@@ -1,0 +1,225 @@
+<resources>
+    <string name="app_name">Shakes works</string>
+    <string name="home_screen_title">Shakespeare\'s works</string>
+    <string name="btn_settings_label">Settings</string>
+    <string name="btn_savesettings_label">Save</string>
+    <string name="btn_saveandclosesettings_label">Save and Close</string>
+    <string name="btn_closesettings_label">Close Settings</string>
+    <string name="txt_mainscreen_head">Shakespeare app</string>
+    <string name="txt_settingsscreen_head">View and update settings</string>
+    <string name="txt_genrefilter">Filter to genre</string>
+    <string name="txt_ageinstruction">Select age:</string>
+    <string name="txt_purposeinstruction">Select your main purpose:</string>
+    <string name="txt_languageinstruction">Select language:</string>
+    <string name="txt_genderinstruction">Select your gender:</string>
+    <string name="txt_aboutyou_button">About you</string>
+    <string name="title_activity_aac">Antony and Cleopatra</string>
+    <string name="title_activity_amsnd">A Midsummer Night\'s Dream</string>
+    <string name="title_activity_settings">User settings</string>
+    <string name="title_activity_settings_home">User settings home</string>
+    <string name="title_activity_viewsystemprompt">Current instruction</string>
+    <string name="action_settings">Settings</string>
+    <string name="font_size">Settings</string>
+    <string name="large_text">large text</string>
+    <string name="font_btn_label_small">T</string>
+    <string name="font_btn_label_medium">T</string>
+    <string name="font_btn_label_large">T</string>
+    <string name="font_settings_btn_label_small">Text small</string>
+    <string name="font_settings_btn_label_medium">Text medium</string>
+    <string name="font_settings_btn_label_large">Text large</string>
+    <string name="nav_btn_label_return_to_home">Home</string>
+    <string name="txt_Message_Send_Box_Hint">Write here</string>
+    <string name="standard_queries">Select from standard questions</string>
+
+    <string name="age_label">Your age, first decades then years</string>
+    <string name="country_label">Your country</string>
+    <string name="language_label">Your preferred language</string>
+
+    <string name="txt_anythingelseinstruction">Anything else we need to be aware of:</string>
+
+    <string-array name="age_decades_list">
+        <item>decades...</item>
+        <item>10+</item>
+        <item>9</item>
+        <item>8</item>
+        <item>7</item>
+        <item>6</item>
+        <item>5</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="age_years_list">
+        <item>years...</item>
+        <item>9</item>
+        <item>8</item>
+        <item>7</item>
+        <item>6</item>
+        <item>5</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>1</item>
+        <item>0</item>
+    </string-array>
+
+    <string-array name="languages_list">
+        <item>Please select...</item>
+        <item>Mine is not listed</item>
+        <item>English</item>
+        <item>Welsh</item>
+        <item>Irish/Gaelic</item>
+        <item>Mandarin</item>
+        <item>Cantonese</item>
+        <item>Hindi</item>
+        <item>Urdu</item>
+        <item>Bengali</item>
+        <item>Arabic</item>
+        <item>Persian</item>
+        <item>Spanish</item>
+        <item>German</item>
+        <item>Russian</item>
+        <item>French</item>
+    </string-array>
+
+    <string-array name="countries_list">
+        <item>Please select...</item>
+        <item>Mine is not listed</item>
+        <item>Wales</item>
+        <item>USA</item>
+        <item>UK</item>
+        <item>Ukraine</item>
+        <item>South Korea</item>
+        <item>Russia</item>
+        <item>Pakistan</item>
+        <item>New Zealand</item>
+        <item>Japan</item>
+        <item>Israel</item>
+        <item>Ireland</item>
+        <item>India</item>
+        <item>Hong Kong</item>
+        <item>Germany</item>
+        <item>France</item>
+        <item>China</item>
+        <item>Canada</item>
+        <item>Belgium</item>
+        <item>Australia</item>
+    </string-array>
+
+    <integer-array name="countries_flag_list">
+        <item>@drawable/blank</item>
+        <item>@drawable/blank</item>
+        <item>@drawable/wls</item>
+        <item>@drawable/usa</item>
+        <item>@drawable/uk</item>
+        <item>@drawable/ukr</item>
+        <item>@drawable/skr</item>
+        <item>@drawable/rsa</item>
+        <item>@drawable/pak</item>
+        <item>@drawable/nzd</item>
+        <item>@drawable/jpn</item>
+        <item>@drawable/isr</item>
+        <item>@drawable/eir</item>
+        <item>@drawable/bha</item>
+        <item>@drawable/hkg</item>
+        <item>@drawable/gmy</item>
+        <item>@drawable/fra</item>
+        <item>@drawable/chn</item>
+        <item>@drawable/can</item>
+        <item>@drawable/bel</item>
+        <item>@drawable/aus</item>
+    </integer-array>
+
+    <string-array name="standard_prompts_list">
+        <item>Please select...</item>
+        <item>---Questions about whole play---</item>
+        <item>What are the main themes of this play?</item>
+        <item>Who are the main characters of the play?</item>
+        <item>What are the main lessons in this play?</item>
+        <item>Which literary techniques are used in this play?</item>
+        <item>How does the play develop?</item>
+        <item>What is the most important character development in the play?</item>
+        <item>Please summarise the plot of this play.</item>
+        <item>---Questions about this Act---</item>
+        <item>What are the main themes of this Act?</item>
+        <item>Who are the main characters in this Act?</item>
+        <item>What are the main lessons in this Act?</item>
+        <item>Which literary techniques are used in this Act?</item>
+        <item>How does this Act develop?</item>
+        <item>What is the most important character development in this Act?</item>
+        <item>Please summarise the plot of this Act.</item>
+        <item>---Questions about this scene---</item>
+        <item>What are the main themes of this scene?</item>
+        <item>Who are the main characters in this scene?</item>
+        <item>What are the main lessons in this scene?</item>
+        <item>Which literary techniques are used in this scene?</item>
+        <item>How does this scene develop?</item>
+        <item>What is the most important character development in this scene?</item>
+        <item>Please summarise the plot of this scene.</item>
+    </string-array>
+
+    <string-array name="standard_prompts_no_act_or_scene">
+        <item>Please select...</item>
+        <item>What are the main themes of this play?</item>
+        <item>Who are the main characters of the play?</item>
+        <item>What are the main lessons in this play?</item>
+        <item>Which literary techniques are used in this play?</item>
+        <item>How does the play develop?</item>
+        <item>What is the most important character development in the play?</item>
+        <item>Please summarise the plot of this play.</item>
+    </string-array>
+
+    <string-array name="plays_all">
+        <item>Select a play...</item>
+        <item>All\'s Well That Ends Well (1602)</item>
+        <item>Antony and Cleopatra (1606)</item>
+        <item>As You Like It (1599)</item>
+        <item>The Comedy of Errors (1589)</item>
+        <item>Hamlet, Prince of Denmark (1600)</item>
+        <item>Henry IV, Part I (1597)</item>
+        <item>Henry IV, Part II (1597)</item>
+        <item>Henry V (1598)</item>
+        <item>Julius Caesar (1599)</item>
+        <item>The Tragedy of King Lear (1605)</item>
+        <item>The Tragedy of Macbeth (1605)</item>
+        <item>The Merchant of Venice (1596)</item>
+        <item>A Midsummer Night\'s Dream (1595)</item>
+        <item>Much Ado about Nothing (1598)</item>
+        <item>Othello, the Moor of Venice (1604)</item>
+        <item>Romeo and Juliet (1594)</item>
+        <item>The Tempest (1611)</item>
+    </string-array>
+
+    <string-array name="plays_tragedies">
+        <item>Select a tragedy...</item>
+        <item>Antony and Cleopatra</item>
+        <item>Hamlet</item>
+        <item>Julius Caesar</item>
+        <item>King Lear</item>
+        <item>Macbeth</item>
+        <item>Othello</item>
+        <item>Romeo and Juliet</item>
+    </string-array>
+
+    <string-array name="plays_comedies">
+        <item>Select a comedy...</item>
+        <item>All\'s Well That Ends Well</item>
+        <item>As You Like It</item>
+        <item>Comedy of Errors</item>
+        <item>Merchant of Venice</item>
+        <item>Midsummer Night\'s Dream</item>
+        <item>Much Ado about Nothing</item>
+        <item>The Tempest</item>
+    </string-array>
+
+    <string-array name="plays_histories">
+        <item>Select a history...</item>
+        <item>Henry IV, Part I</item>
+        <item>Henry IV, Part II</item>
+        <item>Henry V</item>
+    </string-array>
+
+</resources>

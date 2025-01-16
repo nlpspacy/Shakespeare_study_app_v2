@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/blank_padding_top"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsBank"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/txtBlank_top"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text=" " />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/buttonsBank"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <Button
+            android:id="@+id/btnSettings"
+            android:layout_width="wrap_content"
+            android:layout_height="50sp"
+            android:layout_margin="8sp"
+            android:contentDescription="Settings"
+            android:onClick="launchUserInfoScreen"
+            android:text="@string/txt_aboutyou_button"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnViewSystemPrompt"
+            android:layout_height="50sp"
+            android:layout_width="wrap_content"
+            android:layout_margin="8sp"
+            android:onClick="showSystemPrompt"
+            android:textAllCaps="false"
+            android:text="View current information" />
+
+        <Button
+            android:id="@+id/btnfontsmall"
+            android:layout_height="50sp"
+            android:layout_width="wrap_content"
+            android:layout_margin="8dp"
+            android:onClick="setFontSmall12sp"
+            android:text="@string/font_settings_btn_label_small"
+            android:textAllCaps="false"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/btnfontmedium"
+            android:layout_height="50sp"
+            android:layout_width="wrap_content"
+            android:layout_margin="8dp"
+            android:onClick="setFontMedium16sp"
+            android:text="@string/font_settings_btn_label_medium"
+            android:textAllCaps="false"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btnfontlarge"
+            android:layout_height="50sp"
+            android:layout_width="wrap_content"
+            android:layout_margin="8dp"
+            android:onClick="setFontLarge20sp"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:text="@string/font_settings_btn_label_large" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btnReturnToMain"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:onClick="returnToMain"
+            android:textAllCaps="false"
+            android:text="@string/nav_btn_label_return_to_home"
+            android:textSize="10sp"
+            android:layout_marginStart="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

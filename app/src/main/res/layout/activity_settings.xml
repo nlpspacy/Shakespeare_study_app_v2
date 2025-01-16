@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingsActivity">
+
+    <Button
+        android:id="@+id/btn_CloseSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:onClick="returnToSettingsHome"
+        android:text="@string/btn_closesettings_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_SaveSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="updateSystemPrompt"
+        android:text="@string/btn_savesettings_label"
+        app:layout_constraintEnd_toStartOf="@+id/btn_SaveAndCloseSettings"
+        app:layout_constraintStart_toEndOf="@+id/btn_CloseSettings"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_SaveAndCloseSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="updateSystemPromptThenReturnToMain"
+        android:text="@string/btn_saveandclosesettings_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="left" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top" />
+
+    <TextView
+        android:id="@+id/ageInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/txt_ageinstruction"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_CloseSettings" />
+
+    <Spinner
+        android:id="@+id/age_decades_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="22sp"
+        android:layout_marginStart="4dp"
+        android:prompt="@string/age_label"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintStart_toEndOf="@+id/ageInstruction"
+        app:layout_constraintTop_toTopOf="@+id/ageInstruction" />
+
+    <Spinner
+        android:id="@+id/age_years_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="22sp"
+        android:prompt="@string/age_label"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintStart_toEndOf="@+id/age_decades_spinner"
+        app:layout_constraintTop_toTopOf="@+id/ageInstruction" />
+
+    <TextView
+        android:id="@+id/ageSpecified"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=" "
+        android:contentDescription="Age specified by user"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintStart_toStartOf="@+id/ageInstruction"
+        app:layout_constraintTop_toBottomOf="@+id/ageInstruction" />
+
+
+    <TextView
+        android:id="@+id/purposeInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="@string/txt_purposeinstruction"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ageSpecified" />
+
+    <RadioGroup
+        android:id="@+id/userPurpose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/purposeInstruction"
+        app:layout_constraintTop_toBottomOf="@+id/purposeInstruction">
+
+        <RadioButton
+            android:id="@+id/rabtnPurposePrimarySchool"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:text="My primary school studies"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnPurposeMiddleSchool"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:text="My middle school studies"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnPurposeHighSchool"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:text="My high school studies"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnPurposeUniversity"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:text="University studies"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnPurposeInterest"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:text="My personal interest"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnPurposeTheatre"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:text="I perform in theatre"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnPurposeOther"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:text="Other or choose to not answer"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </RadioGroup>
+
+
+    <LinearLayout
+        android:id="@+id/country_selector"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:orientation="vertical"
+        android:padding="2dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userPurpose">
+
+        <TextView
+            android:id="@+id/country_instruction"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:layout_marginTop="2dp"
+            android:padding="1dp"
+            android:text="@string/country_label"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <Spinner
+            android:id="@+id/country_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="22sp"
+            android:padding="1dp"
+            android:paddingStart="12dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="12dp"
+            android:prompt="@string/country_label"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <ImageView
+            android:id="@+id/country_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_launcher_foreground" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/languageInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="2dp"
+        android:text="@string/txt_languageinstruction"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/country_selector" />
+
+    <Spinner
+        android:id="@+id/language_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:prompt="@string/language_label"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintStart_toStartOf="@+id/languageInstruction"
+        app:layout_constraintTop_toBottomOf="@+id/languageInstruction" />
+
+    <TextView
+        android:id="@+id/genderInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/txt_genderinstruction"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/language_spinner" />
+
+    <RadioGroup
+        android:id="@+id/userGenderID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/genderInstruction"
+        app:layout_constraintTop_toBottomOf="@+id/genderInstruction">
+
+        <RadioButton
+            android:id="@+id/rabtnGenderFemale"
+            android:layout_width="55sp"
+            android:layout_height="22sp"
+            android:text="F"
+            android:contentDescription="User gender is female"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnGenderMale"
+            android:contentDescription="User gender is male"
+            android:hint="User gender is male"
+            android:layout_width="55sp"
+            android:layout_height="22sp"
+            android:text="M"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnGenderOther"
+            android:layout_width="75sp"
+            android:layout_height="22sp"
+            android:text="Other"
+            android:contentDescription="User gender is neither female nor male"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <RadioButton
+            android:id="@+id/rabtnGenderChooseNoAnswer"
+            android:layout_width="180sp"
+            android:layout_height="22sp"
+            android:text="Choose no answer"
+            android:contentDescription="User chooses to not specify their gender"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/anythingElseInstruction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="@string/txt_anythingelseinstruction"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/userGenderID" />
+
+    <EditText
+        android:id="@+id/anythingElse"
+        android:hint="Anything else we need to be aware of"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="0dp"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:text=" "
+        app:layout_constraintStart_toStartOf="@+id/anythingElseInstruction"
+        app:layout_constraintTop_toBottomOf="@+id/anythingElseInstruction" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="ageInstruction" type="id"/>
+    <item name="age_decades_spinner" type="id"/>
+    <item name="age_years_spinner" type="id"/>
+    <item name="ageSpecified" type="id"/>
+    <item name="purposeInstruction" type="id"/>
+    <item name="userPurpose" type="id"/>
+    <item name="rabtnPurposePrimarySchool" type="id"/>
+    <item name="rabtnPurposeMiddleSchool" type="id"/>
+    <item name="rabtnPurposeHighSchool" type="id"/>
+    <item name="rabtnPurposeUniversity" type="id"/>
+    <item name="rabtnPurposeInterest" type="id"/>
+    <item name="rabtnPurposeTheatre" type="id"/>
+    <item name="rabtnPurposeOther" type="id"/>
+    <item name="country_selector" type="id"/>
+    <item name="country_spinner" type="id"/>
+    <item name="country_image" type="id"/>
+    <item name="languageInstruction" type="id"/>
+    <item name="language_spinner" type="id"/>
+    <item name="genderInstruction" type="id"/>
+    <item name="userGenderID" type="id"/>
+    <item name="rabtnGenderFemale" type="id"/>
+    <item name="rabtnGenderMale" type="id"/>
+    <item name="rabtnGenderOther" type="id"/>
+    <item name="rabtnGenderNoanswer" type="id"/>
+    <item name="anythingElseInstruction" type="id"/>
+    <item name="anythingElse" type="id"/>
+    <item name="btn_SaveSettings" type="id"/>
+    <item name="btn_CloseSettings" type="id"/>
+    <item name="btn_SaveAndCloseSettings" type="id"/>
+    <item name="txt_SettingsScreenHeading" type="id"/>
+</resources>

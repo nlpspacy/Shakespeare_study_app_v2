@@ -1,0 +1,51 @@
+// this version of this method reads from text files
+// in the assets folder to show the play scripts on the screen
+// the text files being AAC.txt , AMSND.txt and RANDJ.txt
+// superseded 4 Jan 2025 by the sqlite db version.
+
+    public void ShowPlayScriptOnScreen(View v){
+        StringBuilder text = new StringBuilder();
+
+        BufferedReader reader = null;
+
+        try {
+            reader = new BufferedReader(
+//                    new InputStreamReader(getAssets().open("AMSND.txt")));
+                    new InputStreamReader(getAssets().open(GlobalClass.selectedPlayFilename)));
+//            String filePath =  this.assets.open(getAssets().open(GlobalClass.selectedPlayFilename));
+//            Log.d("file path",filePath);
+
+            // do reading, usually loop until end of file reading
+            String mLine;
+            while ((mLine = reader.readLine()) != null) {
+                text.append(mLine);
+                text.append('\n');
+            }
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "Error reading file!", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    //log the exception
+                }
+            }
+
+            // textview version
+            TextView output = findViewById(R.id.textviewAMSND);
+            // output.setText((CharSequence) text);
+            output.setMovementMethod(LinkMovementMethod.getInstance());
+            output.setText(Html.fromHtml(String.valueOf(text), Html.FROM_HTML_MODE_LEGACY));
+            output.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
+
+//            // webview version
+//            WebView output = findViewById(R.id.textviewAMSND);
+//            output.loadUrl(getAssets().open(GlobalClass.selectedPlayFilename));
+            //            // output.setText((CharSequence) text);
+//            output.setHovered(LinkMovementMethod.getInstance().canSelectArbitrarily());
+//            output.setTextDirection(Html.fromHtml(String.valueOf(text), Html.FROM_HTML_MODE_LEGACY).length());
+//            output.setTextDirection(GlobalClass.fontsizesp);
+        }
+    }

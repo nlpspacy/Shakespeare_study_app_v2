@@ -1,0 +1,158 @@
+package com.shakespeare.new_app;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+public abstract class DatabaseHandler extends SQLiteOpenHelper {
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "play_navigation.db";
+    private static final String TABLE_PLAY = "play_navigation";
+    private static final String TABLE_PLAY_POSITION = "play_position";
+    private static final String KEY_ID = "line_number";
+    private static final String KEY_NAME = "line_text";
+
+    public DatabaseHandler(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        //3rd argument to be passed is CursorFactory instance
+
+    }
+
+    // Getting row Count
+    public int getRowCount() {
+
+        SQLiteDatabase db;
+//        String tableNameQuery = "SELECT * FROM sqlite_master WHERE type='table' LIMIT 1;";
+        String selectAllQuery = "SELECT * FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+//        Log.d("database handler action","about to query for row count using: " + selectAllQuery);
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectAllQuery, null);
+
+        return cursor.getCount();
+
+    }
+
+    // Get act number
+    public int getActNumber() {
+        SQLiteDatabase db;
+        String selectQuery = "SELECT * FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+        if(com.shakespeare.new_app.GlobalClass.selectedActNumber!=0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber!=0){
+            selectQuery = "SELECT act_nr FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
+        }
+//        Log.d("database handler action","about to query for act number using: " + selectQuery);
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+
+        //        cursor.close();
+    }
+
+    // Get scene number
+    public int getSceneNumber() {
+        SQLiteDatabase db;
+        String selectQuery = "SELECT * FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+        if(com.shakespeare.new_app.GlobalClass.selectedActNumber!=0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber!=0){
+            selectQuery = "SELECT scene_nr FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
+        }
+//        Log.d("database handler action","about to query for scene number using: " + selectQuery);
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+
+        //        cursor.close();
+    }
+
+    // Get script
+    public String getScript() {
+        SQLiteDatabase db;
+        String selectQuery = "SELECT script_text FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        return cursor.getString(0);
+
+        //        cursor.close();
+    }
+
+    // Get number of acts in the selected play
+    public int getNumberOfActsInPlay() {
+        SQLiteDatabase db;
+        String selectQuery = "SELECT number_of_acts_in_play FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+
+    }
+    // Get number of scenes in the selected act
+    public int getNumberOfScenesInAct() {
+        SQLiteDatabase db;
+        String selectQuery = "SELECT * FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+        if(com.shakespeare.new_app.GlobalClass.selectedActNumber!=0){
+            selectQuery = "SELECT number_of_scenes_in_act FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + ";";
+        }
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        return cursor.getInt(0);
+
+    }
+
+    // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
+    public int getCurrentActNumber() {
+
+        SQLiteDatabase db;
+        String selectQuery = "SELECT current_act_nr FROM " + TABLE_PLAY_POSITION + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+        Log.d("check", selectQuery);
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        Log.d("check", "current act number: " + String.valueOf(cursor.getInt(0)));
+        return cursor.getInt(0);
+
+    }
+
+    // Get current scene number in case the user is returning to the play, so navigation goes to where they left off last time.
+    public int getCurrentSceneNumber() {
+
+        SQLiteDatabase db;
+        String selectQuery = "SELECT current_scene_nr FROM " + TABLE_PLAY_POSITION + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        Log.d("check", "current scene number: " + String.valueOf(cursor.getInt(0)));
+        return cursor.getInt(0);
+
+    }
+
+
+    // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
+    public int updateNavDbWithCurrentActSceneInPlay() {
+
+        SQLiteDatabase db;
+        String updateQuery = "UPDATE " + TABLE_PLAY_POSITION + " SET current_act_nr = " + GlobalClass.selectedActNumber + ", current_scene_nr = " + GlobalClass.selectedSceneNumber + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+
+        Log.d("update query",updateQuery);
+
+        db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(updateQuery, null);
+
+        cursor.moveToFirst();
+        return 1;
+
+    }
+}

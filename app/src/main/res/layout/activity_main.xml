@@ -119,13 +119,13 @@
 
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/buttonsBank"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:layout_marginTop="-50sp"
         app:layout_constraintTop_toBottomOf="@+id/playSelectorLL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -136,6 +136,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="8sp"
             android:layout_weight="2"
+            android:layout_marginStart="80sp"
             android:onClick="openSelectedPlay"
             android:text="Open Play"
             android:textAllCaps="false" />
@@ -143,10 +144,12 @@
         <ImageButton
             android:id="@+id/btnSettings"
             android:layout_width="wrap_content"
-            android:layout_height="30sp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_margin="0sp"
-            android:background="@drawable/settings_cog_white_on_black"
+            android:layout_marginStart="-100sp"
+            android:layout_marginEnd="-100sp"
+            android:src="@drawable/settings_cog_white_on_black"
+            style="?android:attr/borderlessButtonStyle"
             android:contentDescription="Settings"
             android:onClick="launchSettings"
             android:scaleX="0.2"

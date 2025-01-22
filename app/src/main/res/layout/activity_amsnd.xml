@@ -26,7 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" >
 
-
     <!--Play script navigation is here-->
 
     <LinearLayout
@@ -293,7 +292,7 @@
         android:layout_weight="1"
         android:layout_marginStart="8sp"
         android:layout_marginEnd="8sp"
-        android:layout_marginBottom="2sp"
+        android:layout_marginBottom="8sp"
         android:padding="0sp"
         android:text="Send"
         app:layout_constraintBottom_toBottomOf="@+id/message_edit_text"
@@ -358,7 +357,7 @@
             android:contentDescription="Settings"
             android:onClick="launchSettings"
             android:scaleX="0.35"
-            android:scaleY="0.35" />
+            android:scaleY="0.45" />
 
     </LinearLayout>
 

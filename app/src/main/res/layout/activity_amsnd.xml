@@ -250,25 +250,28 @@
         android:layout_marginStart="1sp"
         android:layout_marginBottom="1sp"
         android:gravity="center_vertical"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
         app:layout_constraintStart_toStartOf="parent" >
 
         <!-- Free text textbox for user to write free-form prompt-->
-    <com.shakespeare.new_app.EditTextNoNewLine
-        android:id="@+id/message_edit_text"
-        android:layout_width="0dp"
-        android:layout_weight="4"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8sp"
-        android:hint="@string/txt_Message_Send_Box_Hint"
-        android:padding="8sp"
-        android:textColor="#FFFFFF"
-        android:textIsSelectable="true"
-        android:background="@android:color/background_dark"
-        app:layout_constraintBottom_toBottomOf="@+id/fetchDataButton"
-        app:layout_constraintEnd_toStartOf="@+id/fetchDataButton" />
 
         <!-- Spinner Element to select standard prompts-->
+        <com.shakespeare.new_app.EditTextNoNewLine
+            android:id="@+id/message_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1sp"
+            android:layout_weight="4"
+            android:background="@android:color/background_dark"
+            android:hint="@string/txt_Message_Send_Box_Hint"
+            android:padding="0sp"
+            android:textColor="#FFFFFF"
+            android:textIsSelectable="true"
+            app:layout_constraintBottom_toBottomOf="@+id/fetchDataButton"
+            app:layout_constraintEnd_toStartOf="@+id/fetchDataButton" />
+
         <Spinner
         android:id="@+id/standardprompts_spinner"
         android:layout_width="0dp"
@@ -276,7 +279,7 @@
         android:layout_height="wrap_content"
         android:prompt="@string/standard_queries"
         android:hint="@string/standard_queries"
-        android:padding="8sp"
+        android:padding="0sp"
         android:textColor="#FFFFFF"
         android:textSize="10sp"
         android:textIsSelectable="true"
@@ -290,7 +293,8 @@
         android:layout_weight="1"
         android:layout_marginStart="8sp"
         android:layout_marginEnd="8sp"
-        android:padding="8sp"
+        android:layout_marginBottom="2sp"
+        android:padding="0sp"
         android:text="Send"
         app:layout_constraintBottom_toBottomOf="@+id/message_edit_text"
         app:layout_constraintStart_toEndOf="@+id/message_edit_text"
@@ -342,7 +346,7 @@
             android:layout_weight="2"
             android:textAllCaps="false"
             android:onClick="showStandardPromptsOrFreeTextEntry"
-            android:text="Prepd qns" />
+            android:text="Qns" />
 
         <ImageButton
             android:id="@+id/btnSettings"
@@ -350,11 +354,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:layout_margin="4sp"
-            android:background="@drawable/settings_cog"
+            android:background="@drawable/settings_cog_white_on_black"
             android:contentDescription="Settings"
             android:onClick="launchSettings"
             android:scaleX="0.35"
-            android:scaleY="1" />
+            android:scaleY="0.35" />
 
     </LinearLayout>
 

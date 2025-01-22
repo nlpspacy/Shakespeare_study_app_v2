@@ -481,7 +481,7 @@ public class AMSND extends AppCompatActivity {
             llMessaging.setLayoutParams(lParams2);
 
             // update button label
-            btnShowHide.setText("Show script");
+            btnShowHide.setText("Script");
         } else  {
             llPlayScript.setVisibility(View.VISIBLE);
             llMessaging.setVisibility(View.GONE);
@@ -516,7 +516,7 @@ public class AMSND extends AppCompatActivity {
             standardPromptsSpinner.setVisibility(View.GONE);
             freeTextPrompt.setVisibility(View.VISIBLE);
             Log.d("prompts show standard or allow free text","show free text entry box");
-            btnShowHide.setText("Prepd qns");
+            btnShowHide.setText("Qns");
         }
 
     }

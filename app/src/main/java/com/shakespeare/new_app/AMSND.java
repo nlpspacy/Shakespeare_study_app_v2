@@ -108,7 +108,10 @@ public class AMSND extends AppCompatActivity {
         com.shakespeare.new_app.GlobalClass.selectedActNumber = db.getCurrentActNumber();
         com.shakespeare.new_app.GlobalClass.selectedSceneNumber = db.getCurrentSceneNumber();
 
+
+        Log.d("progress update","before updateScriptDisplay(v)");
         updateScriptDisplay(v);
+        Log.d("progress update","after updateScriptDisplay(v)");
 
         // listen on button and when pressed then send prompt to ChatGPT API
         Button fetchDataButton = findViewById(R.id.fetchDataButton);
@@ -261,12 +264,14 @@ public class AMSND extends AppCompatActivity {
             @Override
             public void onCreate(SQLiteDatabase db) {
 
-                Log.d("sqllite","on create");
+                Log.d("sqllite","onCreate");
 
             }
 
             @Override
             public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+                Log.d("sqllite","onUpgrade");
 
             }
         };
@@ -619,15 +624,15 @@ public class AMSND extends AppCompatActivity {
             return;
         }
 
-        String userPromptPlay = " My query relates to the Shakespeare play _" + GlobalClass.selectedPlay + "_.";
+        String userPromptPlay = " My query relates to the Shakespeare play <i>" + GlobalClass.selectedPlay + "</i>.";
 
         // If the selected standard prompt / prepared question relates to the selected Act or Scene
         // then the prompt needs to incorporate reference to the current act or scene to send this
         // information to ChatGPT in the prompt.
         if (userPrompt.lastIndexOf("this Act")!=-1){
-            userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " of the Shakespeare play _" + GlobalClass.selectedPlay + "_.";
+            userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " of the Shakespeare play <i>" + GlobalClass.selectedPlay + "</i>.";
         } else if (userPrompt.lastIndexOf("this scene")!=-1){
-            userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " scene " + String.valueOf(GlobalClass.selectedSceneNumber) + " of the Shakespeare play _" + GlobalClass.selectedPlay + "_.";
+            userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " scene " + String.valueOf(GlobalClass.selectedSceneNumber) + " of the Shakespeare play <i>" + GlobalClass.selectedPlay + "</i>.";
         }
 
         Log.d("message", "userPrompt: " + userPrompt);

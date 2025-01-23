@@ -9,7 +9,8 @@ import android.util.Log;
 public abstract class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "play_navigation.db";
-    private static final String TABLE_PLAY = "play_navigation";
+//    private static final String TABLE_PLAY = "play_navigation";
+    private static final String TABLE_PLAY = "play_nav_detailed";
     private static final String TABLE_PLAY_POSITION = "play_position";
     private static final String KEY_ID = "line_number";
     private static final String KEY_NAME = "line_text";
@@ -17,6 +18,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         //3rd argument to be passed is CursorFactory instance
+
+        Log.d("progress update", "DatabaseHandler constructor");
 
     }
 
@@ -71,13 +74,30 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     // Get script
     public String getScript() {
         SQLiteDatabase db;
-        String selectQuery = "SELECT script_text FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
+        // this uses the play_navigation table
+//        String selectQuery = "SELECT script_text FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
+
+        // this uses the play_nav_detailed table
+        String selectQuery = "SELECT scene_line_number, script_text FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
+        Log.d("sql",selectQuery);
 
         db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
+        // up to here 24Jan2025 - need to update to show all the rows which satisfy not just the first one
         cursor.moveToFirst();
-        return cursor.getString(0);
+        String strScriptText = cursor.getString(1);
+        Integer intLineNumber = cursor.getInt(0);
+        String strShowLineOnScreen;
+        if(intLineNumber!=0){
+            strShowLineOnScreen = String.valueOf(intLineNumber) + ' ' + strScriptText + " no. of lines: " + String.valueOf(cursor.getCount());
+
+        } else {
+            strShowLineOnScreen = strScriptText + " no. of lines: " + String.valueOf(cursor.getCount());
+
+        }
+//        return cursor.getString(0);
+        return strShowLineOnScreen;
 
         //        cursor.close();
     }
@@ -101,6 +121,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
             selectQuery = "SELECT number_of_scenes_in_act FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + ";";
         }
         db = this.getReadableDatabase();
+
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         cursor.moveToFirst();

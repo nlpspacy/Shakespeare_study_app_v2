@@ -6,6 +6,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public abstract class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "play_navigation.db";
@@ -72,7 +74,10 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Get script
-    public String getScript() {
+    public ArrayList getScript() {
+
+        ArrayList<String> scriptLinesList = new ArrayList<>();
+
         SQLiteDatabase db;
         // this uses the play_navigation table
 //        String selectQuery = "SELECT script_text FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
@@ -89,6 +94,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         String strScriptText = cursor.getString(1);
         Integer intLineNumber = cursor.getInt(0);
         String strShowLineOnScreen;
+
         if(intLineNumber!=0){
             strShowLineOnScreen = String.valueOf(intLineNumber) + ' ' + strScriptText + " no. of lines: " + String.valueOf(cursor.getCount());
 
@@ -97,7 +103,26 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
         }
 //        return cursor.getString(0);
-        return strShowLineOnScreen;
+        // we need to return a list to our recycler view - see this page for guidance:
+        // https://stackoverflow.com/questions/55159923/how-to-display-data-from-sqlite-database-into-recyclerview
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                strScriptText = cursor.getString(1);
+                intLineNumber = cursor.getInt(0);
+
+                // Adding user record to list
+                scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText + "\n");
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+//        return strShowLineOnScreen;
+        return scriptLinesList;
 
         //        cursor.close();
     }

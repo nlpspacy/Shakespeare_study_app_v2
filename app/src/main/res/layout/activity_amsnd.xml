@@ -172,14 +172,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-            <TextView
-                android:id="@+id/textViewScript"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:linksClickable="true"
-                android:maxLength="10000000"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvScript"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="1sp"
                 android:textIsSelectable="true"
-                android:text="Script goes here" />
+                />
 
         </ScrollView>
 

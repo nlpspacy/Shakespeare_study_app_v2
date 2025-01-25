@@ -49,6 +49,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+
 public class AMSND extends AppCompatActivity {
 
     private String[] standard_prompts;
@@ -57,6 +58,10 @@ public class AMSND extends AppCompatActivity {
 
     MyRecyclerViewAdapter adapter;
     ArrayList<String> messageList = new ArrayList<>();
+
+    MyRecyclerViewAdapter adapterScript;
+    ArrayList<String> scriptLinesList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +90,8 @@ public class AMSND extends AppCompatActivity {
             return insets;
         });
 
-        View v = findViewById(R.id.textViewScript);
+//        View v = findViewById(R.id.textViewScript);
+        RecyclerView v = findViewById(R.id.rvScript);
 
         // read from database current act number and scene number with current play code
         // and assign to the global variables
@@ -180,23 +186,6 @@ public class AMSND extends AppCompatActivity {
             }
         });
 
-// need to add these back once we have the script working
-//        TextView tvActNumber = findViewById(R.id.textViewActNumber);
-//        tvActNumber.setVisibility(View.GONE);
-//
-//        TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
-//        tvSceneNumber.setVisibility(View.GONE);
-
-//        // probably redundant because OnCreate calls updateScriptDisplay above
-//        // i.e. already done
-//        TextView tvScript = findViewById(R.id.textViewScript);
-//        tvScript.setText(String.valueOf(db.getScript()));
-//
-//        // probably redundant because OnCreate calls updateScriptDisplay above
-//        // i.e. already done
-//        GlobalClass.numberOfScenesInAct = db.getNumberOfScenesInAct();
-//        GlobalClass.numberOfActsInPlay = db.getNumberOfActsInPlay();
-
         // Default to ChatGPT window hidden with play script in full screen mode.
         // Otherwise the initial appearance of the play is too poky for the user
         // and slightly intimidating.
@@ -218,46 +207,7 @@ public class AMSND extends AppCompatActivity {
 
     }
 
-    // old version which reads the script from a text file
-//    public void ShowPlayScriptOnScreen(View v){
-//        StringBuilder text = new StringBuilder();
-//
-//        BufferedReader reader = null;
-//
-//        try {
-//            reader = new BufferedReader(
-////                    new InputStreamReader(getAssets().open("AMSND.txt")));
-//                    new InputStreamReader(getAssets().open(GlobalClass.selectedPlayFilename)));
-//
-//            // do reading, usually loop until end of file reading
-//            String mLine;
-//            while ((mLine = reader.readLine()) != null) {
-//                text.append(mLine);
-//                text.append('\n');
-//            }
-//        } catch (IOException e) {
-//            Toast.makeText(getApplicationContext(), "Error reading file!", Toast.LENGTH_LONG).show();
-//            e.printStackTrace();
-//        } finally {
-//            if (reader != null) {
-//                try {
-//                    reader.close();
-//                } catch (IOException e) {
-//                    //log the exception
-//                }
-//            }
-//
-//            // textview version
-//            TextView output = findViewById(R.id.textViewScript);
-//            // output.setText((CharSequence) text);
-//            output.setMovementMethod(LinkMovementMethod.getInstance());
-//            output.setText(Html.fromHtml(String.valueOf(text), Html.FROM_HTML_MODE_LEGACY));
-//            output.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
-//
-//        }
-//    }
-
-    // new version which reads the script from the sqlite database
+    // read the script from the sqlite database
     public void updateScriptDisplay(View v){
 
         DatabaseHandler db = new DatabaseHandler(this) {
@@ -307,11 +257,26 @@ public class AMSND extends AppCompatActivity {
 
         }
 
-        // show the script
-        TextView tvScript = findViewById(R.id.textViewScript);
-        tvScript.setText(String.valueOf(db.getScript()));
+        // show the script using text view and single database row returned
+//        TextView tvScript = findViewById(R.id.textViewScript);
+//        tvScript.setText(String.valueOf(db.getScript()));
+
+        // show the script using recycler view with multiple lines returned from database rows returned
+        // *** start recycler view logic ***
+        scriptLinesList.add(String.valueOf(db.getScript()));
+        Log.d("script", "scriptLinesList: " + scriptLinesList.size());
+
+        RecyclerView rvScript = findViewById(R.id.rvScript);
+        rvScript.setLayoutManager(new LinearLayoutManager(rvScript.getContext()));
+
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
+        rvScript.setAdapter(adapter);
+        int listLength = scriptLinesList.size();
+        rvScript.smoothScrollToPosition(listLength);
+        // *** end recycler view logic ***
+
         // set the script to the font size which the user has specified
-        tvScript.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
+//        tvScript.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
 
         // set the act number font size which the user has specified
         TextView tvActNumber = findViewById(R.id.textViewActNumber);
@@ -377,6 +342,13 @@ public class AMSND extends AppCompatActivity {
     public void decrementAct(View v) {
         // decrement act number
         Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
+
+        RecyclerView rvScript = findViewById(R.id.rvScript);
+        // attempt to clear the recycler view
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
+        rvScript.setAdapter(adapter);
+        rvScript.smoothScrollToPosition(0);
+
         if(GlobalClass.selectedActNumber > 1){
             GlobalClass.selectedActNumber -= 1;
             GlobalClass.selectedSceneNumber = 1;
@@ -392,6 +364,13 @@ public class AMSND extends AppCompatActivity {
     }
 
     public void incrementAct(View v) {
+
+        RecyclerView rvScript = findViewById(R.id.rvScript);
+        // attempt to clear the recycler view
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
+        rvScript.setAdapter(adapter);
+        rvScript.smoothScrollToPosition(0);
+
         // increment act number
         if(GlobalClass.selectedActNumber < GlobalClass.numberOfActsInPlay){
             Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
@@ -404,6 +383,13 @@ public class AMSND extends AppCompatActivity {
 
     }
     public void decrementScene(View v) {
+
+        RecyclerView rvScript = findViewById(R.id.rvScript);
+        // attempt to clear the recycler view
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
+        rvScript.setAdapter(adapter);
+        rvScript.smoothScrollToPosition(0);
+
         // decrement scene number
         Log.d("script navigation button", "Scene before: " + String.valueOf(GlobalClass.selectedSceneNumber));
         if(GlobalClass.selectedSceneNumber > 1){
@@ -417,6 +403,13 @@ public class AMSND extends AppCompatActivity {
 
     }
     public void incrementScene(View v) {
+
+        RecyclerView rvScript = findViewById(R.id.rvScript);
+        // attempt to clear the recycler view
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
+        rvScript.setAdapter(adapter);
+        rvScript.smoothScrollToPosition(0);
+
         // increment scene number
         if(GlobalClass.selectedSceneNumber < GlobalClass.numberOfScenesInAct){
             Log.d("script navigation button", "Scene before: " + String.valueOf(GlobalClass.selectedSceneNumber));
@@ -580,7 +573,9 @@ public class AMSND extends AppCompatActivity {
         //WebView tvScript = (WebView) findViewById(R.id.textviewAMSND);
 
         // textview version
-        TextView tvScript = (TextView) findViewById(R.id.textViewScript);
+//        TextView tvScript = (TextView) findViewById(R.id.textViewScript);
+        // RecyclerView version
+        RecyclerView rvScript = (RecyclerView) findViewById(R.id.rvScript);
 
 //        int llChatHeight = llChat.getHeight();
 //        Log.d("info","chat linear layout height: " + Integer.toString(llChatHeight));

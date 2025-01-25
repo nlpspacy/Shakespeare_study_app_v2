@@ -83,7 +83,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 //        String selectQuery = "SELECT script_text FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
 
         // this uses the play_nav_detailed table
-        String selectQuery = "SELECT scene_line_number, script_text FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
+        String selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
         Log.d("sql",selectQuery);
 
         db = this.getReadableDatabase();
@@ -91,6 +91,9 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
         // up to here 24Jan2025 - need to update to show all the rows which satisfy not just the first one
         cursor.moveToFirst();
+        String strCharacter = cursor.getString(2);
+        String strPreviousCharacter = "";
+        Integer intPreviousLineNumber = -9;
         String strScriptText = cursor.getString(1);
         Integer intLineNumber = cursor.getInt(0);
         String strShowLineOnScreen;
@@ -110,11 +113,37 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
             do {
 
+                strCharacter = cursor.getString(2);
                 strScriptText = cursor.getString(1);
                 intLineNumber = cursor.getInt(0);
 
+                Log.d("character update", "current: "+strCharacter + ", previous: " + strPreviousCharacter);
+
                 // Adding user record to list
-                scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText + "\n");
+                if(!strCharacter.equalsIgnoreCase("N.A.") && !strCharacter.equalsIgnoreCase(strPreviousCharacter)){
+
+                    if(intLineNumber == intPreviousLineNumber){
+                        scriptLinesList.add(strCharacter + "\n" + strScriptText + "\n");
+
+                    } else{
+                        scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText + "\n");
+
+                    }
+                    Log.d("character update", "current != N.A.");
+                }else {
+
+                    if(intLineNumber == intPreviousLineNumber){
+                        scriptLinesList.add(strScriptText + "\n");
+
+                    } else{
+                        scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText + "\n");
+
+                    }
+
+                    Log.d("character update", "current is N.A.");
+                }
+                strPreviousCharacter = strCharacter;
+                intPreviousLineNumber = intLineNumber;
             } while (cursor.moveToNext());
         }
 

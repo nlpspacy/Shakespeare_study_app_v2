@@ -119,6 +119,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 Log.d("character update", "current: "+strCharacter + ", previous: " + strPreviousCharacter);
 
+                if(com.shakespeare.new_app.GlobalClass.selectedActNumber==0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber==0){
+                    scriptLinesList.add(strScriptText + "\n");
+
+                }else {
+
                 // Adding user record to list
                 if(!strCharacter.equalsIgnoreCase("N.A.") && !strCharacter.equalsIgnoreCase(strPreviousCharacter)){
 
@@ -142,6 +147,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                     Log.d("character update", "current is N.A.");
                 }
+                }
+
                 strPreviousCharacter = strCharacter;
                 intPreviousLineNumber = intLineNumber;
             } while (cursor.moveToNext());

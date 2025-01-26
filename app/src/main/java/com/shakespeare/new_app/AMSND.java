@@ -296,7 +296,8 @@ public class AMSND extends AppCompatActivity {
         adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
         rvScript.setAdapter(adapter);
         int listLength = scriptLinesList.size();
-        rvScript.smoothScrollToPosition(listLength);
+//        rvScript.smoothScrollToPosition(listLength);
+        rvScript.smoothScrollToPosition(0);
         // *** end recycler view logic ***
 
         // set the script to the font size which the user has specified

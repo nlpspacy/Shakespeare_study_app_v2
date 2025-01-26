@@ -27,6 +27,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -59,6 +60,7 @@ public class AMSND extends AppCompatActivity {
     MyRecyclerViewAdapter adapter;
     ArrayList<String> messageList = new ArrayList<>();
 
+    RecyclerViewAdapterClear adapter_clear;
     MyRecyclerViewAdapter adapterScript;
     ArrayList<String> scriptLinesList = new ArrayList<>();
 
@@ -210,6 +212,10 @@ public class AMSND extends AppCompatActivity {
     // read the script from the sqlite database
     public void updateScriptDisplay(View v){
 
+        // Clear the list so that the acts and scenes don't accumulate in an ever
+        // increasingly long amount of scrollable text.
+        scriptLinesList.clear();
+
         DatabaseHandler db = new DatabaseHandler(this) {
             @Override
             public void onCreate(SQLiteDatabase db) {
@@ -344,10 +350,6 @@ public class AMSND extends AppCompatActivity {
         Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
-        // attempt to clear the recycler view
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
-        rvScript.setAdapter(adapter);
-        rvScript.smoothScrollToPosition(0);
 
         if(GlobalClass.selectedActNumber > 1){
             GlobalClass.selectedActNumber -= 1;
@@ -366,10 +368,6 @@ public class AMSND extends AppCompatActivity {
     public void incrementAct(View v) {
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
-        // attempt to clear the recycler view
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
-        rvScript.setAdapter(adapter);
-        rvScript.smoothScrollToPosition(0);
 
         // increment act number
         if(GlobalClass.selectedActNumber < GlobalClass.numberOfActsInPlay){
@@ -402,12 +400,14 @@ public class AMSND extends AppCompatActivity {
         Log.d("script navigation button", "Scene after: " + String.valueOf(GlobalClass.selectedSceneNumber));
 
     }
+
     public void incrementScene(View v) {
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
         // attempt to clear the recycler view
         adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
-        rvScript.setAdapter(adapter);
+//        rvScript.setAdapter(adapter);
+        rvScript.setAdapter(null);
         rvScript.smoothScrollToPosition(0);
 
         // increment scene number

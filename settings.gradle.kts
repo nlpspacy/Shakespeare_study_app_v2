@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "new_app"
 include(":app")
- 
+include(":newModule")

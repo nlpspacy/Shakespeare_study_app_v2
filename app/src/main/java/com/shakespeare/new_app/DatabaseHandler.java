@@ -117,7 +117,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 strScriptText = cursor.getString(1);
                 intLineNumber = cursor.getInt(0);
 
-                Log.d("character update", "current: "+strCharacter + ", previous: " + strPreviousCharacter);
+//                Log.d("character update", "current: "+strCharacter + ", previous: " + strPreviousCharacter);
 
                 if(com.shakespeare.new_app.GlobalClass.selectedActNumber==0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber==0){
                     scriptLinesList.add(strScriptText + "\n");
@@ -134,7 +134,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText + "\n");
 
                     }
-                    Log.d("character update", "current != N.A.");
+//                    Log.d("character update", "current != N.A.");
                 }else {
 
                     if(intLineNumber == intPreviousLineNumber){
@@ -145,7 +145,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                     }
 
-                    Log.d("character update", "current is N.A.");
+//                    Log.d("character update", "current is N.A.");
                 }
                 }
 

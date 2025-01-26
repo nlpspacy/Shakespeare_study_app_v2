@@ -120,7 +120,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 //                Log.d("character update", "current: "+strCharacter + ", previous: " + strPreviousCharacter);
 
                 if(com.shakespeare.new_app.GlobalClass.selectedActNumber==0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber==0){
-                    scriptLinesList.add(strScriptText + "\n");
+                    scriptLinesList.add(strScriptText );
 
                 }else {
 
@@ -128,20 +128,20 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 if(!strCharacter.equalsIgnoreCase("N.A.") && !strCharacter.equalsIgnoreCase(strPreviousCharacter)){
 
                     if(intLineNumber == intPreviousLineNumber){
-                        scriptLinesList.add(strCharacter + "\n" + strScriptText + "\n");
+                        scriptLinesList.add(strCharacter + "\n" + strScriptText );
 
                     } else{
-                        scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText + "\n");
+                        scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText );
 
                     }
 //                    Log.d("character update", "current != N.A.");
                 }else {
 
                     if(intLineNumber == intPreviousLineNumber){
-                        scriptLinesList.add(strScriptText + "\n");
+                        scriptLinesList.add(strScriptText );
 
                     } else{
-                        scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText + "\n");
+                        scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText );
 
                     }
 
@@ -158,6 +158,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
 //        return strShowLineOnScreen;
+        Log.d("list info", "list size: " + scriptLinesList.size());
         return scriptLinesList;
 
         //        cursor.close();

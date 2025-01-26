@@ -48,6 +48,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -268,11 +269,29 @@ public class AMSND extends AppCompatActivity {
 
         // show the script using recycler view with multiple lines returned from database rows returned
         // *** start recycler view logic ***
-        scriptLinesList.add(String.valueOf(db.getScript()));
+
+        // this adds the script as a single string
+//        scriptLinesList.add(String.valueOf(db.getScript()));
+
+        // but, instead, we want to add as an array or list
+        scriptLinesList = db.getScript();
         Log.d("script", "scriptLinesList: " + scriptLinesList.size());
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
         rvScript.setLayoutManager(new LinearLayoutManager(rvScript.getContext()));
+
+        // *** start: loop through ArrayList scriptLinesList
+        Integer i = 0;
+        for(String string1: scriptLinesList)
+
+        {
+            i++;
+            System.out.println(i);
+            System.out.println("list item is " + string1);
+
+        }
+
+        // *** end: loop through ArrayList scriptLinesList
 
         adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
         rvScript.setAdapter(adapter);

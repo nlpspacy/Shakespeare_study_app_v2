@@ -1,6 +1,8 @@
 package com.shakespeare.new_app;
 
 import android.content.Context;
+import android.graphics.Typeface;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +38,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String animal = mData.get(position);
-        holder.myTextView.setText(animal);
+        String strContent = mData.get(position);
+        holder.myTextView.setText(strContent);
+        holder.myTextView.setTypeface(null, Typeface.BOLD);
+        Log.d("update onBindViewHolder", position + " " + strContent);
         holder.myTextView.setTextIsSelectable(true);
 
         // ensure font size is set to the global variable

@@ -60,7 +60,6 @@ public class AMSND extends AppCompatActivity {
     MyRecyclerViewAdapter adapter;
     ArrayList<String> messageList = new ArrayList<>();
 
-    RecyclerViewAdapterClear adapter_clear;
     MyRecyclerViewAdapter adapterScript;
     ArrayList<String> scriptLinesList = new ArrayList<>();
 

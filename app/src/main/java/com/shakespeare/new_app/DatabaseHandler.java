@@ -109,6 +109,10 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         // we need to return a list to our recycler view - see this page for guidance:
         // https://stackoverflow.com/questions/55159923/how-to-display-data-from-sqlite-database-into-recyclerview
 
+        // Need an individual scriptLinesList entry for the character name so that the character name can be in bold.
+        // Also need to label each line with the relevant character so that text by particular characters can be in the specified
+        // colour shading if the user wants to colour particular characters to highlight those characters' text.
+
         if (cursor.moveToFirst()) {
 
             do {

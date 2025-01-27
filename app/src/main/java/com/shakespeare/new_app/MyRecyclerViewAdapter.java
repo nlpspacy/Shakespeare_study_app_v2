@@ -39,8 +39,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String strContent = mData.get(position);
+        Integer intContentLength = strContent.length();
         holder.myTextView.setText(strContent);
-        holder.myTextView.setTypeface(null, Typeface.BOLD);
+//        String strContentNew;
+        if(strContent.substring(intContentLength-2, intContentLength-1).equals("+")){
+            strContent = strContent.substring(intContentLength-2, intContentLength-1);
+            holder.myTextView.setText(strContent);
+            holder.myTextView.setTypeface(null, Typeface.BOLD);
+        } else {
+            holder.myTextView.setTypeface(null, Typeface.NORMAL);
+
+        }
         Log.d("update onBindViewHolder", position + " " + strContent);
         holder.myTextView.setTextIsSelectable(true);
 

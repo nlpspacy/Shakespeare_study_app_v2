@@ -91,7 +91,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
         // up to here 24Jan2025 - need to update to show all the rows which satisfy not just the first one
         cursor.moveToFirst();
-        String strCharacter = cursor.getString(2);
+        String strCharacter = cursor.getString(2)+"+";
         String strPreviousCharacter = "";
         Integer intPreviousLineNumber = -9;
         String strScriptText = cursor.getString(1);
@@ -117,7 +117,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
             do {
 
-                strCharacter = cursor.getString(2);
+                strCharacter = cursor.getString(2)+"+";
                 strScriptText = cursor.getString(1);
                 intLineNumber = cursor.getInt(0);
 
@@ -132,10 +132,18 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 if(!strCharacter.equalsIgnoreCase("N.A.") && !strCharacter.equalsIgnoreCase(strPreviousCharacter)){
 
                     if(intLineNumber == intPreviousLineNumber){
-                        scriptLinesList.add(strCharacter + "\n" + strScriptText );
+//                        scriptLinesList.add(strCharacter + "\n" + strScriptText );
+                        scriptLinesList.add(strCharacter);
+                        scriptLinesList.add(strScriptText);
 
                     } else{
-                        scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText );
+//                        scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText );
+                        scriptLinesList.add(strCharacter);
+                        if(intLineNumber==0){
+                            scriptLinesList.add(strScriptText );
+                        } else {
+                            scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
+                        }
 
                     }
 //                    Log.d("character update", "current != N.A.");
@@ -145,7 +153,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         scriptLinesList.add(strScriptText );
 
                     } else{
-                        scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText );
+                        if(intLineNumber==0){
+                            scriptLinesList.add(strScriptText );
+                        } else {
+                            scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText );
+                        }
 
                     }
 

@@ -40,21 +40,29 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         String strContent = mData.get(position);
         Integer intContentLength = strContent.length();
-        holder.myTextView.setText(strContent);
 //        String strContentNew;
-        if(strContent.substring(intContentLength-2, intContentLength-1).equals("+")){
-            strContent = strContent.substring(intContentLength-2, intContentLength-1);
+        Log.d("character text", String.valueOf(intContentLength) + ": " + strContent.substring(intContentLength-1, intContentLength));
+
+        // We do not want to show a character name for stage instructions or scene information.
+        if(!strContent.equals("N.A.+"))
+        {
             holder.myTextView.setText(strContent);
-            holder.myTextView.setTypeface(null, Typeface.BOLD);
-        } else {
-            holder.myTextView.setTypeface(null, Typeface.NORMAL);
+
+            if(strContent.substring(intContentLength-1, intContentLength).equals("+")){
+                strContent = strContent.substring(0, intContentLength-1);
+                holder.myTextView.setText(strContent);
+                holder.myTextView.setTypeface(null, Typeface.BOLD);
+            } else {
+                holder.myTextView.setTypeface(null, Typeface.NORMAL);
+
+            }
+            Log.d("update onBindViewHolder", position + " " + strContent);
+            holder.myTextView.setTextIsSelectable(true);
+
+            // ensure font size is set to the global variable
+            holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
 
         }
-        Log.d("update onBindViewHolder", position + " " + strContent);
-        holder.myTextView.setTextIsSelectable(true);
-
-        // ensure font size is set to the global variable
-        holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
 
     }
 

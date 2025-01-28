@@ -41,7 +41,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         String strContent = mData.get(position);
         Integer intContentLength = strContent.length();
 //        String strContentNew;
-        Log.d("character text", String.valueOf(intContentLength) + ": " + strContent.substring(intContentLength-1, intContentLength));
+//        Log.d("character text", String.valueOf(intContentLength) + ": " + strContent.substring(intContentLength-1, intContentLength));
 
         // We do not want to show a character name for stage instructions or scene information.
         if(!strContent.equals("N.A.+"))
@@ -56,7 +56,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 holder.myTextView.setTypeface(null, Typeface.NORMAL);
 
             }
-            Log.d("update onBindViewHolder", position + " " + strContent);
+//            Log.d("update onBindViewHolder", position + " " + strContent);
             holder.myTextView.setTextIsSelectable(true);
 
             // ensure font size is set to the global variable

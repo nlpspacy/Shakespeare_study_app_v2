@@ -312,8 +312,10 @@ public class AMSND extends AppCompatActivity {
         tvSceneNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
 
         // ensure scroller is at the top
-        ScrollView svScript = findViewById(R.id.SCROLLER_ID);
-        svScript.scrollTo(0, 0);
+        // temporarily commented this out because we have removed the scroller view temporarily
+        // to simplify while investigating how to solve the vertical spacing issue.
+//        ScrollView svScript = findViewById(R.id.SCROLLER_ID);
+//        svScript.scrollTo(0, 0);
 
         // these may also work
         // from

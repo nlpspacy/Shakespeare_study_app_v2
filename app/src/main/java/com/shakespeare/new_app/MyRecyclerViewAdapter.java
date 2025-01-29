@@ -1,6 +1,8 @@
 package com.shakespeare.new_app;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.util.TypedValue;
@@ -40,7 +42,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void onBindViewHolder(ViewHolder holder, int position) {
         String strContent = mData.get(position);
         Integer intContentLength = strContent.length();
-//        String strContentNew;
+        Log.d("show position","ViewHolder position: " + String.valueOf(position) + ". Content length: " + String.valueOf(strContent.length()));
+        //        String strContentNew;
 //        Log.d("character text", String.valueOf(intContentLength) + ": " + strContent.substring(intContentLength-1, intContentLength));
 
         // We do not want to show a character name for stage instructions or scene information.
@@ -49,6 +52,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             holder.myTextView.setText(strContent);
 
             if(strContent.substring(intContentLength-1, intContentLength).equals("+")){
+                // If it is a character marker as indicated by the plus sign (+) at the end of the character name,
+                // then re-assign the holder without the plus (+) sign at the end of the character name.
                 strContent = strContent.substring(0, intContentLength-1);
                 holder.myTextView.setText(strContent);
                 holder.myTextView.setTypeface(null, Typeface.BOLD);
@@ -63,6 +68,32 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
 
         }
+
+        holder.myTextView.setBackgroundColor(Color.TRANSPARENT);
+        holder.myTextView.setBackground(null);
+        holder.myTextView.setPadding(0,0,0,-25);
+//        holder.myTextView.setAlpha(1);
+
+
+        // check padding in vertical direction
+        Integer intPaddingTop = holder.myTextView.getPaddingTop();
+        Log.d("padding top","padding top: "+String.valueOf(intPaddingTop));
+        Integer intPaddingBottom = holder.myTextView.getPaddingBottom();
+        Log.d("padding bottom","padding bottom: "+String.valueOf(intPaddingBottom));
+        Integer intTextViewHeight = holder.myTextView.getHeight();
+        Log.d("textview info","textview height: "+String.valueOf(intTextViewHeight));
+        Integer intTextViewMinHeight = holder.myTextView.getMinHeight();
+        Log.d("textview info","textview min height: "+String.valueOf(intTextViewMinHeight));
+        Integer intTextViewMinimumHeight = holder.myTextView.getMinimumHeight();
+        Log.d("textview info","textview minimum height: "+String.valueOf(intTextViewMinimumHeight));
+        Integer intTextViewMeasuredHeight = holder.myTextView.getMeasuredHeight();
+        Log.d("textview info","textview measured height: "+String.valueOf(intTextViewMeasuredHeight));
+        Integer intTextViewMinLines = holder.myTextView.getMinLines();
+        Log.d("textview info","textview min lines: "+String.valueOf(intTextViewMinLines));
+        Integer intTextViewTotalPaddingTop = holder.myTextView.getTotalPaddingTop();
+        Log.d("textview info","textview total padding top: "+String.valueOf(intTextViewTotalPaddingTop));
+        Integer intTextViewTotalPaddingBottom = holder.myTextView.getTotalPaddingBottom();
+        Log.d("textview info","textview total padding bottom: "+String.valueOf(intTextViewTotalPaddingBottom));
 
     }
 

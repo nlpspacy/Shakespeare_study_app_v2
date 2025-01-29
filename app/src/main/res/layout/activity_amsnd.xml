@@ -137,73 +137,57 @@
 
 
     <!--Show play script-->
+    <!--android:background="@drawable/textview_border"-->
 
-    <LinearLayout
-        android:id="@+id/playScriptScrollLL"
-        android:shape="rectangle"
-        android:background="@drawable/textview_border"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="5"
-        android:layout_marginTop="1sp"
-        android:layout_marginBottom="0sp"
-        android:layout_marginStart="8sp"
-        android:layout_marginEnd="8sp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/navigationBar"
-        app:layout_constraintBottom_toTopOf="@+id/mainLinearLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" >
-
-        <ScrollView
-            android:id="@+id/SCROLLER_ID"
+        <LinearLayout
+            android:id="@+id/playScriptScrollLL"
+            android:shape="rectangle"
+            android:background="@android:color/transparent"
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
             android:layout_marginTop="1sp"
             android:layout_marginBottom="0sp"
             android:layout_marginStart="8sp"
             android:layout_marginEnd="8sp"
-            android:fadeScrollbars="false"
-            android:fillViewport="true"
-            android:scrollbarSize="10dp"
-            android:scrollbars="vertical"
-            android:descendantFocusability="blocksDescendants"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/navigationBar"
+            app:layout_constraintBottom_toTopOf="@+id/mainLinearLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" >
+
+            <!--android:background="@android:color/transparent"-->
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvScript"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="0sp"
-                android:layout_marginBottom="1sp"
-                android:textIsSelectable="true"
-                />
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:includeFontPadding="false"
+                android:background="@null"
+                android:textIsSelectable="true" />
 
-        </ScrollView>
+        </LinearLayout>
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/mainLinearLayout"
+            android:shape="rectangle"
+            android:background="@drawable/textview_border"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:layout_marginTop="1sp"
+            android:layout_marginBottom="0sp"
+            android:layout_marginStart="8sp"
+            android:layout_marginEnd="8sp"
+            android:orientation="vertical"
+            android:weightSum="5"
+            app:layout_constraintTop_toBottomOf="@+id/playScriptScrollLL"
+            app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" >
 
-    <LinearLayout
-        android:id="@+id/mainLinearLayout"
-        android:shape="rectangle"
-        android:background="@drawable/textview_border"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="6"
-        android:layout_marginTop="1sp"
-        android:layout_marginBottom="0sp"
-        android:layout_marginStart="8sp"
-        android:layout_marginEnd="8sp"
-        android:orientation="vertical"
-        android:weightSum="5"
-        app:layout_constraintTop_toBottomOf="@+id/playScriptScrollLL"
-        app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" >
-
-    <!--Show transcript with ChatGPT-->
+        <!--Show transcript with ChatGPT-->
 
         <ScrollView
             android:id="@+id/SCROLLER_ID2"

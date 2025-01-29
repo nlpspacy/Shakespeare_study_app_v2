@@ -529,7 +529,7 @@ public class AMSND extends AppCompatActivity {
             standardPromptsSpinner.setVisibility(View.VISIBLE);
             freeTextPrompt.setVisibility(View.GONE);
             Log.d("prompts show standard or allow free text","show standard prompts spinner");
-            btnShowHide.setText("Free text");
+            btnShowHide.setText("Free");
         }
         else {
             standardPromptsSpinner.setVisibility(View.GONE);

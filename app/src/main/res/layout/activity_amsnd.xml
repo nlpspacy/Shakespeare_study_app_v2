@@ -158,6 +158,23 @@
 
             <!--android:background="@android:color/transparent"-->
 
+            <ScrollView
+                android:id="@+id/SCROLLER_ID"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginTop="0sp"
+                android:layout_marginBottom="0sp"
+                android:layout_marginStart="0sp"
+                android:layout_marginEnd="8sp"
+                android:fadeScrollbars="false"
+                android:fillViewport="true"
+                android:scrollbarSize="10dp"
+                android:scrollbars="vertical"
+                android:descendantFocusability="blocksDescendants"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvScript"
                 android:layout_width="match_parent"
@@ -166,6 +183,8 @@
                 android:includeFontPadding="false"
                 android:background="@null"
                 android:textIsSelectable="true" />
+
+            </ScrollView>
 
         </LinearLayout>
 

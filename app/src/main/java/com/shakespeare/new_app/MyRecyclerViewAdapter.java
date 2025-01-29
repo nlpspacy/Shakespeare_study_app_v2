@@ -71,7 +71,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         holder.myTextView.setBackgroundColor(Color.TRANSPARENT);
         holder.myTextView.setBackground(null);
-        holder.myTextView.setPadding(0,0,0,-25);
+        holder.myTextView.setPadding(0,0,0,0);
 //        holder.myTextView.setAlpha(1);
 
 

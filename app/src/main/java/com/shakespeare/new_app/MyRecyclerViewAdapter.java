@@ -69,32 +69,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         }
 
-        holder.myTextView.setBackgroundColor(Color.TRANSPARENT);
-        holder.myTextView.setBackground(null);
-        holder.myTextView.setPadding(0,0,0,0);
-//        holder.myTextView.setAlpha(1);
-
-
-        // check padding in vertical direction
-        Integer intPaddingTop = holder.myTextView.getPaddingTop();
-        Log.d("padding top","padding top: "+String.valueOf(intPaddingTop));
-        Integer intPaddingBottom = holder.myTextView.getPaddingBottom();
-        Log.d("padding bottom","padding bottom: "+String.valueOf(intPaddingBottom));
-        Integer intTextViewHeight = holder.myTextView.getHeight();
-        Log.d("textview info","textview height: "+String.valueOf(intTextViewHeight));
-        Integer intTextViewMinHeight = holder.myTextView.getMinHeight();
-        Log.d("textview info","textview min height: "+String.valueOf(intTextViewMinHeight));
-        Integer intTextViewMinimumHeight = holder.myTextView.getMinimumHeight();
-        Log.d("textview info","textview minimum height: "+String.valueOf(intTextViewMinimumHeight));
-        Integer intTextViewMeasuredHeight = holder.myTextView.getMeasuredHeight();
-        Log.d("textview info","textview measured height: "+String.valueOf(intTextViewMeasuredHeight));
-        Integer intTextViewMinLines = holder.myTextView.getMinLines();
-        Log.d("textview info","textview min lines: "+String.valueOf(intTextViewMinLines));
-        Integer intTextViewTotalPaddingTop = holder.myTextView.getTotalPaddingTop();
-        Log.d("textview info","textview total padding top: "+String.valueOf(intTextViewTotalPaddingTop));
-        Integer intTextViewTotalPaddingBottom = holder.myTextView.getTotalPaddingBottom();
-        Log.d("textview info","textview total padding bottom: "+String.valueOf(intTextViewTotalPaddingBottom));
-
     }
 
     // total number of rows

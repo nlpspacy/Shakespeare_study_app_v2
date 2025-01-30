@@ -83,6 +83,17 @@ public class SettingsHomeActivity extends AppCompatActivity {
         Log.d("fontLog","font size set to 20sp");
     }
 
+    public void showLineNumbers(View v){
+        // set font size to large 20sp
+        com.shakespeare.new_app.GlobalClass.intLineNumbers = 1;
+        Log.d("line numbers preference","show line numbers");
+    }
+
+    public void hideLineNumbers(View v){
+        // set font size to large 20sp
+        com.shakespeare.new_app.GlobalClass.intLineNumbers = 0;
+        Log.d("line numbers preference","hide line numbers");
+    }
 }
 
 

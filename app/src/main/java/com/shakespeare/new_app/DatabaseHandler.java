@@ -142,7 +142,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         if(intLineNumber==0){
                             scriptLinesList.add(strScriptText );
                         } else {
-                            scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
+                            if(com.shakespeare.new_app.GlobalClass.intShowLineNumbers==1){
+                                scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
+                            } else {
+                                scriptLinesList.add(strScriptText);
+                            }
                         }
 
                     }
@@ -156,7 +160,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         if(intLineNumber==0){
                             scriptLinesList.add(strScriptText );
                         } else {
-                            scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText );
+                            if(com.shakespeare.new_app.GlobalClass.intShowLineNumbers==1){
+                                scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
+                            } else {
+                                scriptLinesList.add(strScriptText);
+                            }
                         }
 
                     }

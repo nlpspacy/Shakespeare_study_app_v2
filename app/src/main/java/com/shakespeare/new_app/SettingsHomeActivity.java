@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.RadioButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,20 @@ public class SettingsHomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        if(com.shakespeare.new_app.GlobalClass.intShowLineNumbers==1){
+            RadioButton rbShowLineNumbers = (RadioButton) findViewById(R.id.rbtnShowLineNumbers); // initiate a radio button
+            rbShowLineNumbers.setChecked(true); // check current state of a radio button (true or false).
+
+        } else {
+            RadioButton rbShowLineNumbers = (RadioButton) findViewById(R.id.rbtnShowLineNumbers); // initiate a radio button
+            rbShowLineNumbers.setChecked(false); // check current state of a radio button (true or false).
+
+            RadioButton rbHideLineNumbers = (RadioButton) findViewById(R.id.rbtnHideLineNumbers); // initiate a radio button
+            rbHideLineNumbers.setChecked(true); // check current state of a radio button (true or false).
+
+        }
+
 
 //        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);
 //        tv_Title.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
@@ -85,13 +100,13 @@ public class SettingsHomeActivity extends AppCompatActivity {
 
     public void showLineNumbers(View v){
         // set font size to large 20sp
-        com.shakespeare.new_app.GlobalClass.intLineNumbers = 1;
+        com.shakespeare.new_app.GlobalClass.intShowLineNumbers = 1;
         Log.d("line numbers preference","show line numbers");
     }
 
     public void hideLineNumbers(View v){
         // set font size to large 20sp
-        com.shakespeare.new_app.GlobalClass.intLineNumbers = 0;
+        com.shakespeare.new_app.GlobalClass.intShowLineNumbers = 0;
         Log.d("line numbers preference","hide line numbers");
     }
 }

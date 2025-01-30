@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -99,12 +100,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnfontlarge" />
 
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
         <RadioButton
             android:id="@+id/rbtnShowLineNumbers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="100sp"
             android:layout_marginTop="10sp"
+            android:onClick="showLineNumbers"
             android:text="Show"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/txtShowHideLineNumbers" />
@@ -115,10 +122,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="100sp"
             android:layout_marginTop="10sp"
+            android:onClick="hideLineNumbers"
             android:text="Hide"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rbtnShowLineNumbers" />
 
+        </RadioGroup>
 
     </LinearLayout>
 

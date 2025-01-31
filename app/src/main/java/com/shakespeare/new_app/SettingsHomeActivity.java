@@ -54,6 +54,14 @@ public class SettingsHomeActivity extends AppCompatActivity {
         Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
         startActivity(i);
     }
+    public void goBack(View v) {
+        // launch a new activity
+
+        getOnBackPressedDispatcher().onBackPressed();
+
+//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
+//        startActivity(i);
+    }
 
     public void launchUserInfoScreen(View v) {
         // launch a new activity

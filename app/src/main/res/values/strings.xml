@@ -27,6 +27,7 @@
     <string name="font_settings_btn_label_small">Text small</string>
     <string name="font_settings_btn_label_medium">Text medium</string>
     <string name="font_settings_btn_label_large">Text large</string>
+    <string name="nav_btn_label_back">Back</string>
     <string name="nav_btn_label_return_to_home">Home</string>
     <string name="txt_Message_Send_Box_Hint">Write here</string>
     <string name="standard_queries">Select from standard questions</string>

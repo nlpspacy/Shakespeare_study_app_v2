@@ -138,6 +138,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20sp"
         android:orientation="horizontal"
+        android:gravity="center_horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -147,8 +148,8 @@
             android:layout_width="80sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20sp"
-            android:onClick="returnToMain"
-            android:text="@string/nav_btn_label_return_to_home"
+            android:onClick="goBack"
+            android:text="@string/nav_btn_label_back"
             android:textAllCaps="false"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="parent" />

@@ -206,6 +206,21 @@ public class AMSND extends AppCompatActivity {
         Button btnShowHide = (Button) findViewById(R.id.btnShowHide);
         btnShowHide.setText("Help");
 
+        // using https://stackoverflow.com/questions/24471109/recyclerview-onclick
+        RecyclerView recyclerView = findViewById(R.id.rvScript);
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // do whatever
+                        Log.d("check","onItemClick item clicked in AMNSD.java class: position " + String.valueOf(position));
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                        Log.d("check","onLongItemClick item clicked in AMNSD.java class: position " + String.valueOf(position));
+                    }
+                })
+        );
 
     }
 

@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 //            GlobalClass.selectedPlayFilename = "AMSND.txt";
         } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Romeo and Juliet") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Romeo and Juliet (1594)")) {
             com.shakespeare.new_app.GlobalClass.selectedPlay = "Romeo and Juliet";
-            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "RANDJ";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "RomeoAndJuliet";
 //            GlobalClass.selectedPlayFilename = "RANDJ.txt";
         } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("All\'s Well That Ends Well") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("All\'s Well That Ends Well (1602)")) {
             com.shakespeare.new_app.GlobalClass.selectedPlay = "All\'s Well That Ends Well";

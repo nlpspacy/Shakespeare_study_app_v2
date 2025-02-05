@@ -113,8 +113,8 @@ public class AMSND extends AppCompatActivity {
         };
 
 
-        com.shakespeare.new_app.GlobalClass.selectedActNumber = db.getCurrentActNumber();
-        com.shakespeare.new_app.GlobalClass.selectedSceneNumber = db.getCurrentSceneNumber();
+        GlobalClass.selectedActNumber = db.getCurrentActNumber();
+        GlobalClass.selectedSceneNumber = db.getCurrentSceneNumber();
 
 
         Log.d("progress update","before updateScriptDisplay(v)");
@@ -213,13 +213,17 @@ public class AMSND extends AppCompatActivity {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
 //                        Log.d("script line of text",recyclerView.position);
+                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
+                        String strScriptText = myAdapter.getItem(position);
                         // We would like to get the text of the string which is long-clicked to save in the bookmark.
-                        Log.d("check","onItemClick item clicked in AMNSD.java class: position " + String.valueOf(position));
+                        Log.d("check","onItemClick item clicked in AMNSD.java class: position " + String.valueOf(position) + ", text " + strScriptText);
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
+                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
+                        String strScriptText = myAdapter.getItem(position);
                         // do whatever
-                        Log.d("check","onLongItemClick item clicked in AMNSD.java class: position " + String.valueOf(position));
+                        Log.d("check","onLongItemClick item clicked in AMNSD.java class: position " + String.valueOf(position) + ", text " + strScriptText);
                     }
                 })
         );
@@ -462,6 +466,12 @@ public class AMSND extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void openBookmarks(View v) {
+        // launch a new activity
+
+        Intent i = new Intent(this, Bookmarks.class);
+        startActivity(i);
+    }
     public void launchSettings(View v) {
         // launch a new activity
 

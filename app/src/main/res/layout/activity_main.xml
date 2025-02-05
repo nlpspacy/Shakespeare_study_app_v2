@@ -130,6 +130,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <ImageButton
+            android:id="@+id/btnOpenBookmarks"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_margin="4sp"
+            android:layout_marginStart="80sp"
+            android:background="@drawable/bookmark_icon_white_on_black"
+            android:contentDescription="Bookmarks"
+            android:onClick="openBookmarks"
+            android:scaleX="0.35"
+            android:scaleY="0.45" />
+
         <Button
             android:id="@+id/btnOpenThePlay"
             android:layout_width="0dp"

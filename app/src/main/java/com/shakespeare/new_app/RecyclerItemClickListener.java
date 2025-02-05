@@ -7,6 +7,7 @@ import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -51,10 +52,26 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 };
 
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                Integer position = recyclerView.getChildAdapterPosition(child);
+                MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
+                String strScriptText = myAdapter.getItem(position);
+                Integer intContentLength = strScriptText.length();
+
+                if(strScriptText.substring(intContentLength-1, intContentLength).equals("+")){
+                    // If it is a character marker as indicated by the plus sign (+) at the end of the character name,
+                    // then remove the plus (+) sign at the end of the character name.
+                    strScriptText = strScriptText.substring(0, intContentLength-1);
+                }
+
+                // replace quote character with double version of the same kind of quote character
+                // so the string can be inserted into a SQL statement without errors
+                strScriptText = strScriptText.replace("\'", "\'\'");
+                strScriptText = strScriptText.replace("\"","\"\"");
+
                 if (child != null && mListener != null) {
                     mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
                     Log.d("click check","onLongPress item clicked in RecyclerItemClickListener.java class: getX " + String.valueOf(e.getX()) + " getY " + String.valueOf(e.getY()));
-                    db.addBookmark(recyclerView.getChildAdapterPosition(child));
+                    db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);
                 }
             }
         });

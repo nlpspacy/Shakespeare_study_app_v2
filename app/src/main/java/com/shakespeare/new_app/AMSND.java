@@ -212,6 +212,8 @@ public class AMSND extends AppCompatActivity {
                 new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
+//                        Log.d("script line of text",recyclerView.position);
+                        // We would like to get the text of the string which is long-clicked to save in the bookmark.
                         Log.d("check","onItemClick item clicked in AMNSD.java class: position " + String.valueOf(position));
                     }
 
@@ -298,14 +300,11 @@ public class AMSND extends AppCompatActivity {
         // *** start: loop through ArrayList scriptLinesList
         Integer i = 0;
         for(String string1: scriptLinesList)
-
         {
             i++;
             System.out.println(i);
             System.out.println("list item is " + string1);
-
         }
-
         // *** end: loop through ArrayList scriptLinesList
 
         adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
@@ -349,8 +348,6 @@ public class AMSND extends AppCompatActivity {
 
     }
 
-
-
     public void updateStandardPromptsList(View v){
         // standard prompts spinner - if we are in the dramatis personae section
         // then we exclude act-specific and scene-specific standard questions
@@ -367,7 +364,6 @@ public class AMSND extends AppCompatActivity {
                 android.R.layout.simple_spinner_item, standard_prompts);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         standardpromptsspinner.setAdapter(dataAdapter);
-
 
     }
 

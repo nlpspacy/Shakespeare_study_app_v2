@@ -265,11 +265,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 
     // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
-    public int addBookmark() {
+    public int addBookmark(Integer intRvPosition) {
 
         SQLiteDatabase db;
         String insertQuery = "INSERT INTO bookmark (username, date_time_added, play_code, play_full_name, act_nr, scene_nr, play_line_nr, play_scene_nr, annotation, active_0_or_1) ";
-        insertQuery += "VALUES ('blank', 'VALUES " + TABLE_PLAY_POSITION + " SET current_act_nr = " + GlobalClass.selectedActNumber + ", current_scene_nr = " + GlobalClass.selectedSceneNumber + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
+        insertQuery += "VALUES ('blank', '1','" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "','" + com.shakespeare.new_app.GlobalClass.selectedPlay + "', " + GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", 1, " + intRvPosition + ", 'blank note', 1);";
 
         Log.d("insert query",insertQuery);
 

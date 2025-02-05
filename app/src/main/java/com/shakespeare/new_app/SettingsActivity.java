@@ -559,6 +559,7 @@ public class SettingsActivity extends AppCompatActivity {
             i = new Intent(this, SettingsHomeActivity.class);
         }
 
+        startActivity(i);
 
     }
 

@@ -144,6 +144,16 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
+            android:id="@+id/btnHome"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
+            android:onClick="returnToMain"
+            android:text="@string/nav_btn_label_return_to_home"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
             android:id="@+id/btnBack"
             android:layout_width="80sp"
             android:layout_height="wrap_content"
@@ -151,7 +161,6 @@
             android:onClick="goBack"
             android:text="@string/nav_btn_label_back"
             android:textAllCaps="false"
-            android:textSize="10sp"
             app:layout_constraintStart_toStartOf="parent" />
 
 

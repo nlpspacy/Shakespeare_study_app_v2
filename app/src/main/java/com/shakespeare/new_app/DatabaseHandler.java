@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
@@ -278,6 +279,64 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
         return 1;
+
+    }
+
+    // Get script
+    public ArrayList getBookmarks() {
+
+        //ArrayList<String> bookmarksList = new ArrayList<>();
+        // we need a 2-D array because each bookmark is itself a list, so a list of lists
+        ArrayList<List<String>> bookmarkEntriesList = new ArrayList<List<String>>();
+        // this is the 1-D array which is the list of items within each bookmark in the "outer" list
+        ArrayList<String> bookmarkEntries = new ArrayList<>();
+
+        SQLiteDatabase db;
+
+        // this uses the bookmark table
+        String selectQuery = "SELECT username, date_time_added, play_code, play_full_name, act_nr, scene_nr, ";
+        selectQuery += "play_line_nr, scene_line_nr, position_in_view, script_text, annotation, active_0_or_1 ";
+        selectQuery += "FROM bookmark;";
+        Log.d("sql",selectQuery);
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        String strScriptText = "";
+        String strAnnotation = "";
+
+        if (cursor.moveToFirst()) {
+
+            do {
+
+//                strScriptText = cursor.getString(9);
+//                strAnnotation = cursor.getString(10);
+
+//                bookmarksList.add(strScriptText);
+//                bookmarksList.add(strAnnotation);
+
+//                bookmarkEntriesList.add(new ArrayList<String>());
+
+                //ArrayList<String> bookmarksList = new ArrayList<>();
+                bookmarkEntries.add(cursor.getString(9));
+                bookmarkEntries.add(cursor.getString(10));
+
+                Log.d("retrieving bookmark entries","retrieved: " + cursor.getString(9));
+                Log.d("retrieving bookmark entries","retrieved: " + cursor.getString(10));
+
+                bookmarkEntriesList.add(bookmarkEntries);
+
+
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+//        return bookmarksList
+        Log.d("list info", "list size: " + bookmarkEntriesList.size());
+        return bookmarkEntriesList;
 
     }
 }

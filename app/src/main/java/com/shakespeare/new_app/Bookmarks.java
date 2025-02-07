@@ -104,29 +104,45 @@ public class Bookmarks extends AppCompatActivity {
         String strBmkAnnotation;
         // *** start: loop through ArrayList scriptLinesList
         Integer i = 0;
-        for(List<String> bookmarkEntries: bookmarkEntriesList) // need to fix, i.e. bookmarkEntriesList is a list of lists, not just a list
-        {
-            System.out.println(i);
+        String strBmk = "";
 
-            Log.d("bookmarkEntries","bookmarkEntries: "+bookmarkEntries.get(0));
-            Log.d("bookmarkEntries","bookmarkEntries: "+bookmarkEntries.get(1));
+        // There is inefficiency here because we have an n^2 list of lists
+        // rather than just a list of bookmark entries, where each bookmark entry is a list of the bookmark fields.
+        List<String> bookmarkEntries = bookmarkEntriesList.get(0);
 
-            Log.d("bookmarkEntries","bookmarkEntriesList: "+bookmarkEntriesList.get(i).get(0));
-            Log.d("bookmarkEntries","bookmarkEntriesList: "+bookmarkEntriesList.get(i).get(1));
+            for (String bookmarkEntry : bookmarkEntries) // need to fix, i.e. bookmarkEntriesList is a list of lists, not just a list
+            {
+                System.out.println(i);
 
-            strBmkScriptText = bookmarkEntriesList.get(i).get(0).toString();
-            strBmkAnnotation = bookmarkEntriesList.get(i).get(1).toString();
-            System.out.println("list item is " + strBmkScriptText + " " + strBmkAnnotation);
+                Log.d("bookmarkEntries", "bookmarkEntry: " + bookmarkEntry);
 
-            bookmarksList.add(strBmkScriptText + " " + strBmkAnnotation);
+//            Log.d("bookmarkEntries","bookmarkEntriesList: "+bookmarkEntriesList.get(i).get(0));
+//            Log.d("bookmarkEntries","bookmarkEntriesList: "+bookmarkEntriesList.get(i).get(1));
+
+//            Log.d("bookmarkEntries","bookmarkEntriesList: "+bookmarkEntriesList.toString());
+
+                Log.d("bookmarkEntries", "bookmarkEntriesList: " + bookmarkEntriesList.get(0).get(i).toString());
 
             i++;
+            if(i==1){
+                strBmk = "script_text: " + bookmarkEntry;
+                System.out.println("list item is " + strBmk);
+            }
+            if(i==2){
+                strBmk += "\nannotation: " + bookmarkEntry;
+                bookmarksList.add(strBmk);
+                System.out.println("list item is " + strBmk);
+                i=0;
+                strBmk = "";
+            }
         }
         // *** end: loop through ArrayList scriptLinesList
 
+        Log.d("bookmarksList","final bookmarksList: " + bookmarksList.toString());
+
         adapter = new MyRecyclerViewAdapter(rvBookmarks.getContext(), bookmarksList);
         rvBookmarks.setAdapter(adapter);
-        int listLength = bookmarkEntriesList.size();
+        int listLength = bookmarksList.size();
 //        rvScript.smoothScrollToPosition(listLength);
         rvBookmarks.smoothScrollToPosition(0);
         // *** end recycler view logic ***

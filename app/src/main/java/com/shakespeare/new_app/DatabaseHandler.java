@@ -325,6 +325,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 Log.d("retrieving bookmark entries","retrieved: " + cursor.getString(9));
                 Log.d("retrieving bookmark entries","retrieved: " + cursor.getString(10));
 
+                // There is inefficiency here because we have an n^2 list of lists
+                // rather than just a list of bookmark entries, where each bookmark entry is a list of the bookmark fields.
                 bookmarkEntriesList.add(bookmarkEntries);
 
 

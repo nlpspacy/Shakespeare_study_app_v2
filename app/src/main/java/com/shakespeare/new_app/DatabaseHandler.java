@@ -270,8 +270,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
         SQLiteDatabase db;
         String insertQuery = "INSERT INTO bookmark (username, date_time_added, play_code, play_full_name, act_nr, scene_nr, play_line_nr, scene_line_nr, position_in_view, script_text, annotation, active_0_or_1) ";
-        insertQuery += "VALUES ('blank', '1','" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "','" + com.shakespeare.new_app.GlobalClass.selectedPlay + "', " + GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", -1, -1, " + intRvPosition + ", '" + strScriptText + "', 'blank note', 1);";
-
+        insertQuery += "VALUES ('blank', strftime('%Y-%m-%d %H:%M:%S', datetime('now')), '" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "','" + com.shakespeare.new_app.GlobalClass.selectedPlay + "', " + GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", -1, -1, " + intRvPosition + ", '" + strScriptText + "', 'blank note', 1);";
         Log.d("insert query",insertQuery);
 
         db = this.getWritableDatabase();
@@ -289,46 +288,36 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         // we need a 2-D array because each bookmark is itself a list, so a list of lists
         ArrayList<List<String>> bookmarkEntriesList = new ArrayList<List<String>>();
         // this is the 1-D array which is the list of items within each bookmark in the "outer" list
-        ArrayList<String> bookmarkEntries = new ArrayList<>();
+//        ArrayList<String> bookmarkEntries = new ArrayList<>();
 
         SQLiteDatabase db;
 
         // this uses the bookmark table
-        String selectQuery = "SELECT username, date_time_added, play_code, play_full_name, act_nr, scene_nr, ";
+        String selectQuery = "SELECT DISTINCT username, play_code, play_full_name, act_nr, scene_nr, ";
         selectQuery += "play_line_nr, scene_line_nr, position_in_view, script_text, annotation, active_0_or_1 ";
-        selectQuery += "FROM bookmark;";
+        selectQuery += "FROM bookmark WHERE active_0_or_1 = 1 ";
+        selectQuery += "ORDER BY play_code, date_time_added DESC;";
         Log.d("sql",selectQuery);
 
         db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         cursor.moveToFirst();
-        String strScriptText = "";
-        String strAnnotation = "";
 
         if (cursor.moveToFirst()) {
 
             do {
 
-//                strScriptText = cursor.getString(9);
-//                strAnnotation = cursor.getString(10);
+                ArrayList<String> bookmarkEntries = new ArrayList<>();
 
-//                bookmarksList.add(strScriptText);
-//                bookmarksList.add(strAnnotation);
+                bookmarkEntries.add(cursor.getString(1)); // play_code
+                bookmarkEntries.add(cursor.getString(2)); // play_full_name
+                bookmarkEntries.add(cursor.getString(3)); // act_nr
+                bookmarkEntries.add(cursor.getString(4)); // scene_nr
+                bookmarkEntries.add(cursor.getString(8)); // script_text
+                bookmarkEntries.add("Note: " + cursor.getString(9)); // annotation
 
-//                bookmarkEntriesList.add(new ArrayList<String>());
-
-                //ArrayList<String> bookmarksList = new ArrayList<>();
-                bookmarkEntries.add(cursor.getString(9));
-                bookmarkEntries.add(cursor.getString(10));
-
-                Log.d("retrieving bookmark entries","retrieved: " + cursor.getString(9));
-                Log.d("retrieving bookmark entries","retrieved: " + cursor.getString(10));
-
-                // There is inefficiency here because we have an n^2 list of lists
-                // rather than just a list of bookmark entries, where each bookmark entry is a list of the bookmark fields.
                 bookmarkEntriesList.add(bookmarkEntries);
-
 
             } while (cursor.moveToNext());
         }
@@ -337,7 +326,6 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
 
 //        return bookmarksList
-        Log.d("list info", "list size: " + bookmarkEntriesList.size());
         return bookmarkEntriesList;
 
     }

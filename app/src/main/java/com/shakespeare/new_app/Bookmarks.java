@@ -94,51 +94,49 @@ public class Bookmarks extends AppCompatActivity {
 
         // but, instead, we want to add as an array or list
         bookmarkEntriesList = db.getBookmarks();
-        Log.d("script", "scriptLinesList: " + bookmarkEntriesList.size());
+//        Log.d("bookmarkEntriesList", "bookmarkEntriesList: " + bookmarkEntriesList.toString());
+//        Log.d("script", "bookmarkEntriesList: " + bookmarkEntriesList.size());
 
         RecyclerView rvBookmarks = findViewById(R.id.rvBookmarks);
 
         rvBookmarks.setLayoutManager(new LinearLayoutManager(rvBookmarks.getContext()));
 
-        String strBmkScriptText;
-        String strBmkAnnotation;
-        // *** start: loop through ArrayList scriptLinesList
-        Integer i = 0;
+        // *** start: loop through ArrayList bookmarks
         String strBmk = "";
+        Integer actNr = 0;
+        Integer scNr = 0;
 
-        // There is inefficiency here because we have an n^2 list of lists
-        // rather than just a list of bookmark entries, where each bookmark entry is a list of the bookmark fields.
-        List<String> bookmarkEntries = bookmarkEntriesList.get(0);
+        for(List<String> bookmarkEntry : bookmarkEntriesList) {
 
-            for (String bookmarkEntry : bookmarkEntries) // need to fix, i.e. bookmarkEntriesList is a list of lists, not just a list
-            {
-                System.out.println(i);
+            actNr = Integer.valueOf(bookmarkEntry.get(2));
+            scNr = Integer.valueOf(bookmarkEntry.get(3));
 
-                Log.d("bookmarkEntries", "bookmarkEntry: " + bookmarkEntry);
-
-//            Log.d("bookmarkEntries","bookmarkEntriesList: "+bookmarkEntriesList.get(i).get(0));
-//            Log.d("bookmarkEntries","bookmarkEntriesList: "+bookmarkEntriesList.get(i).get(1));
-
-//            Log.d("bookmarkEntries","bookmarkEntriesList: "+bookmarkEntriesList.toString());
-
-                Log.d("bookmarkEntries", "bookmarkEntriesList: " + bookmarkEntriesList.get(0).get(i).toString());
-
-            i++;
-            if(i==1){
-                strBmk = "script_text: " + bookmarkEntry;
-                System.out.println("list item is " + strBmk);
+            strBmk = bookmarkEntry.get(1).toString();
+            strBmk += "\n" + bookmarkEntry.get(5).toString();
+            if (actNr == 0 && scNr == 0) {
+                strBmk += "\nCharacters in play";
+            } else {
+                strBmk += "\nAct " + actNr + " Scene " + scNr;
             }
-            if(i==2){
-                strBmk += "\nannotation: " + bookmarkEntry;
-                bookmarksList.add(strBmk);
-                System.out.println("list item is " + strBmk);
-                i=0;
-                strBmk = "";
-            }
+            strBmk += "\n" + bookmarkEntry.get(4).toString();
+
+//            for(String bkmkItem : bookmarkEntry) {
+//
+//                // access "row" for inside arraylist or "intValue" for integer value.
+//                strBmk += bkmkItem + " ";
+//                System.out.println("list item is " + bkmkItem);
+//                System.out.println(i);
+//                i++;
+//
+//            }
+
+            bookmarksList.add(strBmk);
+
         }
-        // *** end: loop through ArrayList scriptLinesList
 
-        Log.d("bookmarksList","final bookmarksList: " + bookmarksList.toString());
+        // *** end: loop through ArrayList bookmarks
+
+//        Log.d("bookmarksList","final bookmarksList: " + bookmarksList.toString());
 
         adapter = new MyRecyclerViewAdapter(rvBookmarks.getContext(), bookmarksList);
         rvBookmarks.setAdapter(adapter);

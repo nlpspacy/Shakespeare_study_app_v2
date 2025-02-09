@@ -106,6 +106,14 @@ public class Bookmarks extends AppCompatActivity {
         Integer actNr = 0;
         Integer scNr = 0;
 
+        // improvements to make:
+        // 1. group by play so that the name of the play appears once as a heading,
+        // and the bookmarks relating to that play appear under it
+        // 2. allow the user to remove bookmarks by right-clicking which will set to inactive
+        // so the bookmark no longer appears
+        // 3. provide another view for inactive bookmarks and allow to make them active again
+        // or delete completely.
+
         for(List<String> bookmarkEntry : bookmarkEntriesList) {
 
             actNr = Integer.valueOf(bookmarkEntry.get(2));

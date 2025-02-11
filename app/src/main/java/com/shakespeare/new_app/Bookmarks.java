@@ -103,30 +103,48 @@ public class Bookmarks extends AppCompatActivity {
 
         // *** start: loop through ArrayList bookmarks
         String strBmk = "";
+        String strPlayFullName = "";
+        String strFirstPlayFullName = "";
         Integer actNr = 0;
         Integer scNr = 0;
 
         // improvements to make:
-        // 1. group by play so that the name of the play appears once as a heading,
+        // 1. (Done) group by play so that the name of the play appears once as a heading,
         // and the bookmarks relating to that play appear under it
-        // 2. allow the user to remove bookmarks by right-clicking which will set to inactive
+        // 2. allow the user to remove bookmarks by long-clicking which will set to inactive
         // so the bookmark no longer appears
-        // 3. provide another view for inactive bookmarks and allow to make them active again
-        // or delete completely.
+        // 3. (Optional for first release) provide another view for inactive bookmarks and
+        // allow to make them active again or delete completely.
 
         for(List<String> bookmarkEntry : bookmarkEntriesList) {
+
+            Log.d("bookmarkEntry", String.valueOf(bookmarkEntry));
 
             actNr = Integer.valueOf(bookmarkEntry.get(2));
             scNr = Integer.valueOf(bookmarkEntry.get(3));
 
-            strBmk = bookmarkEntry.get(1).toString();
+            if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(1).toString()))
+            {
+                if (!strBmk.equals(("")))
+                {
+                    bookmarksList.add(strBmk);
+                }
+                strPlayFullName = bookmarkEntry.get(1).toString(); // play full name
+                strBmk = "** " + strPlayFullName + " **\n";
+
+                if (strFirstPlayFullName.equals(""))
+                {
+                    strFirstPlayFullName = strPlayFullName;
+                }
+            }
+
             strBmk += "\n" + bookmarkEntry.get(5).toString();
             if (actNr == 0 && scNr == 0) {
                 strBmk += "\nCharacters in play";
             } else {
                 strBmk += "\nAct " + actNr + " Scene " + scNr;
             }
-            strBmk += "\n" + bookmarkEntry.get(4).toString();
+            strBmk += "\n" + bookmarkEntry.get(4).toString() + "\n";
 
 //            for(String bkmkItem : bookmarkEntry) {
 //
@@ -138,10 +156,18 @@ public class Bookmarks extends AppCompatActivity {
 //
 //            }
 
-            bookmarksList.add(strBmk);
+            Log.d("bookmark",strBmk);
 
         }
 
+        // Add the bookmark for the final play in the list of bookmarks.
+        // We do not want repeat a play's bookmarks if there is only one play because
+        // the last will be the same as the first.
+//        if (!strBmk.equals(("")) && !strPlayFullName.equals(strFirstPlayFullName))
+        if (!strBmk.equals(("")))
+        {
+            bookmarksList.add(strBmk);
+        }
         // *** end: loop through ArrayList bookmarks
 
 //        Log.d("bookmarksList","final bookmarksList: " + bookmarksList.toString());

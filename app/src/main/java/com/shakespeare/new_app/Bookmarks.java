@@ -110,9 +110,12 @@ public class Bookmarks extends AppCompatActivity {
 
         // improvements to make:
         // 1. (Done) group by play so that the name of the play appears once as a heading,
-        // and the bookmarks relating to that play appear under it
+        // and the bookmarks relating to that play appear under it.
+
         // 2. allow the user to remove bookmarks by long-clicking which will set to inactive
-        // so the bookmark no longer appears
+        // so the bookmark no longer appears. Then open Yes/No dialog to confirm removal. See
+        // https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
+
         // 3. (Optional for first release) provide another view for inactive bookmarks and
         // allow to make them active again or delete completely.
 
@@ -174,10 +177,35 @@ public class Bookmarks extends AppCompatActivity {
 
         adapter = new MyRecyclerViewAdapter(rvBookmarks.getContext(), bookmarksList);
         rvBookmarks.setAdapter(adapter);
+
         int listLength = bookmarksList.size();
 //        rvScript.smoothScrollToPosition(listLength);
         rvBookmarks.smoothScrollToPosition(0);
         // *** end recycler view logic ***
+
+        rvBookmarks.addOnItemTouchListener(
+                // check for clicks
+
+                new RecyclerItemClickListener(this, rvBookmarks ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // do whatever
+//                        Log.d("script line of text",recyclerView.position);
+                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
+                        String strBookmarks = myAdapter.getItem(position);
+                        // We would like to get the text of the string which is long-clicked to save in the bookmark.
+                        Log.d("check","onItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
+                        String strBookmarks = myAdapter.getItem(position);
+                        // do whatever
+                        Log.d("check","onLongItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
+                    }
+                })
+
+        );
+
     }
 
     public void goBack(View v) {

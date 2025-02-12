@@ -116,6 +116,11 @@ public class Bookmarks extends AppCompatActivity {
         // so the bookmark no longer appears. Then open Yes/No dialog to confirm removal. See
         // https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
 
+        // to achieve 2.:
+        // we need each note to be a separate item to add to the bookmarksList not the entire
+        // play with *all* of its bookmarks being a single item because then we cannot remove
+        // individual bookmarks but only the entire play with all the bookmarks in the play.
+
         // 3. (Optional for first release) provide another view for inactive bookmarks and
         // allow to make them active again or delete completely.
 

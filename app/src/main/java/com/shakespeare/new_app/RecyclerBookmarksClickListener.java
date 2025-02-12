@@ -11,9 +11,9 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class RecyclerBookmarksClickListener {
+public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchListener {
 
-    private RecyclerItemClickListener.OnItemClickListener mListener;
+    private OnItemClickListener m2Listener;
 
     public interface OnItemClickListener {
         public void onItemClick(View view, int position);
@@ -23,14 +23,14 @@ public class RecyclerBookmarksClickListener {
 
     GestureDetector mGestureDetector;
 
-    public RecyclerItemClickListener(Context context, final RecyclerView recyclerView, RecyclerItemClickListener.OnItemClickListener listener) {
+    public RecyclerBookmarksClickListener(Context context, final RecyclerView recyclerView, OnItemClickListener listener) {
 
-        mListener = listener;
+        m2Listener = listener;
         mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
 
-                Log.d("click check","onSingleTapUp item clicked in RecyclerItemClickListener.java class " + String.valueOf(e));
+                Log.d("click check","onSingleTapUp item clicked in RecyclerBookmarksClickListener.java class " + String.valueOf(e));
                 return true;
             }
 
@@ -52,24 +52,26 @@ public class RecyclerBookmarksClickListener {
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 Integer position = recyclerView.getChildAdapterPosition(child);
                 MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
-                String strScriptText = myAdapter.getItem(position);
-                Integer intContentLength = strScriptText.length();
+                String strBookmark = myAdapter.getItem(position);
+                Integer intContentLength = strBookmark.length();
 
-                if(strScriptText.substring(intContentLength-1, intContentLength).equals("+")){
+                if(strBookmark.substring(intContentLength-1, intContentLength).equals("+")){
                     // If it is a character marker as indicated by the plus sign (+) at the end of the character name,
                     // then remove the plus (+) sign at the end of the character name.
-                    strScriptText = strScriptText.substring(0, intContentLength-1);
+                    strBookmark = strBookmark.substring(0, intContentLength-1);
                 }
 
                 // replace quote character with double version of the same kind of quote character
                 // so the string can be inserted into a SQL statement without errors
-                strScriptText = strScriptText.replace("\'", "\'\'");
-                strScriptText = strScriptText.replace("\"","\"\"");
+                strBookmark = strBookmark.replace("\'", "\'\'");
+                strBookmark = strBookmark.replace("\"","\"\"");
 
-                if (child != null && mListener != null) {
-                    mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
-                    Log.d("click check","onLongPress item clicked in RecyclerItemClickListener.java class: getX " + String.valueOf(e.getX()) + " getY " + String.valueOf(e.getY()));
-                    db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);
+                if (child != null && m2Listener != null) {
+                    m2Listener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
+                    Log.d("click check","onLongPress item clicked in RecyclerBookmarksClickListener.java class: position " + String.valueOf(position) + ", getX " + String.valueOf(e.getX()) + " getY " + String.valueOf(e.getY()));
+                    // show Yes/No message to confirm changing bookmark to inactive status
+                    // if user presses Yes, then change bookmark to inactive status
+                    // mark that it will not show up next time bookmarks are opened, or alternatively auto-refresh to remove bookmark
                 }
             }
         });
@@ -77,8 +79,8 @@ public class RecyclerBookmarksClickListener {
 
     @Override public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {
         View childView = view.findChildViewUnder(e.getX(), e.getY());
-        if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-            mListener.onItemClick(childView, view.getChildAdapterPosition(childView));
+        if (childView != null && m2Listener != null && mGestureDetector.onTouchEvent(e)) {
+            m2Listener.onItemClick(childView, view.getChildAdapterPosition(childView));
             return true;
         }
         return false;

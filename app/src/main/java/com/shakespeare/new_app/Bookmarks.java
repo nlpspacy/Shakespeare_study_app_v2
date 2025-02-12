@@ -186,7 +186,8 @@ public class Bookmarks extends AppCompatActivity {
         rvBookmarks.addOnItemTouchListener(
                 // check for clicks
 
-                new RecyclerItemClickListener(this, rvBookmarks ,new RecyclerItemClickListener.OnItemClickListener() {
+                // in progress to hook this up to the new click listener class RecyclerBookmarksClickListener
+                new RecyclerBookmarksClickListener(this, rvBookmarks ,new RecyclerBookmarksClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
 //                        Log.d("script line of text",recyclerView.position);

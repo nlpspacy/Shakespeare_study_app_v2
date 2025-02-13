@@ -152,7 +152,7 @@ public class Bookmarks extends AppCompatActivity {
             } else {
                 strBmk += "\nAct " + actNr + " Scene " + scNr;
             }
-            strBmk += "\n" + bookmarkEntry.get(4).toString() + "\n";
+            strBmk += "\n" + bookmarkEntry.get(4).toString();
 
 //            for(String bkmkItem : bookmarkEntry) {
 //
@@ -166,16 +166,19 @@ public class Bookmarks extends AppCompatActivity {
 
             Log.d("bookmark",strBmk);
 
+            if (!strBmk.equals(("")))
+            {
+                bookmarksList.add(strBmk);
+            }
+
+            strBmk = "";
+
         }
 
         // Add the bookmark for the final play in the list of bookmarks.
         // We do not want repeat a play's bookmarks if there is only one play because
         // the last will be the same as the first.
 //        if (!strBmk.equals(("")) && !strPlayFullName.equals(strFirstPlayFullName))
-        if (!strBmk.equals(("")))
-        {
-            bookmarksList.add(strBmk);
-        }
         // *** end: loop through ArrayList bookmarks
 
 //        Log.d("bookmarksList","final bookmarksList: " + bookmarksList.toString());

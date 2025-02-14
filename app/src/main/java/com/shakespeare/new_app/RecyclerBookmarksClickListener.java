@@ -68,7 +68,8 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
 
                 if (child != null && m2Listener != null) {
                     m2Listener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
-                    Log.d("click check","onLongPress item clicked in RecyclerBookmarksClickListener.java class: position " + String.valueOf(position) + ", getX " + String.valueOf(e.getX()) + " getY " + String.valueOf(e.getY()));
+                    String strBookmarkText = myAdapter.getItem(position);
+                    Log.d("click check","onLongPress item clicked in RecyclerBookmarksClickListener.java class: position " + String.valueOf(position) + " " + strBookmarkText + ", getX " + String.valueOf(e.getX()) + " getY " + String.valueOf(e.getY()));
                     // show Yes/No message to confirm changing bookmark to inactive status
                     // if user presses Yes, then change bookmark to inactive status
                     // mark that it will not show up next time bookmarks are opened, or alternatively auto-refresh to remove bookmark

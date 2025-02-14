@@ -293,7 +293,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db;
 
         // this uses the bookmark table
-        String selectQuery = "SELECT DISTINCT username, play_code, play_full_name, act_nr, scene_nr, ";
+        String selectQuery = "SELECT DISTINCT bookmark_row_id, username, play_code, play_full_name, act_nr, scene_nr, ";
         selectQuery += "play_line_nr, scene_line_nr, position_in_view, script_text, annotation, active_0_or_1 ";
         selectQuery += "FROM bookmark WHERE active_0_or_1 = 1 ";
         selectQuery += "ORDER BY play_code, date_time_added DESC;";
@@ -310,12 +310,13 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 ArrayList<String> bookmarkEntries = new ArrayList<>();
 
-                bookmarkEntries.add(cursor.getString(1)); // play_code
-                bookmarkEntries.add(cursor.getString(2)); // play_full_name
-                bookmarkEntries.add(cursor.getString(3)); // act_nr
-                bookmarkEntries.add(cursor.getString(4)); // scene_nr
-                bookmarkEntries.add(cursor.getString(8)); // script_text
-                bookmarkEntries.add("Note: " + cursor.getString(9)); // annotation
+                bookmarkEntries.add(cursor.getString(0)); // bookmark_row_id
+                bookmarkEntries.add(cursor.getString(2)); // play_code
+                bookmarkEntries.add(cursor.getString(3)); // play_full_name
+                bookmarkEntries.add(cursor.getString(4)); // act_nr
+                bookmarkEntries.add(cursor.getString(5)); // scene_nr
+                bookmarkEntries.add(cursor.getString(9)); // script_text
+                bookmarkEntries.add("Note: " + cursor.getString(10)); // annotation
 
                 bookmarkEntriesList.add(bookmarkEntries);
 

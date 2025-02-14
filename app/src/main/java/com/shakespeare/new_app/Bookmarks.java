@@ -2,6 +2,7 @@ package com.shakespeare.new_app;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
@@ -105,6 +106,7 @@ public class Bookmarks extends AppCompatActivity {
         String strBmk = "";
         String strPlayFullName = "";
         String strFirstPlayFullName = "";
+        Integer bookmarkID = 0;
         Integer actNr = 0;
         Integer scNr = 0;
 
@@ -128,17 +130,19 @@ public class Bookmarks extends AppCompatActivity {
 
             Log.d("bookmarkEntry", String.valueOf(bookmarkEntry));
 
-            actNr = Integer.valueOf(bookmarkEntry.get(2));
-            scNr = Integer.valueOf(bookmarkEntry.get(3));
+            bookmarkID = Integer.valueOf(bookmarkEntry.get(0));
+            Log.d("bookmark ID", String.valueOf(bookmarkID));
+            actNr = Integer.valueOf(bookmarkEntry.get(3));
+            scNr = Integer.valueOf(bookmarkEntry.get(4));
 
-            if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(1).toString()))
+            if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(2).toString()))
             {
                 if (!strBmk.equals(("")))
                 {
                     bookmarksList.add(strBmk);
                 }
-                strPlayFullName = bookmarkEntry.get(1).toString(); // play full name
-                strBmk = "** " + strPlayFullName + " **\n";
+                strPlayFullName = bookmarkEntry.get(2).toString(); // play full name
+                strBmk = "<h2>" + strPlayFullName + "</h2>";
 
                 if (strFirstPlayFullName.equals(""))
                 {
@@ -146,13 +150,15 @@ public class Bookmarks extends AppCompatActivity {
                 }
             }
 
-            strBmk += "\n" + bookmarkEntry.get(5).toString();
+            // add annotation
+            strBmk += bookmarkEntry.get(6).toString() + " {{" + bookmarkID + "}}";
+
             if (actNr == 0 && scNr == 0) {
-                strBmk += "\nCharacters in play";
+                strBmk += "<br>Characters in play";
             } else {
-                strBmk += "\nAct " + actNr + " Scene " + scNr;
+                strBmk += "<br>Act " + actNr + " Scene " + scNr;
             }
-            strBmk += "\n" + bookmarkEntry.get(4).toString();
+            strBmk += "<br>" + bookmarkEntry.get(5).toString();
 
 //            for(String bkmkItem : bookmarkEntry) {
 //
@@ -168,7 +174,7 @@ public class Bookmarks extends AppCompatActivity {
 
             if (!strBmk.equals(("")))
             {
-                bookmarksList.add(strBmk);
+                bookmarksList.add(String.valueOf(Html.fromHtml(strBmk)));
             }
 
             strBmk = "";

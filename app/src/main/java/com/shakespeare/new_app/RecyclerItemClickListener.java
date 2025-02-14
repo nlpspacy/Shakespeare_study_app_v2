@@ -72,6 +72,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                     mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
                     Log.d("click check","onLongPress item clicked in RecyclerItemClickListener.java class: getX " + String.valueOf(e.getX()) + " getY " + String.valueOf(e.getY()));
                     db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);
+                    // use this guide use this guide https://m.youtube.com/watch?v=fn5OlqQuOCk
+                    // to add popup for annotation
                 }
             }
         });

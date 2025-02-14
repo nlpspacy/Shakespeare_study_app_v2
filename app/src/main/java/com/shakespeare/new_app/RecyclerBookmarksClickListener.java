@@ -73,6 +73,7 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
                     // show Yes/No message to confirm changing bookmark to inactive status
                     // if user presses Yes, then change bookmark to inactive status
                     // mark that it will not show up next time bookmarks are opened, or alternatively auto-refresh to remove bookmark
+                    // use this guide https://m.youtube.com/watch?v=fn5OlqQuOCk
                 }
             }
         });

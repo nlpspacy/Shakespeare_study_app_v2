@@ -7,6 +7,6 @@ public class NewBookmarkPop extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.new_bookmark_pop);
+        setContentView(R.layout.activity_newbookmarkpop);
     }
 }

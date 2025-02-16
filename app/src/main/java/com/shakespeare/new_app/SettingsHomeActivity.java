@@ -55,7 +55,7 @@ public class SettingsHomeActivity extends AppCompatActivity {
         startActivity(i);
     }
     public void goBack(View v) {
-        // launch a new activity
+        // go back to previous screen/activity
 
         getOnBackPressedDispatcher().onBackPressed();
 

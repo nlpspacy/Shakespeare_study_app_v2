@@ -56,7 +56,7 @@
             android:name=".NewBookmarkPop"
             android:exported="false"
             android:label="@string/addbookmark"
-            android:theme="@style/Theme.Design" />
+            android:theme="@style/Theme.New_app.Popup" />
     </application>
 
 </manifest>

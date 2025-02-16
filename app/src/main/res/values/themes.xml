@@ -15,4 +15,10 @@
     <style name="Theme.New_app.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.New_app.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-</resources>
+
+    <style name="Theme.New_app.Popup">
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- <item name="android:windowCloseOnTouchOutside">true</item> -->
+    </style>
+
+        </resources>

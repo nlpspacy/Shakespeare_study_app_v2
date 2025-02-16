@@ -4,37 +4,97 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_bookmark_pop"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
-    <!-- Spinner Element to select standard prompts-->
-    <com.shakespeare.new_app.EditTextNoNewLine
-        android:id="@+id/message_edit_text"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="4"
-        android:background="@android:color/background_dark"
-        android:text="Add annotation"
-        android:hint="Add annotation"
-        android:padding="0sp"
-        android:textColor="#FFFFFF"
-        android:textIsSelectable="true"
-        android:layout_marginBottom="80sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    android:layout_height="match_parent"
+    android:background="#2196F3">
 
     <TextView
         android:id="@+id/new_bookmark_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80sp"
-        android:text="New bookmark popup"
         android:hint="New bookmark"
+        android:text="New bookmark popup"
         android:textSize="@dimen/home_font_size"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/add_annotation_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80sp"
+        android:hint="Add annotation"
+        android:text="Add annotation:"
+        android:textSize="@dimen/home_font_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/new_bookmark_label"
+        app:layout_constraintBottom_toTopOf="@+id/bookmarkusernote" />
+
+
+    <!-- Free text to type annotation-->
+    <com.shakespeare.new_app.EditTextNoNewLine
+        android:id="@+id/bookmarkusernote"
+        android:gravity="start"
+        android:layout_width="0dp"
+        android:layout_height="300sp"
+        android:layout_marginBottom="80sp"
+        android:layout_weight="4"
+        android:background="@android:color/background_dark"
+        android:hint="Add annotation"
+        android:padding="0sp"
+        android:text=""
+        android:textColor="#FFFFFF"
+        android:textIsSelectable="true"
+        app:layout_constraintTop_toBottomOf="@+id/add_annotation_label"
+        app:layout_constraintBottom_toTopOf="@+id/buttonsLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <LinearLayout
+        android:id="@+id/buttonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20sp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="100sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
+            android:onClick="closePopupWithoutSaving"
+            android:text="@string/btn_label_cancel"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btnSaveAndClose"
+            android:layout_width="100sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
+            android:onClick="saveBookmarkClosePopup"
+            android:text="@string/btn_label_save_and_close"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="100sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
+            android:onClick="saveBookmarkKeepTyping"
+            android:text="@string/btn_label_save"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent" />
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -26,7 +26,7 @@ public class NewBookmarkPop extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width*0.8), (int) (height*0.6));
+        getWindow().setLayout((int) (width*0.7), (int) (height*0.6));
 
     }
 
@@ -60,6 +60,8 @@ public class NewBookmarkPop extends AppCompatActivity {
 
         db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote);
         Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
+
+        getOnBackPressedDispatcher().onBackPressed();
 
     }
     public void saveBookmarkKeepTyping(View v) {

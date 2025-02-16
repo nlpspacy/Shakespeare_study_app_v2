@@ -22,8 +22,8 @@
     <string name="font_size">Settings</string>
     <string name="large_text">large text</string>
     <string name="btn_label_save">Save</string>
-    <string name="btn_label_save_and_close">Save Close</string>
-    <string name="btn_label_cancel">Cancel</string>
+    <string name="btn_label_save_and_close">Close</string>
+    <string name="btn_label_cancel">Canc</string>
     <string name="font_btn_label_small">T</string>
     <string name="font_btn_label_medium">T</string>
     <string name="font_btn_label_large">T</string>

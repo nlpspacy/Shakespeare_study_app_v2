@@ -2,10 +2,13 @@
 
 package com.shakespeare.new_app;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.content.Context;
 //import android.support.v7.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -74,9 +77,18 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                     db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);
                     // use this guide use this guide https://m.youtube.com/watch?v=fn5OlqQuOCk
                     // to add popup for annotation
+                    Log.d("new bookmark pop", "RecyclerItemClickListener: new bookmark pop");
+                    Intent i;
+//                    i = new Intent(this, com.shakespeare.new_app.NewBookmarkPop.class);
+                    i = new Intent(context.getApplicationContext(), NewBookmarkPop.class);
+                    child.getContext().startActivity(i);
                 }
             }
         });
+    }
+
+    private void startActivity(Intent i) {
+
     }
 
     @Override public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {

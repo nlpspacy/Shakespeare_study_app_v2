@@ -32,6 +32,7 @@
     <string name="txt_Message_Send_Box_Hint">Write here</string>
     <string name="standard_queries">Select from standard questions</string>
     <string name="bookmarks">Bookmarks</string>
+    <string name="addbookmark">Add bookmark</string>
 
     <string name="age_label">Your age, first decades then years</string>
     <string name="country_label">Your country</string>

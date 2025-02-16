@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/new_bookmark_pop"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
+    <!-- Spinner Element to select standard prompts-->
+    <com.shakespeare.new_app.EditTextNoNewLine
+        android:id="@+id/message_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:background="@android:color/background_dark"
+        android:text="Add annotation"
+        android:hint="Add annotation"
+        android:padding="0sp"
+        android:textColor="#FFFFFF"
+        android:textIsSelectable="true"
+        android:layout_marginBottom="80sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/new_bookmark_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80sp"
+        android:text="New bookmark popup"
+        android:hint="New bookmark"
+        android:textSize="@dimen/home_font_size"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

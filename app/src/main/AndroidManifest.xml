@@ -52,6 +52,11 @@
             android:exported="false"
             android:label="@string/bookmarks"
             android:theme="@style/Theme.Design" />
+        <activity
+            android:name=".NewBookmarkPop"
+            android:exported="false"
+            android:label="@string/addbookmark"
+            android:theme="@style/Theme.Design" />
     </application>
 
 </manifest>

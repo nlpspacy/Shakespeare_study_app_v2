@@ -20,5 +20,7 @@ public class GlobalClass {
     public static Integer intAboutYouScreenSource = 0; // source of About You click Main = 0, Settings Home = 1.
     public static Integer intShowLineNumbers = 1; // Show line numbers = 1, and hide line numbers = 0.
 
+    public static Integer scriptPosition = 0; // for adding bookmark
+    public static String scriptText = ""; // for adding bookmark
 
 }

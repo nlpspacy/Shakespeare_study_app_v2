@@ -74,14 +74,23 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 if (child != null && mListener != null) {
                     mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
                     Log.d("click check","onLongPress item clicked in RecyclerItemClickListener.java class: getX " + String.valueOf(e.getX()) + " getY " + String.valueOf(e.getY()));
-                    db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);
                     // use this guide use this guide https://m.youtube.com/watch?v=fn5OlqQuOCk
                     // to add popup for annotation
                     Log.d("new bookmark pop", "RecyclerItemClickListener: new bookmark pop");
+
+                    com.shakespeare.new_app.GlobalClass.scriptPosition = recyclerView.getChildAdapterPosition(child);
+                    com.shakespeare.new_app.GlobalClass.scriptText = strScriptText;
+
+                    Log.d("new bookmark pop", "RecyclerItemClickListener: global variables assigned");
+
                     Intent i;
 //                    i = new Intent(this, com.shakespeare.new_app.NewBookmarkPop.class);
                     i = new Intent(context.getApplicationContext(), NewBookmarkPop.class);
                     child.getContext().startActivity(i);
+
+//                    db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);
+//                    Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
+
                 }
             }
         });

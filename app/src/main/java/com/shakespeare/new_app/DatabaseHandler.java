@@ -84,6 +84,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 //        String selectQuery = "SELECT script_text FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
 
         // this uses the play_nav_detailed table
+        // ** improvement needed 18 Feb 2025 - when we get script, we want to left outer join to a SELECT DISTINCT
+        // by act, scene and line on the bookmarks table so that where there is a bookmark we can show an asterisk
+        // or other mark at the end of the line so the user knows there is a bookmark on that line.
+        // This means that when we save a bookmark we need to save the universal line number, i.e. play_line_number,
+        // in the bookmark as well.
         String selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
         Log.d("sql",selectQuery);
 

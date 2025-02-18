@@ -1,5 +1,7 @@
 package com.shakespeare.new_app;
 
+import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.Html;
@@ -214,8 +216,16 @@ public class Bookmarks extends AppCompatActivity {
                     @Override public void onLongItemClick(View view, int position) {
                         MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
                         String strBookmarks = myAdapter.getItem(position);
-                        // do whatever
+                        // *** request confirmation to remove this bookmark
+                        // which will be actioned by setting the active_0_or_1 to 0.
                         Log.d("check","onLongItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
+
+                        // need to fix this - the application context cannot be null
+                        // so how do pass the correct context to the Intent call.
+                        Context context = null;
+                        Intent i = new Intent(context.getApplicationContext(), RemoveBookmarkPop.class);
+                        startActivity(i);
+
                     }
                 })
 

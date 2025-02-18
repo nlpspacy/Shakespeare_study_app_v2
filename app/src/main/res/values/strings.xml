@@ -23,7 +23,9 @@
     <string name="large_text">large text</string>
     <string name="btn_label_save">Save</string>
     <string name="btn_label_save_and_close">Close</string>
-    <string name="btn_label_cancel">Canc</string>
+    <string name="btn_label_cancel">Cancel</string>
+    <string name="btn_label_yes">Yes</string>
+    <string name="btn_label_no">No</string>
     <string name="font_btn_label_small">T</string>
     <string name="font_btn_label_medium">T</string>
     <string name="font_btn_label_large">T</string>
@@ -36,6 +38,7 @@
     <string name="standard_queries">Select from standard questions</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="addbookmark">Add bookmark</string>
+    <string name="removebookmark">Remove bookmark</string>
 
     <string name="age_label">Your age, first decades then years</string>
     <string name="country_label">Your country</string>

@@ -112,10 +112,8 @@ public class AMSND extends AppCompatActivity {
             }
         };
 
-
         GlobalClass.selectedActNumber = db.getCurrentActNumber();
         GlobalClass.selectedSceneNumber = db.getCurrentSceneNumber();
-
 
         Log.d("progress update","before updateScriptDisplay(v)");
         updateScriptDisplay(v);

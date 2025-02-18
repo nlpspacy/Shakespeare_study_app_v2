@@ -8,12 +8,12 @@
     android:background="#2196F3">
 
     <TextView
-        android:id="@+id/new_bookmark_label"
+        android:id="@+id/add_annotation_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
-        android:hint="New bookmark"
-        android:text="Add a note for your bookmark"
+        android:hint="Add annotation"
+        android:text="Add annotation:"
         android:textSize="@dimen/font_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,13 +23,13 @@
         android:id="@+id/scripttext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20sp"
-        android:hint="Add annotation"
+        android:layout_marginTop="10sp"
+        android:hint="Script text"
         android:text=""
         android:textSize="@dimen/font_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_bookmark_label"
+        app:layout_constraintTop_toBottomOf="@+id/add_annotation_label"
         app:layout_constraintBottom_toTopOf="@+id/bookmarkusernote" />
 
 
@@ -38,8 +38,7 @@
         android:id="@+id/bookmarkusernote"
         android:gravity="start"
         android:layout_width="0dp"
-        android:layout_height="250sp"
-        android:layout_marginTop="20sp"
+        android:layout_height="300sp"
         android:layout_marginBottom="80sp"
         android:layout_weight="4"
         android:background="@android:color/background_dark"
@@ -67,34 +66,32 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="90sp"
+            android:layout_width="100sp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
             android:onClick="closePopupWithoutSaving"
             android:text="@string/btn_label_cancel"
             android:textAllCaps="false"
-            android:textSize="@dimen/font_size"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btnSaveAndClose"
-            android:layout_width="90sp"
+            android:layout_width="100sp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5sp"
+            android:layout_marginStart="20sp"
             android:onClick="saveBookmarkClosePopup"
             android:text="@string/btn_label_save_and_close"
             android:textAllCaps="false"
-            android:textSize="@dimen/font_size"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/btnSave"
-            android:layout_width="90sp"
+            android:layout_width="100sp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5sp"
+            android:layout_marginStart="20sp"
             android:onClick="saveBookmarkKeepTyping"
             android:text="@string/btn_label_save"
             android:textAllCaps="false"
-            android:textSize="@dimen/font_size"
             app:layout_constraintStart_toStartOf="parent" />
 
 

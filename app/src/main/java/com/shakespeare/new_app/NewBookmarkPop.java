@@ -3,14 +3,18 @@ package com.shakespeare.new_app;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.w3c.dom.Text;
 
 public class NewBookmarkPop extends AppCompatActivity {
 
@@ -27,6 +31,13 @@ public class NewBookmarkPop extends AppCompatActivity {
         int height = dm.heightPixels;
 
         getWindow().setLayout((int) (width*0.7), (int) (height*0.6));
+
+        TextView vwScriptText = findViewById(R.id.scripttext);
+
+        String strLocationHeading = "'" + com.shakespeare.new_app.GlobalClass.selectedPlay + "' Act " + GlobalClass.selectedActNumber + ", Sc " + GlobalClass.selectedSceneNumber;
+
+        vwScriptText.setText(strLocationHeading + "\n" + com.shakespeare.new_app.GlobalClass.scriptText);
+        vwScriptText.setTypeface(null, Typeface.ITALIC);
 
     }
 

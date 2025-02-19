@@ -407,6 +407,8 @@ public class AMSND extends AppCompatActivity {
         if(GlobalClass.selectedActNumber < GlobalClass.numberOfActsInPlay){
             Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
             GlobalClass.selectedActNumber += 1;
+            // need to include logic here
+            // if minimum scene number for the new act number is 0 then GlobalClass.selectedSceneNumber = 0 else GlobalClass.selectedSceneNumber = 1;
             GlobalClass.selectedSceneNumber = 1;
             updateScriptDisplay(v);
             Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));

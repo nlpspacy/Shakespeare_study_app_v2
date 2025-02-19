@@ -153,7 +153,7 @@ public class Bookmarks extends AppCompatActivity {
             }
 
             // add annotation
-            strBmk += bookmarkEntry.get(6).toString() + " {" + bookmarkID + "}";
+            strBmk +=  "Note {" + bookmarkID + "}: " + bookmarkEntry.get(6).toString();
 
             if (actNr == 0 && scNr == 0) {
                 strBmk += "<br>Characters in play";

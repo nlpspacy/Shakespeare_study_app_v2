@@ -92,6 +92,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             // ensure font size is set to the global variable
             holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
 
+        } else {
+            // do not add "N.A.+" to the adapter
+            // unfortunately something is garbled here in what is added to the adapter and presented on the screen
         }
 
     }

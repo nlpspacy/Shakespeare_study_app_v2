@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     public int getSceneNumber() {
         SQLiteDatabase db;
         String selectQuery = "SELECT * FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "';";
-        if(com.shakespeare.new_app.GlobalClass.selectedActNumber!=0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber!=0){
+//        if(com.shakespeare.new_app.GlobalClass.selectedActNumber!=0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber!=0){
+        if(com.shakespeare.new_app.GlobalClass.selectedActNumber!=0){
             selectQuery = "SELECT scene_nr FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
         }
 //        Log.d("database handler action","about to query for scene number using: " + selectQuery);
@@ -90,11 +92,15 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         // or other mark at the end of the line so the user knows there is a bookmark on that line.
         // This means that when we save a bookmark we need to save the universal line number, i.e. play_line_number,
         // in the bookmark as well.
-        String selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + ";";
-        Log.d("sql",selectQuery);
 
         db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+        String selectQuery;
+        Cursor cursor;
+
+        selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY play_line_number;";
+        Log.d("sql",selectQuery);
+
+        cursor = db.rawQuery(selectQuery, null);
 
         // up to here 24Jan2025 - need to update to show all the rows which satisfy not just the first one
         cursor.moveToFirst();
@@ -322,7 +328,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 bookmarkEntries.add(cursor.getString(4)); // act_nr
                 bookmarkEntries.add(cursor.getString(5)); // scene_nr
                 bookmarkEntries.add(cursor.getString(9)); // script_text
-                bookmarkEntries.add("Note: " + cursor.getString(10)); // annotation
+                bookmarkEntries.add(cursor.getString(10)); // annotation
 
                 bookmarkEntriesList.add(bookmarkEntries);
 

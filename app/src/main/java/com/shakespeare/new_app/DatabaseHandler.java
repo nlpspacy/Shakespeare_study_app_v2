@@ -151,7 +151,9 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                     } else{
 //                        scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText );
-                        scriptLinesList.add(strCharacter);
+                        if(!strCharacter.equalsIgnoreCase("N.A.")){
+                            scriptLinesList.add(strCharacter);
+                        }
                         if(intLineNumber==0){
                             scriptLinesList.add(strScriptText );
                         } else {
@@ -259,6 +261,21 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+
+    // Get minimum scene number of current act to find whether it is scene 0, usually with a chorus, or scene 1.
+    public int getMinimumSceneNumber() {
+
+        SQLiteDatabase db;
+        String selectQuery = "SELECT MIN(scene_nr) FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr = " + GlobalClass.selectedActNumber + ";";
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        Log.d("check", "minimum scene number: " + String.valueOf(cursor.getInt(0)));
+        return cursor.getInt(0);
+
+    }
 
     // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
     public int updateNavDbWithCurrentActSceneInPlay() {

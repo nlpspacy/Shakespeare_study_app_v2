@@ -262,13 +262,23 @@ public class AMSND extends AppCompatActivity {
         Log.d("act number and scene number returned","Act and scene number selected:" + String.valueOf(intActNumberSelected) + " " + String.valueOf(intSceneNumberSelected));
 
         // If the content is the preamble including Dramatis Personae
-        // then don't display act number and scene number.
-        if(intActNumberSelected==0 || intSceneNumberSelected==0){
+        // then don't display act number or scene number.
+        if(intActNumberSelected==0){
             TextView tvActNumber = findViewById(R.id.textViewActNumber);
             tvActNumber.setVisibility(View.GONE);
 
             TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
             tvSceneNumber.setVisibility(View.GONE);
+
+        } else if(intSceneNumberSelected==0){
+            // If the content is the preamble of an Act, then don't display scene number.
+            TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+            tvSceneNumber.setVisibility(View.GONE);
+
+            // Display act number only.
+            TextView tvActNumber = findViewById(R.id.textViewActNumber);
+            tvActNumber.setVisibility(View.VISIBLE);
+            tvActNumber.setText("Act " + String.valueOf(intActNumberSelected) + "/" + GlobalClass.numberOfActsInPlay);
 
         } else {
             // Otherwise display act number and scene number.
@@ -401,15 +411,40 @@ public class AMSND extends AppCompatActivity {
 
     public void incrementAct(View v) {
 
-        RecyclerView rvScript = findViewById(R.id.rvScript);
-
         // increment act number
         if(GlobalClass.selectedActNumber < GlobalClass.numberOfActsInPlay){
+
+            RecyclerView rvScript = findViewById(R.id.rvScript);
+
+            DatabaseHandler db = new DatabaseHandler(this) {
+                @Override
+                public void onCreate(SQLiteDatabase db) {
+
+                    Log.d("sqllite","onCreate");
+
+                }
+
+                @Override
+                public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+                    Log.d("sqllite","onUpgrade");
+
+                }
+            };
+
+
+
             Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
             GlobalClass.selectedActNumber += 1;
             // need to include logic here
             // if minimum scene number for the new act number is 0 then GlobalClass.selectedSceneNumber = 0 else GlobalClass.selectedSceneNumber = 1;
-            GlobalClass.selectedSceneNumber = 1;
+            if (db.getMinimumSceneNumber() == 0) {
+                GlobalClass.selectedSceneNumber = 0;
+
+            } else {
+                GlobalClass.selectedSceneNumber = 1;
+
+            }
             updateScriptDisplay(v);
             Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));
 

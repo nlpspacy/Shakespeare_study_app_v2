@@ -72,8 +72,9 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //        Log.d("character text", String.valueOf(intContentLength) + ": " + strContent.substring(intContentLength-1, intContentLength));
 
         // We do not want to show a character name for stage instructions or scene information.
-        if(!strContent.equals("N.A.+"))
-        {
+        if(strContent.equals("N.A.+")) {
+            strContent = "Stage direction+";
+        }
             holder.myTextView.setText(strContent);
 
             if(strContent.substring(intContentLength-1, intContentLength).equals("+")){
@@ -92,10 +93,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             // ensure font size is set to the global variable
             holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
 
-        } else {
-            // do not add "N.A.+" to the adapter
-            // unfortunately something is garbled here in what is added to the adapter and presented on the screen
-        }
+
 
     }
 

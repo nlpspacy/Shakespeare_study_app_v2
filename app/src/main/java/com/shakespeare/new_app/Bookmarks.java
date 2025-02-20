@@ -1,5 +1,10 @@
 package com.shakespeare.new_app;
 
+import static android.app.PendingIntent.getActivity;
+
+import static com.shakespeare.new_app.RecyclerBookmarksClickListener.*;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -7,7 +12,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.RadioButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -202,6 +206,8 @@ public class Bookmarks extends AppCompatActivity {
         rvBookmarks.addOnItemTouchListener(
                 // check for clicks
 
+              //this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener()
+
                 // in progress to hook this up to the new click listener class RecyclerBookmarksClickListener
                 new RecyclerBookmarksClickListener(this, rvBookmarks ,new RecyclerBookmarksClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
@@ -219,12 +225,6 @@ public class Bookmarks extends AppCompatActivity {
                         // *** request confirmation to remove this bookmark
                         // which will be actioned by setting the active_0_or_1 to 0.
                         Log.d("check","onLongItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
-
-                        // need to fix this - the application context cannot be null
-                        // so how do pass the correct context to the Intent call.
-                        Context context = null;
-                        Intent i = new Intent(context.getApplicationContext(), RemoveBookmarkPop.class);
-                        startActivity(i);
 
                     }
                 })

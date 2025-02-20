@@ -2,13 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/new_bookmark_pop"
+    android:id="@+id/remove_bookmark_pop"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#2196F3">
 
     <TextView
-        android:id="@+id/new_bookmark_label"
+        android:id="@+id/remove_bookmark_conf_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10sp"
@@ -20,16 +20,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/scripttext"
+        android:id="@+id/bookmarktext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20sp"
-        android:hint="Add annotation"
+        android:hint="Show the bookmark which would be removed"
         android:text=""
         android:textSize="@dimen/font_size"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/new_bookmark_label" />
+        app:layout_constraintTop_toBottomOf="@+id/remove_bookmark_conf_label" />
 
     <LinearLayout
         android:id="@+id/buttonsLayout"
@@ -46,7 +46,7 @@
             android:id="@+id/btnCancel"
             android:layout_width="90sp"
             android:layout_height="wrap_content"
-            android:onClick="closePopupWithoutSaving"
+            android:onClick="closePopupWithoutChange"
             android:text="@string/btn_label_cancel"
             android:textAllCaps="false"
             android:textSize="@dimen/font_size"

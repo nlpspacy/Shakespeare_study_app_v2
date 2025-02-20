@@ -1,9 +1,11 @@
 package com.shakespeare.new_app;
 
+import android.app.Activity;
 import android.content.Context;
 //import android.support.v7.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -47,6 +49,8 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
                     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
                         Log.d("sqllite","onUpgrade");
                     }
+
+
                 };
 
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
@@ -74,6 +78,12 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
                     // if user presses Yes, then change bookmark to inactive status
                     // mark that it will not show up next time bookmarks are opened, or alternatively auto-refresh to remove bookmark
                     // use this guide https://m.youtube.com/watch?v=fn5OlqQuOCk
+
+                    Intent i;
+//                    i = new Intent(this, com.shakespeare.new_app.NewBookmarkPop.class);
+                    i = new Intent(context.getApplicationContext(), RemoveBookmarkPop.class);
+                    child.getContext().startActivity(i);
+
                 }
             }
         });

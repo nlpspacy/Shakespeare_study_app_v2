@@ -134,7 +134,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 strScriptText = cursor.getString(1);
                 intLineNumber = cursor.getInt(0);
 
-//                Log.d("character update", "current: "+strCharacter + ", previous: " + strPreviousCharacter);
+                //Log.d("character update", "line nr "+intLineNumber +" previous line nr "+ intPreviousLineNumber + ", current: "+strCharacter + ", previous: " + strPreviousCharacter);
 
                 if(com.shakespeare.new_app.GlobalClass.selectedActNumber==0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber==0){
                     scriptLinesList.add(strScriptText );
@@ -142,23 +142,25 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 }else {
 
                 // Adding user record to list
-                if(!strCharacter.equalsIgnoreCase("N.A.") && !strCharacter.equalsIgnoreCase(strPreviousCharacter)){
+                if(!strCharacter.equalsIgnoreCase("N.A.+") && !strCharacter.equalsIgnoreCase(strPreviousCharacter)){
 
+                    //Log.d("flag", "check lines numbers to decide whether to add not NA new character " +strCharacter+" "+strScriptText);
                     if(intLineNumber == intPreviousLineNumber){
 //                        scriptLinesList.add(strCharacter + "\n" + strScriptText );
                         scriptLinesList.add(strCharacter);
                         scriptLinesList.add(strScriptText);
+                        //Log.d("flag", "not NA new character added");
 
                     } else{
 //                        scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText );
-                        if(!strCharacter.equalsIgnoreCase("N.A.")){
                             scriptLinesList.add(strCharacter);
-                        }
+                        //Log.d("flag", "NA *or* non-new character added " +strCharacter);
                         if(intLineNumber==0){
                             scriptLinesList.add(strScriptText );
                         } else {
                             if(com.shakespeare.new_app.GlobalClass.intShowLineNumbers==1){
                                 scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
+                                //Log.d("flag", "option 1: add script text without line number " +strCharacter + " line nr " + strScriptText);
                             } else {
                                 scriptLinesList.add(strScriptText);
                             }
@@ -168,8 +170,10 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 //                    Log.d("character update", "current != N.A.");
                 }else {
 
-                    if(intLineNumber == intPreviousLineNumber){
-                        scriptLinesList.add(strScriptText );
+                    //Log.d("flag", "line numbers: " + intLineNumber +", "+ intPreviousLineNumber+", difference: "+String.valueOf(intLineNumber-intPreviousLineNumber));
+                    if((intLineNumber-intPreviousLineNumber)==0){
+                        //Log.d("flag", "option 2: add script text without line number " +strCharacter + " line nr " + strScriptText);
+                        scriptLinesList.add(strScriptText);
 
                     } else{
                         if(intLineNumber==0){
@@ -177,6 +181,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         } else {
                             if(com.shakespeare.new_app.GlobalClass.intShowLineNumbers==1){
                                 scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
+                                //Log.d("flag", "option 3: add script text with line number " +strCharacter + " line nr " + strScriptText);
                             } else {
                                 scriptLinesList.add(strScriptText);
                             }

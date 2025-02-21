@@ -82,6 +82,7 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
                     Intent i;
 //                    i = new Intent(this, com.shakespeare.new_app.NewBookmarkPop.class);
                     i = new Intent(context.getApplicationContext(), RemoveBookmarkPop.class);
+                    i.putExtra("strBookmarkText",strBookmarkText);
                     child.getContext().startActivity(i);
 
                 }

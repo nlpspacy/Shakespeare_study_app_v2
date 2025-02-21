@@ -5,6 +5,7 @@
     android:id="@+id/remove_bookmark_pop"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10sp"
     android:background="#2196F3">
 
     <TextView
@@ -44,7 +45,7 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="90sp"
+            android:layout_width="120sp"
             android:layout_height="wrap_content"
             android:onClick="closePopupWithoutChange"
             android:text="@string/btn_label_cancel"
@@ -57,7 +58,7 @@
             android:layout_width="90sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5sp"
-            android:onClick="saveBookmarkClosePopup"
+            android:onClick="removeBookmarkClosePopup"
             android:text="@string/btn_label_yes"
             android:textAllCaps="false"
             android:textSize="@dimen/font_size"
@@ -68,7 +69,7 @@
             android:layout_width="90sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5sp"
-            android:onClick="saveBookmarkKeepTyping"
+            android:onClick="closePopupWithoutChange"
             android:text="@string/btn_label_no"
             android:textAllCaps="false"
             android:textSize="@dimen/font_size"

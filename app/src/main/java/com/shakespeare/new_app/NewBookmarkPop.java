@@ -30,14 +30,14 @@ public class NewBookmarkPop extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width*0.7), (int) (height*0.6));
+        getWindow().setLayout((int) (width*0.85), (int) (height*0.6));
 
-//        TextView vwScriptText = findViewById(R.id.scripttext);
-//
-//        String strLocationHeading = "'" + com.shakespeare.new_app.GlobalClass.selectedPlay + "' Act " + GlobalClass.selectedActNumber + ", Sc " + GlobalClass.selectedSceneNumber;
-//
-//        vwScriptText.setText(strLocationHeading + "\n" + com.shakespeare.new_app.GlobalClass.scriptText);
-//        vwScriptText.setTypeface(null, Typeface.ITALIC);
+        TextView vwScriptText = findViewById(R.id.scripttext);
+
+        String strLocationHeading = "'" + com.shakespeare.new_app.GlobalClass.selectedPlay + "' Act " + GlobalClass.selectedActNumber + ", Sc " + GlobalClass.selectedSceneNumber;
+
+        vwScriptText.setText(strLocationHeading + "\n" + com.shakespeare.new_app.GlobalClass.scriptText);
+        vwScriptText.setTypeface(null, Typeface.ITALIC);
 
     }
 

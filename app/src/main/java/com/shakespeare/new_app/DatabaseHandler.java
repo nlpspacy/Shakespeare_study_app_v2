@@ -364,4 +364,20 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         return bookmarkEntriesList;
 
     }
+
+
+    // Get current scene number in case the user is returning to the play, so navigation goes to where they left off last time.
+    public void removeBookmarkLongClicked(Integer intBookmarkReference) {
+
+        SQLiteDatabase db;
+        String updateQuery = "UPDATE bookmark SET active_0_or_1 = 0 WHERE bookmark_row_id = "+String.valueOf(intBookmarkReference)+";";
+
+        db = this.getWritableDatabase();
+        db.execSQL(updateQuery);
+
+        Log.d("response", "completed");
+
+    }
+
+
 }

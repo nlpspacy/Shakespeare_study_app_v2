@@ -5,6 +5,7 @@
     android:id="@+id/new_bookmark_pop"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10sp"
     android:background="#2196F3">
 
     <TextView
@@ -66,7 +67,7 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="100sp"
+            android:layout_width="120sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20sp"
             android:onClick="closePopupWithoutSaving"

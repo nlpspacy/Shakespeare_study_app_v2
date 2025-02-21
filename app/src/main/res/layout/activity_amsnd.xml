@@ -322,9 +322,9 @@
 
         <Button
             android:id="@+id/btnReturnToMain"
-            android:layout_width="wrap_content"
+            android:layout_width="80sp"
             android:layout_height="wrap_content"
-            android:layout_margin="4sp"
+            android:layout_margin="2sp"
             android:onClick="returnToMain"
             android:textAllCaps="false"
             android:text="@string/nav_btn_label_return_to_home" />
@@ -333,7 +333,7 @@
             android:id="@+id/btnOpenBookmarks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4sp"
+            android:layout_margin="2sp"
             android:layout_marginStart="80sp"
             android:background="@drawable/bookmark_icon_white_on_black"
             android:contentDescription="Bookmarks"
@@ -341,18 +341,18 @@
 
         <Button
             android:id="@+id/btnShowHide"
-            android:layout_width="wrap_content"
+            android:layout_width="80sp"
             android:layout_height="wrap_content"
-            android:layout_margin="4sp"
+            android:layout_margin="2sp"
             android:textAllCaps="false"
             android:onClick="showHideMessaging"
             android:text="Hide" />
 
         <Button
             android:id="@+id/btnStandardFree"
-            android:layout_width="wrap_content"
+            android:layout_width="80sp"
             android:layout_height="wrap_content"
-            android:layout_margin="4sp"
+            android:layout_margin="2sp"
             android:textAllCaps="false"
             android:onClick="showStandardPromptsOrFreeTextEntry"
             android:text="Qns" />
@@ -361,7 +361,7 @@
             android:id="@+id/btnSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4sp"
+            android:layout_margin="2sp"
             android:background="@drawable/settings_cog_white_on_black"
             android:contentDescription="Settings"
             android:onClick="launchSettings" />

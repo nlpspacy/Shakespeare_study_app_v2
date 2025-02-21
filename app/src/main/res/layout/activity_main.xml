@@ -124,32 +124,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="-50sp"
+        android:gravity="center"
+        android:layout_marginTop="20sp"
         app:layout_constraintTop_toBottomOf="@+id/playSelectorLL"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/btnOpenBookmarks"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:layout_margin="4sp"
-            android:layout_marginStart="80sp"
+            android:layout_margin="20sp"
+            android:layout_marginStart="0sp"
             android:background="@drawable/bookmark_icon_white_on_black"
             android:contentDescription="Bookmarks"
-            android:onClick="openBookmarks"
-            android:scaleX="0.35"
-            android:scaleY="0.45" />
+            android:onClick="openBookmarks" />
 
         <Button
             android:id="@+id/btnOpenThePlay"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8sp"
-            android:layout_weight="2"
-            android:layout_marginStart="80sp"
+            android:layout_marginStart="0sp"
             android:onClick="openSelectedPlay"
             android:text="Open Play"
             android:textAllCaps="false" />
@@ -158,15 +154,12 @@
             android:id="@+id/btnSettings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="-100sp"
-            android:layout_marginEnd="-100sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
             android:src="@drawable/settings_cog_white_on_black"
             style="?android:attr/borderlessButtonStyle"
             android:contentDescription="Settings"
-            android:onClick="launchSettings"
-            android:scaleX="0.2"
-            android:scaleY="0.2" />
+            android:onClick="launchSettings" />
 
     </LinearLayout>
 

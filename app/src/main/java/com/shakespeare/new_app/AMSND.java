@@ -505,6 +505,9 @@ public class AMSND extends AppCompatActivity {
         // launch a new activity
 
         Intent i = new Intent(this, Bookmarks.class);
+//        i.putExtra("sourceScreen","PlayScreen");
+        GlobalClass.bookmarkSourceScreen = "PlayScreen";
+        Log.d("message","put extra");
         startActivity(i);
     }
     public void launchSettings(View v) {

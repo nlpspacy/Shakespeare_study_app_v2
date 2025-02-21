@@ -34,7 +34,6 @@ public class Bookmarks extends AppCompatActivity {
 
     MyRecyclerViewAdapter adapter;
 
-
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("settings", "open settings home activity");
         super.onCreate(savedInstanceState);
@@ -236,10 +235,26 @@ public class Bookmarks extends AppCompatActivity {
     public void goBack(View v) {
         // launch a new activity
 
-        getOnBackPressedDispatcher().onBackPressed();
+        // We cannot use this because when new activities are opened the extras are wiped.
+        // For some reason currently it isn't working from when we first open the
+        // bookmarks screen activity either. So unfortunately we need to use a global
+        // variable to store the source screen.
+//        Bundle extras = getIntent().getExtras();
+//        String strSourceScreen = extras.getString("sourceScreen");
 
-//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
-//        startActivity(i);
+        if(GlobalClass.bookmarkSourceScreen.equals("HomeScreen")) {
+            Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
+            startActivity(i);
+        }
+        else if(GlobalClass.bookmarkSourceScreen.equals("PlayScreen")) {
+            Intent i = new Intent(this, com.shakespeare.new_app.AMSND.class);
+            startActivity(i);
+        }
+        else {
+            getOnBackPressedDispatcher().onBackPressed();
+
+        }
+
     }
 
 }

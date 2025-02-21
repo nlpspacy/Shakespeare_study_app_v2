@@ -23,4 +23,5 @@ public class GlobalClass {
     public static Integer scriptPosition = 0; // for adding bookmark
     public static String scriptText = ""; // for adding bookmark
 
+    public static String bookmarkSourceScreen = "HomeScreen"; // originating screen for bookmark screen
 }

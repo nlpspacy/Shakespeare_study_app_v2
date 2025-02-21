@@ -206,6 +206,9 @@ public class MainActivity extends AppCompatActivity {
         // launch a new activity
 
         Intent i = new Intent(this, Bookmarks.class);
+        GlobalClass.bookmarkSourceScreen = "HomeScreen";
+//        i.putExtra("sourceScreen","HomeScreen");
+        Log.d("message","put extra");
         startActivity(i);
     }
 

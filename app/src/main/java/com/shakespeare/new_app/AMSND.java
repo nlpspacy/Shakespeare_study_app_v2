@@ -314,8 +314,8 @@ public class AMSND extends AppCompatActivity {
         for(String string1: scriptLinesList)
         {
             i++;
-            System.out.println(i);
-            System.out.println("list item is " + string1);
+//            System.out.println(i);
+//            System.out.println("list item is " + string1);
         }
         // *** end: loop through ArrayList scriptLinesList
 

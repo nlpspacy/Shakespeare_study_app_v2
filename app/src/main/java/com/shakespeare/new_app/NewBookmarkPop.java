@@ -37,20 +37,25 @@ public class NewBookmarkPop extends AppCompatActivity {
         // obtain detailed reference information
         Intent intent = getIntent();
         String strScriptRef = intent.getStringExtra("scriptRef");
+        Log.d("strScriptRef",strScriptRef);
         Integer intSceneLineNr;
         Integer intPlayLineNr;
 
-        Integer intScriptLineNrStart = 16+strScriptRef.indexOf(" script_line_nr ");
+        Integer intScriptLineNrStart = 15+strScriptRef.indexOf(" scene_line_nr ");
         Integer intScriptLineNrEnd = intScriptLineNrStart+strScriptRef.substring(intScriptLineNrStart,strScriptRef.length()).indexOf(" ");
-        intSceneLineNr = Integer.valueOf(strScriptRef.substring(intScriptLineNrStart,intScriptLineNrEnd));
+        Log.d("strScriptRef",intScriptLineNrStart+" "+intScriptLineNrEnd);
+        String strSceneLineNr = strScriptRef.substring(intScriptLineNrStart,intScriptLineNrEnd);
+        Log.d("strSceneLineNr",strSceneLineNr);
+        intSceneLineNr = Integer.valueOf(strSceneLineNr);
         com.shakespeare.new_app.GlobalClass.scriptSceneLineNr = intSceneLineNr;
 
         Integer intScriptPlayNrStart = 14+strScriptRef.indexOf(" play_line_nr ");
         Integer intScriptPlayNrEnd = strScriptRef.length();
-        intPlayLineNr = Integer.valueOf(strScriptRef.substring(intScriptPlayNrStart,intScriptPlayNrEnd));
+        String strPlayLineNr = strScriptRef.substring(intScriptPlayNrStart,intScriptPlayNrEnd);
+        intPlayLineNr = Integer.valueOf(strPlayLineNr);
         com.shakespeare.new_app.GlobalClass.scriptPlayLineNr = intPlayLineNr;
 
-        String strLocationHeading = "'" + com.shakespeare.new_app.GlobalClass.selectedPlay + "' Act " + GlobalClass.selectedActNumber + ", Sc " + GlobalClass.selectedSceneNumber;
+        String strLocationHeading = "'" + com.shakespeare.new_app.GlobalClass.selectedPlay + "' Act " + GlobalClass.selectedActNumber + ", Sc " + GlobalClass.selectedSceneNumber + ", Line " + intSceneLineNr;
 
         vwScriptText.setText(strLocationHeading + "\n" + com.shakespeare.new_app.GlobalClass.scriptText);
         vwScriptText.setTypeface(null, Typeface.ITALIC);

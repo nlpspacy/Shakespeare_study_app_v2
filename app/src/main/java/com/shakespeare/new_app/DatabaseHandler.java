@@ -98,7 +98,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor;
 
 //        selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY play_line_number;";
-        selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
+        selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
         Log.d("sql",selectQuery);
 
         cursor = db.rawQuery(selectQuery, null);
@@ -136,8 +136,15 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 strCharacter = cursor.getString(2)+"+";
                 strScriptText = cursor.getString(1);
                 intLineNumber = cursor.getInt(0);
-                intBookmarkCount = cursor.getInt(3);
-//                Log.d("bookmark count" ,String.valueOf(intBookmarkCount));
+                // add line reference which will be included as a hidden row for reference purposes
+                intPlayLineNumber = cursor.getInt(4);
+                intBookmarkCount = cursor.getInt(5);
+                if(intBookmarkCount>0){
+                    strScriptText += " <" + String.valueOf(intBookmarkCount) + ">";
+                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intBookmarkCount));
+                }
+
+                scriptLinesList.add("play_code: " + com.shakespeare.new_app.GlobalClass.selectedPlayCode + " Act " + com.shakespeare.new_app.GlobalClass.selectedActNumber + " Scene " + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " scene_line_nr " + intLineNumber + " play_line_nr " + String.valueOf(intPlayLineNumber));
 
                 //Log.d("character update", "line nr "+intLineNumber +" previous line nr "+ intPreviousLineNumber + ", current: "+strCharacter + ", previous: " + strPreviousCharacter);
 
@@ -200,11 +207,6 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 strPreviousCharacter = strCharacter;
                 intPreviousLineNumber = intLineNumber;
-
-                // add line reference which will be included as a hidden row for reference purposes
-                intPlayLineNumber = cursor.getInt(4);
-                intBookmarkCount = cursor.getInt(5);
-                scriptLinesList.add("play_code: " + com.shakespeare.new_app.GlobalClass.selectedPlayCode + " Act " + com.shakespeare.new_app.GlobalClass.selectedActNumber + " Scene " + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " scene_line_nr " + intLineNumber + " play_line_nr " + String.valueOf(intPlayLineNumber));
 
             } while (cursor.moveToNext());
         }

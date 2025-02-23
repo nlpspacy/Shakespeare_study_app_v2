@@ -67,7 +67,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         String strContent = mData.get(position);
         Integer intContentLength = strContent.length();
-        Log.d("show position","ViewHolder position: " + String.valueOf(position) + ". Content length: " + String.valueOf(strContent.length()));
+//        Log.d("show position","ViewHolder position: " + String.valueOf(position) + ". Content length: " + String.valueOf(strContent.length()));
         //        String strContentNew;
 //        Log.d("character text", String.valueOf(intContentLength) + ": " + strContent.substring(intContentLength-1, intContentLength));
 
@@ -101,9 +101,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             // check whether we can selectively hide a line
         if(strContent.length() > 12){
             if(strContent.substring(0,10).equals("play_code:")){
-                holder.myTextView.setTextIsSelectable(false);
-                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 0);
-                holder.myTextView.setVisibility(View.GONE);
+//                holder.myTextView.setTextIsSelectable(false);
+//                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 0);
+//                holder.myTextView.setVisibility(View.GONE);
+                holder.myTextView.setTextIsSelectable(true);
+                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
             }
         }
 

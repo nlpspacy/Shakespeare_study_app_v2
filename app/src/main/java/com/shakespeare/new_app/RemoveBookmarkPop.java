@@ -70,7 +70,8 @@ public class RemoveBookmarkPop extends AppCompatActivity {
         };
 
         db.removeBookmarkLongClicked(intBookmarkReference);
-        Toast.makeText(this, "Bookmark {"+String.valueOf(intBookmarkReference)+"} removed.", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Bookmark {"+String.valueOf(intBookmarkReference)+"} removed.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Bookmark removed.", Toast.LENGTH_SHORT).show();
 
         Intent i = new Intent(this, Bookmarks.class);
         startActivity(i);

@@ -71,11 +71,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         //        String strContentNew;
 //        Log.d("character text", String.valueOf(intContentLength) + ": " + strContent.substring(intContentLength-1, intContentLength));
 
+        // insert here an alternating hidden text RecyclerView item giving
+        // the location of the script line in the play.
+
         // We do not want to show a character name for stage instructions or scene information.
         if(strContent.equals("N.A.+")) {
             strContent = "Stage direction+";
         }
             holder.myTextView.setText(strContent);
+//        holder.myTextView.setVisibility(View.GONE);
 
             if(strContent.substring(intContentLength-1, intContentLength).equals("+")){
                 // If it is a character marker as indicated by the plus sign (+) at the end of the character name,

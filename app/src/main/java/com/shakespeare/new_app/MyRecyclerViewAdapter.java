@@ -101,11 +101,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             // check whether we can selectively hide a line
         if(strContent.length() > 12){
             if(strContent.substring(0,10).equals("play_code:")){
-//                holder.myTextView.setTextIsSelectable(false);
-//                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 0);
-//                holder.myTextView.setVisibility(View.GONE);
-                holder.myTextView.setTextIsSelectable(true);
-                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+                holder.myTextView.setTextIsSelectable(false);
+                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 0);
+                holder.myTextView.setVisibility(View.GONE);
+//                holder.myTextView.setTextIsSelectable(true);
+//                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
             }
         }
 

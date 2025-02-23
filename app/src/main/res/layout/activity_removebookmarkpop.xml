@@ -45,7 +45,7 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="120sp"
+            android:layout_width="100sp"
             android:layout_height="wrap_content"
             android:onClick="closePopupWithoutChange"
             android:text="@string/btn_label_cancel"

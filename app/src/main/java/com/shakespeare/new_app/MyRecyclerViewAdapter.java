@@ -93,10 +93,11 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
             }
 //            Log.d("update onBindViewHolder", position + " " + strContent);
-            holder.myTextView.setTextIsSelectable(true);
+        holder.myTextView.setTextIsSelectable(true);
 
             // ensure font size is set to the global variable
-            holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
+        holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
+        holder.myTextView.setVisibility(View.VISIBLE);
 
             // check whether we can selectively hide a line
         if(strContent.length() > 12){

@@ -58,6 +58,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 Integer position = recyclerView.getChildAdapterPosition(child);
                 MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
                 String strScriptText = myAdapter.getItem(position);
+                String strScriptRef = myAdapter.getItem(position-1);
                 Integer intContentLength = strScriptText.length();
 
                 if(strScriptText.substring(intContentLength-1, intContentLength).equals("+")){
@@ -84,8 +85,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                     Log.d("new bookmark pop", "RecyclerItemClickListener: global variables assigned");
 
                     Intent i;
-//                    i = new Intent(this, com.shakespeare.new_app.NewBookmarkPop.class);
                     i = new Intent(context.getApplicationContext(), NewBookmarkPop.class);
+                    i.putExtra("scriptRef", strScriptRef);
                     child.getContext().startActivity(i);
 
 //                    db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);

@@ -73,13 +73,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         // insert here an alternating hidden text RecyclerView item giving
         // the location of the script line in the play.
+//        holder.myTextView.setText("play, act, scene and play_line_nr reference");
+//        holder.myTextView.setVisibility(View.GONE);
 
         // We do not want to show a character name for stage instructions or scene information.
         if(strContent.equals("N.A.+")) {
             strContent = "Stage direction+";
         }
             holder.myTextView.setText(strContent);
-//        holder.myTextView.setVisibility(View.GONE);
 
             if(strContent.substring(intContentLength-1, intContentLength).equals("+")){
                 // If it is a character marker as indicated by the plus sign (+) at the end of the character name,
@@ -97,7 +98,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             // ensure font size is set to the global variable
             holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
 
-
+            // check whether we can selectively hide a line
+        if(strContent.length() > 12){
+            if(strContent.substring(0,10).equals("play_code:")){
+                holder.myTextView.setTextIsSelectable(false);
+                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 0);
+                holder.myTextView.setVisibility(View.GONE);
+            }
+        }
 
     }
 

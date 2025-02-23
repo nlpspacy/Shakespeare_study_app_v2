@@ -319,6 +319,8 @@ public class AMSND extends AppCompatActivity {
         }
         // *** end: loop through ArrayList scriptLinesList
 
+        // script lines list needs alternating line with the playcode, act, scene, play_line_nr reference
+        // to include in the recycler view as a hidden row for bookmark referencing
         adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
         rvScript.setAdapter(adapter);
         int listLength = scriptLinesList.size();

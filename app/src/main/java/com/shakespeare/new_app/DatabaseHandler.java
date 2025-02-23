@@ -97,7 +97,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
 
-        selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY play_line_number;";
+//        selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY play_line_number;";
+        selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
         Log.d("sql",selectQuery);
 
         cursor = db.rawQuery(selectQuery, null);
@@ -109,6 +110,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         Integer intPreviousLineNumber = -9;
         String strScriptText = cursor.getString(1);
         Integer intLineNumber = cursor.getInt(0);
+        Integer intPlayLineNumber = cursor.getInt(4);
+        Integer intBookmarkCount = cursor.getInt(5);
         String strShowLineOnScreen;
 
         if(intLineNumber!=0){
@@ -133,6 +136,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 strCharacter = cursor.getString(2)+"+";
                 strScriptText = cursor.getString(1);
                 intLineNumber = cursor.getInt(0);
+                intBookmarkCount = cursor.getInt(3);
+//                Log.d("bookmark count" ,String.valueOf(intBookmarkCount));
 
                 //Log.d("character update", "line nr "+intLineNumber +" previous line nr "+ intPreviousLineNumber + ", current: "+strCharacter + ", previous: " + strPreviousCharacter);
 
@@ -195,6 +200,12 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 strPreviousCharacter = strCharacter;
                 intPreviousLineNumber = intLineNumber;
+
+                // add line reference which will be included as a hidden row for reference purposes
+                intPlayLineNumber = cursor.getInt(4);
+                intBookmarkCount = cursor.getInt(5);
+                scriptLinesList.add("play_code: " + com.shakespeare.new_app.GlobalClass.selectedPlayCode + " Act " + com.shakespeare.new_app.GlobalClass.selectedActNumber + " Scene " + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " scene_line_nr " + intLineNumber + " play_line_nr " + String.valueOf(intPlayLineNumber));
+
             } while (cursor.moveToNext());
         }
 
@@ -300,11 +311,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 
     // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
-    public int addBookmark(Integer intRvPosition, String strScriptText, String strUserNote) {
+    public int addBookmark(Integer intRvPosition, String strScriptText, String strUserNote, Integer intSceneLineNr, Integer intPlayLineNr) {
 
         SQLiteDatabase db;
-        String insertQuery = "INSERT INTO bookmark (username, date_time_added, play_code, play_full_name, act_nr, scene_nr, play_line_nr, scene_line_nr, position_in_view, script_text, annotation, active_0_or_1) ";
-        insertQuery += "VALUES ('blank', strftime('%Y-%m-%d %H:%M:%S', datetime('now')), '" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "','" + com.shakespeare.new_app.GlobalClass.selectedPlay + "', " + GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", -1, -1, " + intRvPosition + ", '" + strScriptText + "', '" + strUserNote + "', 1);";
+        String insertQuery = "INSERT INTO bookmark (username, date_time_added, play_code, play_full_name, act_nr, scene_nr, scene_line_nr, play_line_nr, position_in_view, script_text, annotation, active_0_or_1) ";
+        insertQuery += "VALUES ('blank', strftime('%Y-%m-%d %H:%M:%S', datetime('now')), '" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "','" + com.shakespeare.new_app.GlobalClass.selectedPlay + "', " + GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", " + intSceneLineNr + ", " + intPlayLineNr + ", " + intRvPosition + ", '" + strScriptText + "', '" + strUserNote + "', 1);";
         Log.d("insert query",insertQuery);
 
         db = this.getWritableDatabase();

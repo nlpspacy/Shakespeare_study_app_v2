@@ -24,4 +24,8 @@ public class GlobalClass {
     public static String scriptText = ""; // for adding bookmark
 
     public static String bookmarkSourceScreen = "HomeScreen"; // originating screen for bookmark screen
+
+    public static Integer scriptSceneLineNr = -1; // Variable for adding scene line reference in bookmark.
+    public static Integer scriptPlayLineNr = -1; // Variable for adding play line reference in bookmark.
+
 }

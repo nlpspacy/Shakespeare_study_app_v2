@@ -34,10 +34,27 @@ public class NewBookmarkPop extends AppCompatActivity {
 
         TextView vwScriptText = findViewById(R.id.scripttext);
 
+        // obtain detailed reference information
+        Intent intent = getIntent();
+        String strScriptRef = intent.getStringExtra("scriptRef");
+        Integer intSceneLineNr;
+        Integer intPlayLineNr;
+
+        Integer intScriptLineNrStart = 16+strScriptRef.indexOf(" script_line_nr ");
+        Integer intScriptLineNrEnd = intScriptLineNrStart+strScriptRef.substring(intScriptLineNrStart,strScriptRef.length()).indexOf(" ");
+        intSceneLineNr = Integer.valueOf(strScriptRef.substring(intScriptLineNrStart,intScriptLineNrEnd));
+        com.shakespeare.new_app.GlobalClass.scriptSceneLineNr = intSceneLineNr;
+
+        Integer intScriptPlayNrStart = 14+strScriptRef.indexOf(" play_line_nr ");
+        Integer intScriptPlayNrEnd = strScriptRef.length();
+        intPlayLineNr = Integer.valueOf(strScriptRef.substring(intScriptPlayNrStart,intScriptPlayNrEnd));
+        com.shakespeare.new_app.GlobalClass.scriptPlayLineNr = intPlayLineNr;
+
         String strLocationHeading = "'" + com.shakespeare.new_app.GlobalClass.selectedPlay + "' Act " + GlobalClass.selectedActNumber + ", Sc " + GlobalClass.selectedSceneNumber;
 
         vwScriptText.setText(strLocationHeading + "\n" + com.shakespeare.new_app.GlobalClass.scriptText);
         vwScriptText.setTypeface(null, Typeface.ITALIC);
+
 
     }
 
@@ -69,7 +86,7 @@ public class NewBookmarkPop extends AppCompatActivity {
             }
         };
 
-        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote);
+        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr);
         Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
 
         getOnBackPressedDispatcher().onBackPressed();
@@ -96,7 +113,7 @@ public class NewBookmarkPop extends AppCompatActivity {
             }
         };
 
-        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote);
+        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr);
         Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
 
 

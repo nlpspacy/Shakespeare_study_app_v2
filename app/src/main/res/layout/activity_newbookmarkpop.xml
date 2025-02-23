@@ -67,7 +67,7 @@
 
         <Button
             android:id="@+id/btnCancel"
-            android:layout_width="100sp"
+            android:layout_width="95sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20sp"
             android:onClick="closePopupWithoutSaving"
@@ -77,9 +77,9 @@
 
         <Button
             android:id="@+id/btnSaveAndClose"
-            android:layout_width="90sp"
+            android:layout_width="85sp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20sp"
+            android:layout_marginStart="10sp"
             android:onClick="saveBookmarkClosePopup"
             android:text="@string/btn_label_save_and_close"
             android:textAllCaps="false"
@@ -87,9 +87,9 @@
 
         <Button
             android:id="@+id/btnSave"
-            android:layout_width="90sp"
+            android:layout_width="85sp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20sp"
+            android:layout_marginStart="10sp"
             android:onClick="saveBookmarkKeepTyping"
             android:text="@string/btn_label_save"
             android:textAllCaps="false"

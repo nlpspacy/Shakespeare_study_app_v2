@@ -44,16 +44,6 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="100sp"
-            android:layout_height="wrap_content"
-            android:onClick="closePopupWithoutChange"
-            android:text="@string/btn_label_cancel"
-            android:textAllCaps="false"
-            android:textSize="@dimen/font_size"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
             android:id="@+id/btnYes"
             android:layout_width="90sp"
             android:layout_height="wrap_content"
@@ -66,9 +56,9 @@
 
         <Button
             android:id="@+id/btnNo"
-            android:layout_width="90sp"
+            android:layout_width="85sp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5sp"
+            android:layout_marginStart="15sp"
             android:onClick="closePopupWithoutChange"
             android:text="@string/btn_label_no"
             android:textAllCaps="false"

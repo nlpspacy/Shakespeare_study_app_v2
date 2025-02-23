@@ -30,7 +30,7 @@ public class NewBookmarkPop extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width*0.9), (int) (height*0.9));
+        getWindow().setLayout((int) (width*0.9), (int) (height*0.8));
 
         TextView vwScriptText = findViewById(R.id.scripttext);
 

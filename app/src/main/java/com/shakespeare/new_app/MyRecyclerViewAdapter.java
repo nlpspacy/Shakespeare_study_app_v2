@@ -98,13 +98,20 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             // ensure font size is set to the global variable
         holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
         holder.myTextView.setVisibility(View.VISIBLE);
+//        Log.d("hide line","show line: " + strContent);
+//        holder.myTextView.setMaxHeight(20);
+        holder.myTextView.setLineSpacing(1,1);
 
-            // check whether we can selectively hide a line
+
+        // check whether we can selectively hide a line
         if(strContent.length() > 12){
             if(strContent.substring(0,10).equals("play_code:")){
+//                Log.d("hide line","hide line: " + strContent);
                 holder.myTextView.setTextIsSelectable(false);
                 holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 0);
                 holder.myTextView.setVisibility(View.GONE);
+//                holder.myTextView.setMaxHeight(1);
+                holder.myTextView.setLineSpacing(-3,-3);
 //                holder.myTextView.setTextIsSelectable(true);
 //                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
             }

@@ -447,6 +447,7 @@ public class AMSND extends AppCompatActivity {
                 GlobalClass.selectedSceneNumber = 1;
 
             }
+            Log.d("check position in play","Act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
             updateScriptDisplay(v);
             Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));
 

@@ -167,7 +167,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 if(com.shakespeare.new_app.GlobalClass.selectedActNumber==0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber==0){
                     scriptLinesList.add(strScriptText);
-\
+
                 }else {
 
                 // Adding user record to list

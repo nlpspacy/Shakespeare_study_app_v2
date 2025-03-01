@@ -88,7 +88,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 strContent = strContent.substring(0, intContentLength-1);
                 holder.myTextView.setText(strContent);
                 holder.myTextView.setTypeface(null, Typeface.BOLD);
-            } else {
+            }else if(strContent.equals("Characters in the Play")){
+                holder.myTextView.setTypeface(null, Typeface.BOLD);
+
+            }else {
                 holder.myTextView.setTypeface(null, Typeface.NORMAL);
 
             }

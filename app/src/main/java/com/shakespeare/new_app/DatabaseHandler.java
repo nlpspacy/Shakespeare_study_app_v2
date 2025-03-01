@@ -139,8 +139,17 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 intPlayLineNumber = cursor.getInt(4);
                 intBookmarkCount = cursor.getInt(5);
 
+                // If we are in the Characters in the play section, then
+                // present the character name and, if any, extension to their name.
+                // For the hading of this section, leave out the character name field which holds the value "N.A."
                 if (cursor.getString(6).equals("Characters in the play")){
-                    strScriptText = cursor.getString(2) + cursor.getString(1);
+                    if (cursor.getString(2).equals("N.A.") && cursor.getString(1).equals("Characters in the Play")){
+                        strScriptText = cursor.getString(1);
+
+                    } else{
+                        strScriptText = cursor.getString(2) + cursor.getString(1);
+
+                    }
 
                 }else {
                     strScriptText = cursor.getString(1);
@@ -157,8 +166,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 //Log.d("character update", "line nr "+intLineNumber +" previous line nr "+ intPreviousLineNumber + ", current: "+strCharacter + ", previous: " + strPreviousCharacter);
 
                 if(com.shakespeare.new_app.GlobalClass.selectedActNumber==0 && com.shakespeare.new_app.GlobalClass.selectedSceneNumber==0){
-                    scriptLinesList.add(strScriptText );
-
+                    scriptLinesList.add(strScriptText);
+\
                 }else {
 
                 // Adding user record to list

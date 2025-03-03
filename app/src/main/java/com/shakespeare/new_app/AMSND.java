@@ -150,7 +150,7 @@ public class AMSND extends AppCompatActivity {
             }
         });
 
-        // standard prompts spinner - if we are in the dramatis personae section
+        // standard prompts spinner - if we are in the "Characters in the play" section
         // then we exclude act-specific and scene-specific standard questions
         if(GlobalClass.selectedActNumber == 0 && GlobalClass.selectedSceneNumber == 0) {
             standard_prompts = getResources().getStringArray(R.array.standard_prompts_no_act_or_scene);
@@ -190,6 +190,7 @@ public class AMSND extends AppCompatActivity {
         // Otherwise the initial appearance of the play is too poky for the user
         // and slightly intimidating.
 
+        Log.d("check","progress 1000");
         LinearLayout llPlayScript = (LinearLayout) findViewById(R.id.playScriptScrollLL);
         // update vertical weight of llPlayScript to 10
         LinearLayout.LayoutParams lParams = (LinearLayout.LayoutParams) llPlayScript.getLayoutParams();
@@ -203,6 +204,8 @@ public class AMSND extends AppCompatActivity {
         llSendMessageLayout.setVisibility(View.GONE);
         Button btnShowHide = (Button) findViewById(R.id.btnShowHide);
         btnShowHide.setText("Help");
+
+        Log.d("check","progress 1001");
 
         // using https://stackoverflow.com/questions/24471109/recyclerview-onclick
         RecyclerView recyclerView = findViewById(R.id.rvScript);
@@ -225,6 +228,8 @@ public class AMSND extends AppCompatActivity {
                     }
                 })
         );
+
+        Log.d("check","progress 1002");
 
     }
 
@@ -456,6 +461,24 @@ public class AMSND extends AppCompatActivity {
     }
     public void decrementScene(View v) {
 
+        DatabaseHandler db = new DatabaseHandler(this) {
+            @Override
+            public void onCreate(SQLiteDatabase db) {
+
+                Log.d("sqllite","onCreate");
+
+            }
+
+            @Override
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+                Log.d("sqllite","onUpgrade");
+
+            }
+        };
+
+        Integer intMinScNr = db.getMinimumSceneNumber();
+
         RecyclerView rvScript = findViewById(R.id.rvScript);
         // attempt to clear the recycler view
         adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
@@ -464,10 +487,10 @@ public class AMSND extends AppCompatActivity {
 
         // decrement scene number
         Log.d("script navigation button", "Scene before: " + String.valueOf(GlobalClass.selectedSceneNumber));
-        if(GlobalClass.selectedSceneNumber > 1){
+        if(GlobalClass.selectedSceneNumber > intMinScNr){
             GlobalClass.selectedSceneNumber -= 1;
             updateScriptDisplay(v);
-        } else if(GlobalClass.selectedSceneNumber == 1){
+        } else if(GlobalClass.selectedSceneNumber == intMinScNr){
             Log.d("decrement scene", "Decremented scene: act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
             decrementAct(v);
         }

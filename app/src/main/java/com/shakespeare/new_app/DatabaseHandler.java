@@ -77,7 +77,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Get script
-    public ArrayList getScript() {
+    public ArrayList  getScript(Boolean boolAtPrologue, Boolean boolAtEpilogue) {
 
         ArrayList<String> scriptLinesList = new ArrayList<>();
 
@@ -98,7 +98,17 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         Cursor cursor;
 
 //        selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY play_line_number;";
-        selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
+        if (boolAtPrologue) {
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr_roman='Prologue' ORDER BY p.play_line_number;";
+
+        } else if (boolAtEpilogue) {
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr_roman='Epilogue' ORDER BY p.play_line_number;";
+
+        } else {
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
+
+        }
+
         Log.d("sql",selectQuery);
 
         cursor = db.rawQuery(selectQuery, null);
@@ -317,6 +327,53 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         cursor.moveToFirst();
         Log.d("check", "minimum scene number: " + String.valueOf(cursor.getInt(0)));
         return cursor.getInt(0);
+
+    }
+
+    // Get minimum scene number of current act to find whether it is scene 0, usually with a chorus, or scene 1.
+    public boolean checkForEpilogue() {
+
+        SQLiteDatabase db;
+        String selectQuery = "SELECT count(*) FROM " + TABLE_PLAY + " ";
+        selectQuery += "WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' ";
+        selectQuery += "AND act_nr_roman = 'Epilogue';";
+
+        Log.d("check", selectQuery);
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        Integer intEpilogueCheck = Integer.valueOf(cursor.getInt(0));
+        Log.d("check", "check whether there is an epilogue: " + String.valueOf(cursor.getInt(0)));
+        if (intEpilogueCheck > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public boolean checkForPrologue() {
+
+        SQLiteDatabase db;
+        String selectQuery = "SELECT count(*) FROM " + TABLE_PLAY + " ";
+        selectQuery += "WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' ";
+        selectQuery += "AND act_nr_roman = 'Prologue';";
+
+        Log.d("check", selectQuery);
+
+        db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        cursor.moveToFirst();
+        Integer intPrologueCheck = Integer.valueOf(cursor.getInt(0));
+        Log.d("check", "check whether there is an prologue: " + String.valueOf(cursor.getInt(0)));
+        if (intPrologueCheck > 0) {
+            return true;
+        } else {
+            return false;
+        }
 
     }
 

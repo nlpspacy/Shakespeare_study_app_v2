@@ -116,7 +116,7 @@ public class AMSND extends AppCompatActivity {
         GlobalClass.selectedSceneNumber = db.getCurrentSceneNumber();
 
         Log.d("progress update","before updateScriptDisplay(v)");
-        updateScriptDisplay(v);
+        updateScriptDisplay(v, false, false);
         Log.d("progress update","after updateScriptDisplay(v)");
 
         // listen on button and when pressed then send prompt to ChatGPT API
@@ -234,7 +234,7 @@ public class AMSND extends AppCompatActivity {
     }
 
     // read the script from the sqlite database
-    public void updateScriptDisplay(View v){
+    public void updateScriptDisplay(View v, Boolean boolAtPrologue, Boolean boolAtEpilogue){
 
         // Clear the list so that the acts and scenes don't accumulate in an ever
         // increasingly long amount of scrollable text.
@@ -264,6 +264,12 @@ public class AMSND extends AppCompatActivity {
 
         int intActNumberSelected = GlobalClass.selectedActNumber;
         int intSceneNumberSelected = GlobalClass.selectedSceneNumber;
+        // if we are at the prologue then act number selected is -1 and we need scene number to be -1 as well.
+        // if we are at the epilogue then act number selected is -2 and we need scene number to be -2 as well.
+        if (intActNumberSelected<0) {
+            intSceneNumberSelected = intActNumberSelected;
+            GlobalClass.selectedSceneNumber = intSceneNumberSelected;
+        }
         Log.d("act number and scene number returned","Act and scene number selected:" + String.valueOf(intActNumberSelected) + " " + String.valueOf(intSceneNumberSelected));
 
         // If the content is the preamble including Dramatis Personae
@@ -284,6 +290,26 @@ public class AMSND extends AppCompatActivity {
             TextView tvActNumber = findViewById(R.id.textViewActNumber);
             tvActNumber.setVisibility(View.VISIBLE);
             tvActNumber.setText("Act " + String.valueOf(intActNumberSelected) + "/" + GlobalClass.numberOfActsInPlay);
+
+        } else if(intActNumberSelected==-2){
+            // If the content is the preamble of an Act, then don't display scene number.
+            TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+            tvSceneNumber.setVisibility(View.GONE);
+
+            // Display act number only.
+            TextView tvActNumber = findViewById(R.id.textViewActNumber);
+            tvActNumber.setVisibility(View.VISIBLE);
+            tvActNumber.setText("Prol.");
+
+        } else if(intActNumberSelected==-1){
+            // If the content is the preamble of an Act, then don't display scene number.
+            TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+            tvSceneNumber.setVisibility(View.GONE);
+
+            // Display act number only.
+            TextView tvActNumber = findViewById(R.id.textViewActNumber);
+            tvActNumber.setVisibility(View.VISIBLE);
+            tvActNumber.setText("Epil.");
 
         } else {
             // Otherwise display act number and scene number.
@@ -308,7 +334,7 @@ public class AMSND extends AppCompatActivity {
 //        scriptLinesList.add(String.valueOf(db.getScript()));
 
         // but, instead, we want to add as an array or list
-        scriptLinesList = db.getScript();
+        scriptLinesList = db.getScript(boolAtPrologue, boolAtEpilogue);
         Log.d("script", "scriptLinesList: " + scriptLinesList.size());
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
@@ -332,9 +358,6 @@ public class AMSND extends AppCompatActivity {
 //        rvScript.smoothScrollToPosition(listLength);
         rvScript.smoothScrollToPosition(0);
         // *** end recycler view logic ***
-
-        // set the script to the font size which the user has specified
-//        tvScript.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
 
         // set the act number font size which the user has specified
         TextView tvActNumber = findViewById(R.id.textViewActNumber);
@@ -391,7 +414,7 @@ public class AMSND extends AppCompatActivity {
         Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
         GlobalClass.selectedActNumber = 0;
         GlobalClass.selectedSceneNumber = 0;
-        updateScriptDisplay(v);
+        updateScriptDisplay(v, false, false);
         Log.d("go to start of play", "Now at start of play: act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
         Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));
 
@@ -400,16 +423,50 @@ public class AMSND extends AppCompatActivity {
         // decrement act number
         Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
 
+        DatabaseHandler db = new DatabaseHandler(this) {
+            @Override
+            public void onCreate(SQLiteDatabase db) {
+
+                Log.d("sqllite","onCreate");
+
+            }
+
+            @Override
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+                Log.d("sqllite","onUpgrade");
+
+            }
+        };
+
         RecyclerView rvScript = findViewById(R.id.rvScript);
 
         if(GlobalClass.selectedActNumber > 1){
             GlobalClass.selectedActNumber -= 1;
             GlobalClass.selectedSceneNumber = 1;
-            updateScriptDisplay(v);
+            updateScriptDisplay(v, false, false);
         } else if(GlobalClass.selectedActNumber == 1){
+            // check for prologue and if a prologue exists, then go to the prologue
+            if (db.checkForPrologue() == true) {
+                GlobalClass.selectedActNumber = -2;
+                GlobalClass.selectedSceneNumber = -2;
+                updateScriptDisplay(v, true, false);
+            } else {
+                // if there is no prologue then go to act 0 scene 0
+                // which is the 'Characters in the Play' section
+                GlobalClass.selectedActNumber = 0;
+                GlobalClass.selectedSceneNumber = 0;
+                updateScriptDisplay(v, false, false);
+
+            }
+        } else if(GlobalClass.selectedActNumber == -2){ // currently at prologue
             GlobalClass.selectedActNumber = 0;
             GlobalClass.selectedSceneNumber = 0;
-            updateScriptDisplay(v);
+            updateScriptDisplay(v, false, false);
+        } else if(GlobalClass.selectedActNumber == -1){ // currently at epilogue
+            GlobalClass.selectedActNumber = GlobalClass.numberOfActsInPlay;
+            GlobalClass.selectedSceneNumber = 1;
+            updateScriptDisplay(v, false, false);
         }
         Log.d("decrement scene", "Decremented scene: act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
         Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));
@@ -418,44 +475,80 @@ public class AMSND extends AppCompatActivity {
 
     public void incrementAct(View v) {
 
+        DatabaseHandler db = new DatabaseHandler(this) {
+            @Override
+            public void onCreate(SQLiteDatabase db) {
+
+                Log.d("sqllite","onCreate");
+
+            }
+
+            @Override
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+                Log.d("sqllite","onUpgrade");
+
+            }
+        };
+
         // increment act number
         if(GlobalClass.selectedActNumber < GlobalClass.numberOfActsInPlay){
 
             RecyclerView rvScript = findViewById(R.id.rvScript);
 
-            DatabaseHandler db = new DatabaseHandler(this) {
-                @Override
-                public void onCreate(SQLiteDatabase db) {
-
-                    Log.d("sqllite","onCreate");
-
-                }
-
-                @Override
-                public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-                    Log.d("sqllite","onUpgrade");
-
-                }
-            };
-
-
-
             Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
-            GlobalClass.selectedActNumber += 1;
-            // need to include logic here
-            // if minimum scene number for the new act number is 0 then GlobalClass.selectedSceneNumber = 0 else GlobalClass.selectedSceneNumber = 1;
-            if (db.getMinimumSceneNumber() == 0) {
-                GlobalClass.selectedSceneNumber = 0;
 
-            } else {
-                GlobalClass.selectedSceneNumber = 1;
+            // if we are at the 'Characters in the Play' section and the play has a prologue
+            // then increment to the prologue, otherwise follow the usual act increment process.
+            if (GlobalClass.selectedActNumber == 0 && db.checkForPrologue() == true) {
+                    GlobalClass.selectedActNumber = -2;
+                    GlobalClass.selectedSceneNumber = -2;
+                    updateScriptDisplay(v, true, false);
+
+            } else if (GlobalClass.selectedActNumber == -2) { // if at the prologue then move to act 1
+                GlobalClass.selectedActNumber = 1;
+                if (db.getMinimumSceneNumber() == 0) {
+                    GlobalClass.selectedSceneNumber = 0;
+
+                } else {
+                    GlobalClass.selectedSceneNumber = 1;
+
+                }
+                Log.d("check position in play","Act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
+                updateScriptDisplay(v, false, false);
+                Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));
+
+            } else if (GlobalClass.selectedActNumber == -1) { // if at the epilogue then do nothing
+                // do nothing
+            } else { // standard case of incrementing the act number
+                GlobalClass.selectedActNumber += 1;
+                // need to include logic here
+                // if minimum scene number for the new act number is 0 then GlobalClass.selectedSceneNumber = 0 else GlobalClass.selectedSceneNumber = 1;
+                if (db.getMinimumSceneNumber() == 0) {
+                    GlobalClass.selectedSceneNumber = 0;
+
+                } else {
+                    GlobalClass.selectedSceneNumber = 1;
+
+                }
+                Log.d("check position in play","Act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
+                updateScriptDisplay(v, false, false);
+                Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));
 
             }
-            Log.d("check position in play","Act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
-            updateScriptDisplay(v);
-            Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));
 
+        } else {
+            // if we are at the maximum act number and there is an epilogue
+            // then move to the epilogue, otherwise do nothing i.e. stay at max act number
+            // check whether there is an epilogue in this play
+            if (db.checkForEpilogue() == true) {
+                GlobalClass.selectedActNumber = -1;
+                updateScriptDisplay(v, false, true);
+
+            } else {
+                Log.d("epilogue check","there is no epilogue so do not navigate forward");
+                // do nothing
+            }
         }
 
     }
@@ -489,7 +582,9 @@ public class AMSND extends AppCompatActivity {
         Log.d("script navigation button", "Scene before: " + String.valueOf(GlobalClass.selectedSceneNumber));
         if(GlobalClass.selectedSceneNumber > intMinScNr){
             GlobalClass.selectedSceneNumber -= 1;
-            updateScriptDisplay(v);
+            updateScriptDisplay(v, false, false);
+        } else if(GlobalClass.selectedActNumber == 0){ // currently at Characters in the Play section
+            // do nothing
         } else if(GlobalClass.selectedSceneNumber == intMinScNr){
             Log.d("decrement scene", "Decremented scene: act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
             decrementAct(v);
@@ -508,10 +603,13 @@ public class AMSND extends AppCompatActivity {
         rvScript.smoothScrollToPosition(0);
 
         // increment scene number
-        if(GlobalClass.selectedSceneNumber < GlobalClass.numberOfScenesInAct){
+        if(GlobalClass.selectedActNumber == -1){
+            // if already at the epilogue, do nothing
+            Log.d("epilogue","we are at the epilogue, stop here");
+        } else if(GlobalClass.selectedSceneNumber < GlobalClass.numberOfScenesInAct){
             Log.d("script navigation button", "Scene before: " + String.valueOf(GlobalClass.selectedSceneNumber));
             GlobalClass.selectedSceneNumber += 1;
-            updateScriptDisplay(v);
+            updateScriptDisplay(v, false, false);
             Log.d("script navigation button", "Scene after: " + String.valueOf(GlobalClass.selectedSceneNumber));
         } else if(Objects.equals(GlobalClass.selectedSceneNumber, GlobalClass.numberOfScenesInAct)){
             incrementAct(v);
@@ -647,19 +745,19 @@ public class AMSND extends AppCompatActivity {
         // set font size to small 12sp
         GlobalClass.fontsizesp = 12;
         Log.d("fontLog","font size set to 12sp");
-        updateScriptDisplay(v);
+        updateScriptDisplay(v, false, false);
     }
     public void setFontMedium16sp(View v){
         // set font size to medium 16sp
         GlobalClass.fontsizesp = 16;
         Log.d("fontLog","font size set to 16sp");
-        updateScriptDisplay(v);
+        updateScriptDisplay(v, false, false);
     }
     public void setFontLarge20sp(View v){
         // set font size to large 20sp
         GlobalClass.fontsizesp = 20;
         Log.d("fontLog","font size set to 20sp");
-        updateScriptDisplay(v);
+        updateScriptDisplay(v, false, false);
     }
 
     public void openAMSND(View v) {

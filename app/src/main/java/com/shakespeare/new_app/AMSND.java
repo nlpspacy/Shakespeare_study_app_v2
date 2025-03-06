@@ -520,6 +520,8 @@ public class AMSND extends AppCompatActivity {
 
             } else if (GlobalClass.selectedActNumber == -1) { // if at the epilogue then do nothing
                 // do nothing
+                Log.d("epilogue check","at epilogue");
+
             } else { // standard case of incrementing the act number
                 GlobalClass.selectedActNumber += 1;
                 // need to include logic here
@@ -543,6 +545,7 @@ public class AMSND extends AppCompatActivity {
             // check whether there is an epilogue in this play
             if (db.checkForEpilogue() == true) {
                 GlobalClass.selectedActNumber = -1;
+                Log.d("epilogue check","at epilogue");
                 updateScriptDisplay(v, false, true);
 
             } else {
@@ -599,7 +602,7 @@ public class AMSND extends AppCompatActivity {
         // attempt to clear the recycler view
         adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
 //        rvScript.setAdapter(adapter);
-        rvScript.setAdapter(null);
+        //rvScript.setAdapter(null);
         rvScript.smoothScrollToPosition(0);
 
         // increment scene number

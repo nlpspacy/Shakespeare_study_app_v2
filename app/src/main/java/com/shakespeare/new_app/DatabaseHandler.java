@@ -77,7 +77,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     // Get script
-    public ArrayList  getScript(Boolean boolAtPrologue, Boolean boolAtEpilogue) {
+    public ArrayList getScript(Boolean boolAtPrologue, Boolean boolAtEpilogue) {
 
         ArrayList<String> scriptLinesList = new ArrayList<>();
 
@@ -214,9 +214,9 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 //                    Log.d("character update", "current != N.A.");
                 }else {
 
-                    //Log.d("flag", "line numbers: " + intLineNumber +", "+ intPreviousLineNumber+", difference: "+String.valueOf(intLineNumber-intPreviousLineNumber));
+//                    Log.d("flag", "line numbers: " + intLineNumber +", "+ intPreviousLineNumber+", difference: "+String.valueOf(intLineNumber-intPreviousLineNumber));
                     if((intLineNumber-intPreviousLineNumber)==0){
-                        //Log.d("flag", "option 2: add script text without line number " +strCharacter + " line nr " + strScriptText);
+//                        Log.d("flag", "option 2: add script text without line number " +strCharacter + " line nr " + strScriptText);
                         scriptLinesList.add(strScriptText);
 
                     } else{
@@ -233,7 +233,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                     }
 
-//                    Log.d("character update", "current is N.A.");
+                    Log.d("character update", "current is N.A.");
                 }
                 }
 

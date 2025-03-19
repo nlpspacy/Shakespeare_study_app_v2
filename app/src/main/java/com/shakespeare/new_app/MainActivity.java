@@ -278,6 +278,15 @@ public class MainActivity extends AppCompatActivity {
         } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("The Tempest") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("The Tempest (1611)")) {
             com.shakespeare.new_app.GlobalClass.selectedPlay = "The Tempest";
             com.shakespeare.new_app.GlobalClass.selectedPlayCode = "Tempest";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("King John") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("King John (1623)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "King John";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "KingJohn";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Richard II") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Richard II (1595)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Richard II";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "RichardII";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Richard III") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Richard III (1597)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Richard III";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "RichardIII";
         } else {
             return;
         }

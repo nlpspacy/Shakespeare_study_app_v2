@@ -192,6 +192,9 @@
         <item>Henry IV, Part II (1597)</item>
         <item>Henry V (1598)</item>
         <item>Julius Caesar (1599)</item>
+        <item>King John (1623)</item>
+        <item>Richard II (1595)</item>
+        <item>Richard III (1597)</item>
         <item>The Tragedy of King Lear (1605)</item>
         <item>The Tragedy of Macbeth (1605)</item>
         <item>The Merchant of Venice (1596)</item>
@@ -229,6 +232,9 @@
         <item>Henry IV, Part I</item>
         <item>Henry IV, Part II</item>
         <item>Henry V</item>
+        <item>King John</item>
+        <item>Richard II</item>
+        <item>Richard III</item>
     </string-array>
 
 </resources>

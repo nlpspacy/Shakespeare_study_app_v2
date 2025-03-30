@@ -32,6 +32,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
 }
 
 dependencies {
@@ -40,9 +41,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation(libs.core)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+//    androidTestImplementation(androidx.test:runner:1.1.0)
+
+//    androidTestImplementation(com.android.support.test:runner:1.0.2)
+
 //    implementation(androidx.recyclerview:recyclerview:1.1.0)
 //    implementation(androidx.appcompat:appcompat:1.1.0)
 }

@@ -1,24 +1,25 @@
 package com.shakespeare.new_app;
 
+import static androidx.test.core.app.ApplicationProvider.*;
+
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.InstrumentationRegistry;
 
 //import com.example.new_app.R;
-import com.shakespeare.new_app.R;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
@@ -108,6 +109,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         // check whether we can selectively hide a line
         if(strContent.length() > 12){
+            // if it is a reference line then hide it
             if(strContent.substring(0,10).equals("play_code:")){
 //                Log.d("hide line","hide line: " + strContent);
                 holder.myTextView.setTextIsSelectable(false);
@@ -117,6 +119,16 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 holder.myTextView.setLineSpacing(-3,-3);
 //                holder.myTextView.setTextIsSelectable(true);
 //                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
+            } else {
+                // if it not a reference line, then do nothing
+                // or if the user has opted for text to speech, then speak the line out loud
+//                Context context = getContext();
+
+                MyApplication.setLanguage(Locale.ENGLISH);
+               MyApplication.textToSpeech.speak(strContent,TextToSpeech.QUEUE_ADD,null,
+                       UUID.randomUUID().toString());
+
+
             }
         }
 

@@ -1,5 +1,6 @@
 package com.shakespeare.new_app;
 
+import android.speech.tts.TextToSpeech;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -410,6 +411,9 @@ public class AMSND extends AppCompatActivity {
     }
 
     public void goToStartOfPlay(View v) {
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+
         // decrement act number
         Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
         GlobalClass.selectedActNumber = 0;
@@ -420,6 +424,9 @@ public class AMSND extends AppCompatActivity {
 
     }
     public void decrementAct(View v) {
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+
         // decrement act number
         Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
 
@@ -474,6 +481,9 @@ public class AMSND extends AppCompatActivity {
     }
 
     public void incrementAct(View v) {
+
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
 
         DatabaseHandler db = new DatabaseHandler(this) {
             @Override
@@ -557,6 +567,9 @@ public class AMSND extends AppCompatActivity {
     }
     public void decrementScene(View v) {
 
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+
         DatabaseHandler db = new DatabaseHandler(this) {
             @Override
             public void onCreate(SQLiteDatabase db) {
@@ -598,6 +611,9 @@ public class AMSND extends AppCompatActivity {
 
     public void incrementScene(View v) {
 
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+
         RecyclerView rvScript = findViewById(R.id.rvScript);
         // attempt to clear the recycler view
         adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
@@ -624,12 +640,18 @@ public class AMSND extends AppCompatActivity {
     public void returnToMain(View v) {
         // launch a new activity
 
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
 
     public void openBookmarks(View v) {
         // launch a new activity
+
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
 
         Intent i = new Intent(this, Bookmarks.class);
 //        i.putExtra("sourceScreen","PlayScreen");
@@ -726,6 +748,9 @@ public class AMSND extends AppCompatActivity {
 
     }
     public void showSystemPrompt(View v) {
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+
         // launch a new activity
         Intent i = new Intent(this, SystemPromptActivity.class);
         Log.d("settings","open system prompt");
@@ -771,6 +796,9 @@ public class AMSND extends AppCompatActivity {
     }
 
     public void callChatGPT(View v) {
+
+        // pause text to speech as user requested to navigate to another part of the play
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
 
         Log.d("check","Chat GPT button pressed");
 

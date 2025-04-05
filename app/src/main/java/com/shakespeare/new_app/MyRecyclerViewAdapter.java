@@ -124,9 +124,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 // or if the user has opted for text to speech, then speak the line out loud
 //                Context context = getContext();
 
-               MyApplication.setLanguage(Locale.ENGLISH);
-               MyApplication.textToSpeech.speak(strContent,TextToSpeech.QUEUE_ADD,null,
-                       UUID.randomUUID().toString());
+                if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){
+
+                    MyApplication.setLanguage(Locale.ENGLISH);
+                    MyApplication.textToSpeech.speak(strContent,TextToSpeech.QUEUE_ADD,null,
+                            UUID.randomUUID().toString());
+
+                }
 
 
             }

@@ -13,6 +13,7 @@
     <string name="txt_languageinstruction">Select language:</string>
     <string name="txt_genderinstruction">Select your gender:</string>
     <string name="txt_aboutyou_button">About you</string>
+    <string name="txt_sound_on_off_button">Sound</string>
     <string name="title_activity_aac">Antony and Cleopatra</string>
     <string name="title_activity_amsnd">A Midsummer Night\'s Dream</string>
     <string name="title_activity_settings">User settings</string>

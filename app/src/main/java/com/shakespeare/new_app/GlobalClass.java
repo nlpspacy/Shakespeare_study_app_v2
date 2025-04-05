@@ -28,4 +28,5 @@ public class GlobalClass {
     public static Integer scriptSceneLineNr = -1; // Variable for adding scene line reference in bookmark.
     public static Integer scriptPlayLineNr = -1; // Variable for adding play line reference in bookmark.
 
+    public static Boolean boolSoundOn = false; // Variable flagging whether sound is on or not.
 }

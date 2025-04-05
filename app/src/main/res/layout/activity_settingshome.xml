@@ -41,7 +41,18 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <Button
+    <LinearLayout
+        android:id="@+id/buttonsTop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <Button
             android:id="@+id/btnSettings"
             android:layout_width="wrap_content"
             android:layout_height="50sp"
@@ -50,6 +61,19 @@
             android:onClick="launchUserInfoScreen"
             android:text="@string/txt_aboutyou_button"
             android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnSound"
+            android:layout_width="wrap_content"
+            android:layout_height="50sp"
+            android:layout_margin="8sp"
+            android:contentDescription="ToggleSoundOnOff"
+            android:onClick="toggleSoundOnOff"
+            android:text="@string/txt_sound_on_off_button"
+            android:textAllCaps="false" />
+
+
+    </LinearLayout>
 
         <Button
             android:id="@+id/btnViewSystemPrompt"
@@ -92,9 +116,9 @@
 
         <TextView
             android:id="@+id/txtShowHideLineNumbers"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="100sp"
+            android:layout_marginStart="0sp"
             android:layout_marginTop="10sp"
             android:text="Show or hide line numbers:"
             app:layout_constraintStart_toStartOf="parent"

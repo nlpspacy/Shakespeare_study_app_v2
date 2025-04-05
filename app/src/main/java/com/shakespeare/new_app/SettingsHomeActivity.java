@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -117,6 +118,20 @@ public class SettingsHomeActivity extends AppCompatActivity {
         com.shakespeare.new_app.GlobalClass.intShowLineNumbers = 0;
         Log.d("line numbers preference","hide line numbers");
     }
+
+    public void toggleSoundOnOff(View v) {
+        // toggle sound on and off
+        if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){
+
+            com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.FALSE;
+            Toast.makeText(this, "Sound off", Toast.LENGTH_SHORT).show();
+        } else{
+            com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.TRUE;
+            Toast.makeText(this, "Sound on", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
 }
 
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -28,6 +29,9 @@ import androidx.core.view.WindowInsetsCompat;
 //import com.example.new_app.R;
 import com.shakespeare.new_app.AMSND;
 import com.shakespeare.new_app.R;
+
+import java.util.Locale;
+import java.util.UUID;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -166,6 +170,19 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, com.shakespeare.new_app.SettingsActivity.class);
         startActivity(i);
         GlobalClass.intAboutYouScreenSource = 0;
+    }
+
+    public void toggleSoundOnOff(View v) {
+        // toggle sound on and off
+        if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){
+
+            com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.FALSE;
+            Toast.makeText(this, "Sound off", Toast.LENGTH_SHORT).show();
+        } else{
+            com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.TRUE;
+            Toast.makeText(this, "Sound on", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     public void launchSettings(View v) {

@@ -15,9 +15,11 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
+    private static final String TAG = "RecyclerItemClickListen";
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -42,23 +44,31 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
             @Override
             public void onLongPress(MotionEvent e) {
 
-                DatabaseHandler db = new DatabaseHandler(context.getApplicationContext()) {
-                    @Override
-                    public void onCreate(SQLiteDatabase db) {
-                        Log.d("sqllite","onCreate");
-                    }
-
-                    @Override
-                    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-                        Log.d("sqllite","onUpgrade");
-                    }
-                };
+                try{
 
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 Integer position = recyclerView.getChildAdapterPosition(child);
                 MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
                 String strScriptText = myAdapter.getItem(position);
-                String strScriptRef = myAdapter.getItem(position-1);
+
+                // find the closest previous line with script reference information
+                    // identified by the first 10 characters being "play_code:"
+                    String strScriptRef = myAdapter.getItem(position - 1);
+                    Log.d("script ref","search for closest previous strScriptRef, position - 1: " + strScriptRef);
+                    if (!strScriptRef.substring(0, 10).equals("play_code:")) {
+                        strScriptRef = myAdapter.getItem(position - 2);
+                        Log.d("script ref","search for closest previous strScriptRef, position - 2: " + strScriptRef);
+                        if (!strScriptRef.substring(0, 10).equals("play_code:")) {
+                            strScriptRef = myAdapter.getItem(position - 3);
+                            Log.d("script ref","search for closest previous strScriptRef, position - 2: " + strScriptRef);
+                            if (!strScriptRef.substring(0, 10).equals("play_code:")) {
+                                strScriptRef = myAdapter.getItem(position - 4);
+                                Log.d("script ref","search for closest previous strScriptRef, position - 2: " + strScriptRef);
+                                if (!strScriptRef.substring(0, 10).equals("play_code:")) {
+                                    strScriptRef = "play_code: " + com.shakespeare.new_app.GlobalClass.selectedPlay + " Act " + com.shakespeare.new_app.GlobalClass.selectedActNumber.toString() + " Scene " + com.shakespeare.new_app.GlobalClass.selectedSceneNumber.toString() + " scene_line_nr 0 play_line_nr 0";
+                                    Log.d("script ref","search for closest previous strScriptRef, position - 2: " + strScriptRef);
+                                }}}}
+
                 Integer intContentLength = strScriptText.length();
 
                 if(strScriptText.substring(intContentLength-1, intContentLength).equals("+")){
@@ -93,6 +103,12 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 //                    Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
 
                 }
+                }catch(Exception exception){
+                    Log.e(TAG, "onLongPress: ", exception);
+                    // do something
+                    Log.d("exception report"," "+exception.getMessage().toString());
+                }
+
             }
         });
     }

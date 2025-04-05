@@ -57,14 +57,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-
+        holder.itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         // using https://www.geeksforgeeks.org/how-to-apply-onclicklistener-to-recyclerview-items-in-android/
         holder.itemView.setOnClickListener(view -> {
-                    if (onClickListener != null) {
-                        onClickListener.onClick(position);
-                        Log.d("click check","script line clicked");
-                    }
-                });
+            if (onClickListener != null) {
+                onClickListener.onClick(position);
+                Log.d("click check", "script line clicked");
+            }
+        });
 
         String strContent = mData.get(position);
         Integer intContentLength = strContent.length();
@@ -78,56 +78,55 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //        holder.myTextView.setVisibility(View.GONE);
 
         // We do not want to show a character name for stage instructions or scene information.
-        if(strContent.equals("N.A.+")) {
+        if (strContent.equals("N.A.+")) {
             strContent = "Stage direction+";
         }
+        holder.myTextView.setText(strContent);
+
+        if (strContent.substring(intContentLength - 1, intContentLength).equals("+")) {
+            // If it is a character marker as indicated by the plus sign (+) at the end of the character name,
+            // then re-assign the holder without the plus (+) sign at the end of the character name.
+            strContent = strContent.substring(0, intContentLength - 1);
             holder.myTextView.setText(strContent);
+            holder.myTextView.setTypeface(null, Typeface.BOLD);
+        } else if (strContent.equals("Characters in the Play")) {
+            holder.myTextView.setTypeface(null, Typeface.BOLD);
 
-            if(strContent.substring(intContentLength-1, intContentLength).equals("+")){
-                // If it is a character marker as indicated by the plus sign (+) at the end of the character name,
-                // then re-assign the holder without the plus (+) sign at the end of the character name.
-                strContent = strContent.substring(0, intContentLength-1);
-                holder.myTextView.setText(strContent);
-                holder.myTextView.setTypeface(null, Typeface.BOLD);
-            }else if(strContent.equals("Characters in the Play")){
-                holder.myTextView.setTypeface(null, Typeface.BOLD);
+        } else {
+            holder.myTextView.setTypeface(null, Typeface.NORMAL);
 
-            }else {
-                holder.myTextView.setTypeface(null, Typeface.NORMAL);
-
-            }
+        }
 //            Log.d("update onBindViewHolder", position + " " + strContent);
         holder.myTextView.setTextIsSelectable(true);
 
-            // ensure font size is set to the global variable
+        // ensure font size is set to the global variable
         holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, com.shakespeare.new_app.GlobalClass.fontsizesp);
         holder.myTextView.setVisibility(View.VISIBLE);
 //        Log.d("hide line","show line: " + strContent);
 //        holder.myTextView.setMaxHeight(20);
-        holder.myTextView.setLineSpacing(1,1);
-
+        holder.myTextView.setLineSpacing(1, 1);
 
         // check whether we can selectively hide a line
-        if(strContent.length() > 12){
+        if (strContent.length() > 12) {
             // if it is a reference line then hide it
-            if(strContent.substring(0,10).equals("play_code:")){
+            if (strContent.substring(0, 10).equals("play_code:")) {
+                holder.itemView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
 //                Log.d("hide line","hide line: " + strContent);
                 holder.myTextView.setTextIsSelectable(false);
                 holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 0);
                 holder.myTextView.setVisibility(View.GONE);
 //                holder.myTextView.setMaxHeight(1);
-                holder.myTextView.setLineSpacing(-3,-3);
+                holder.myTextView.setLineSpacing(-3, -3);
 //                holder.myTextView.setTextIsSelectable(true);
 //                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
             } else {
-                // if it not a reference line, then do nothing
-                // or if the user has opted for text to speech, then speak the line out loud
-//                Context context = getContext();
+                // If it not a reference line, then leave the line visible.
+                // Also, if the user has opted for text to speech, then speak the line out loud.
 
-                if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){
+                if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
 
                     MyApplication.setLanguage(Locale.ENGLISH);
-                    MyApplication.textToSpeech.speak(strContent,TextToSpeech.QUEUE_ADD,null,
+                    MyApplication.textToSpeech.speak(strContent, TextToSpeech.QUEUE_ADD, null,
                             UUID.randomUUID().toString());
 
                 }
@@ -162,7 +161,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         public void onClick(View view) {
             if (mClickListener != null) {
                 mClickListener.onItemClick(view, getAdapterPosition());
-                Log.d("recycler view adapter click listener","user clicked a script line");
+                Log.d("recycler view adapter click listener", "user clicked a script line");
             }
         }
     }

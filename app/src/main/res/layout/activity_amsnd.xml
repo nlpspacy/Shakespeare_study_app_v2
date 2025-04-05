@@ -182,6 +182,7 @@
                 android:fontFamily="monospace"
                 android:includeFontPadding="false"
                 android:background="@null"
+                tools:listitem="@layout/recyclerview_row"
                 android:textIsSelectable="true" />
 
             </ScrollView>

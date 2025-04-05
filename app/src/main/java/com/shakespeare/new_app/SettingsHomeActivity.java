@@ -2,9 +2,11 @@ package com.shakespeare.new_app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -46,6 +48,13 @@ public class SettingsHomeActivity extends AppCompatActivity {
 
 //        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);
 //        tv_Title.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
+
+        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
+        if(GlobalClass.boolSoundOn == Boolean.TRUE){
+            tvSoundOnOffInd.setText("Sound on");
+        } else {
+            tvSoundOnOffInd.setText("Sound off");
+        }
 
     }
 
@@ -121,12 +130,18 @@ public class SettingsHomeActivity extends AppCompatActivity {
 
     public void toggleSoundOnOff(View v) {
         // toggle sound on and off
-        if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){
+        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
+        if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){ // if tts is on, then turn off
+
+            // turn off any text to speech that is currently in progress
+            MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
 
             com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.FALSE;
+            tvSoundOnOffInd.setText("Sound off");
             Toast.makeText(this, "Sound off", Toast.LENGTH_SHORT).show();
-        } else{
+        } else{ // if tts is off, then turn on
             com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.TRUE;
+            tvSoundOnOffInd.setText("Sound on");
             Toast.makeText(this, "Sound on", Toast.LENGTH_SHORT).show();
 
         }

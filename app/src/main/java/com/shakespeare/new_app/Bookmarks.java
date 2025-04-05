@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -147,7 +148,7 @@ public class Bookmarks extends AppCompatActivity {
                     bookmarksList.add(strBmk);
                 }
                 strPlayFullName = bookmarkEntry.get(2).toString(); // play full name
-                strBmk = "<h2>" + strPlayFullName + "</h2>";
+                strBmk = "<br><h2>" + strPlayFullName + "</h2>";
 
                 if (strFirstPlayFullName.equals(""))
                 {
@@ -233,6 +234,10 @@ public class Bookmarks extends AppCompatActivity {
     }
 
     public void goBack(View v) {
+
+        // turn off any text to speech that is currently in progress
+        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+
         // launch a new activity
 
         // We cannot use this because when new activities are opened the extras are wiped.

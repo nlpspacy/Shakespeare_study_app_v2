@@ -112,6 +112,13 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
+        if(GlobalClass.boolSoundOn == Boolean.TRUE){
+            tvSoundOnOffInd.setText("Sound on");
+        } else {
+            tvSoundOnOffInd.setText("Sound off");
+        }
+
 
     }
 
@@ -174,12 +181,18 @@ public class MainActivity extends AppCompatActivity {
 
     public void toggleSoundOnOff(View v) {
         // toggle sound on and off
-        if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){
+        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
+        if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){ // if tts is on, then turn off
+
+            // turn off any text to speech that is currently in progress
+            MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
 
             com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.FALSE;
+            tvSoundOnOffInd.setText("Sound off");
             Toast.makeText(this, "Sound off", Toast.LENGTH_SHORT).show();
-        } else{
+        } else{ // if tts is off, then turn on
             com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.TRUE;
+            tvSoundOnOffInd.setText("Sound on");
             Toast.makeText(this, "Sound on", Toast.LENGTH_SHORT).show();
 
         }

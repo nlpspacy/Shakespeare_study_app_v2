@@ -43,6 +43,15 @@
             android:text="@string/txt_sound_on_off_button"
             android:textAllCaps="false" />
 
+        <TextView
+            android:id="@+id/txtSoundOnOffIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Sound on/off"
+            app:layout_constraintStart_toEndOf="@+id/btnSound" />
+
+
     </LinearLayout>
 
     <ImageView

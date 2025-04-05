@@ -20,7 +20,7 @@ public class MyApplication extends Application {
                 new TextToSpeech.OnInitListener() {
                     @Override
                     public void onInit(int i) {
-                        Set<Voice> voices = getVoices();
+                      /*  Set<Voice> voices = getVoices();
                         for (Voice voice : voices) {
 
                             Log.d(TAG, "setLanguage: "+voice.getName());
@@ -28,9 +28,14 @@ public class MyApplication extends Application {
                                 Log.d(TAG, "setLanguage:feature "+feature);
                             }
 
+                        }*/
+                        if (i == TextToSpeech.SUCCESS) {
+                            Log.d(TAG, "onInit: init success");
+                        }else {
+                            Log.d(TAG, "onInit: init failed!");
                         }
                     }
-                },"com.google.android.tts");
+                }/*,"com.google.android.tts"*/);
     }
 
     public  static Set<Voice> getVoices(){

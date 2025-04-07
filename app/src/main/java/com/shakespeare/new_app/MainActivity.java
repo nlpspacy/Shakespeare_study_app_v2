@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -112,12 +113,19 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
+//        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);
+//        tv_Title.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
+
+        ImageButton btnSound = findViewById(R.id.btnSound);
+//        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
         if(GlobalClass.boolSoundOn == Boolean.TRUE){
-            tvSoundOnOffInd.setText("Sound on");
+            btnSound.setImageResource(R.drawable.sound_icon_transparent_bg);
+//            tvSoundOnOffInd.setText("Sound on");
         } else {
-            tvSoundOnOffInd.setText("Sound off");
+            btnSound.setImageResource(R.drawable.mute_icon_transparent_bg);
+//            tvSoundOnOffInd.setText("Sound off");
         }
+
 
 
     }
@@ -181,18 +189,22 @@ public class MainActivity extends AppCompatActivity {
 
     public void toggleSoundOnOff(View v) {
         // toggle sound on and off
-        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
-        if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){ // if tts is on, then turn off
+//        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
+        ImageButton btnSound = findViewById(R.id.btnSound);
+
+        if(GlobalClass.boolSoundOn.equals(Boolean.TRUE)){ // if tts is on, then turn off
 
             // turn off any text to speech that is currently in progress
             MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
 
-            com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.FALSE;
-            tvSoundOnOffInd.setText("Sound off");
+            GlobalClass.boolSoundOn = Boolean.FALSE;
+            btnSound.setImageResource(R.drawable.mute_icon_transparent_bg);
+//            tvSoundOnOffInd.setText("Sound off");
             Toast.makeText(this, "Sound off", Toast.LENGTH_SHORT).show();
         } else{ // if tts is off, then turn on
-            com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.TRUE;
-            tvSoundOnOffInd.setText("Sound on");
+            GlobalClass.boolSoundOn = Boolean.TRUE;
+            btnSound.setImageResource(R.drawable.sound_icon_transparent_bg);
+//            tvSoundOnOffInd.setText("Sound on");
             Toast.makeText(this, "Sound on", Toast.LENGTH_SHORT).show();
 
         }

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +33,7 @@ public class SettingsHomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        if(com.shakespeare.new_app.GlobalClass.intShowLineNumbers==1){
+        if(GlobalClass.intShowLineNumbers==1){
             RadioButton rbShowLineNumbers = (RadioButton) findViewById(R.id.rbtnShowLineNumbers); // initiate a radio button
             rbShowLineNumbers.setChecked(true); // check current state of a radio button (true or false).
 
@@ -49,11 +50,14 @@ public class SettingsHomeActivity extends AppCompatActivity {
 //        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);
 //        tv_Title.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
 
-        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
+        ImageButton btnSound = findViewById(R.id.btnSound);
+//        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
         if(GlobalClass.boolSoundOn == Boolean.TRUE){
-            tvSoundOnOffInd.setText("Sound on");
+            btnSound.setImageResource(R.drawable.sound_icon_transparent_bg);
+//            tvSoundOnOffInd.setText("Sound on");
         } else {
-            tvSoundOnOffInd.setText("Sound off");
+            btnSound.setImageResource(R.drawable.mute_icon_transparent_bg);
+//            tvSoundOnOffInd.setText("Sound off");
         }
 
     }
@@ -61,7 +65,7 @@ public class SettingsHomeActivity extends AppCompatActivity {
     public void returnToMain(View v) {
         // launch a new activity
 
-        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
+        Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
     }
     public void goBack(View v) {
@@ -76,14 +80,14 @@ public class SettingsHomeActivity extends AppCompatActivity {
     public void launchUserInfoScreen(View v) {
         // launch a new activity
 
-        Intent i = new Intent(this, com.shakespeare.new_app.SettingsActivity.class);
+        Intent i = new Intent(this, SettingsActivity.class);
         startActivity(i);
         GlobalClass.intAboutYouScreenSource = 1;
     }
 
     public void showSystemPrompt(View v) {
         // launch a new activity
-        Intent i = new Intent(this, com.shakespeare.new_app.SystemPromptActivity.class);
+        Intent i = new Intent(this, SystemPromptActivity.class);
         Log.d("settings","open system prompt");
 
         try {
@@ -96,21 +100,21 @@ public class SettingsHomeActivity extends AppCompatActivity {
 
     public void setFontSmall12sp(View v){
         // set font size to small 12sp
-        com.shakespeare.new_app.GlobalClass.fontsizesp = 12;
+        GlobalClass.fontsizesp = 12;
 //        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);
 //        tv_Title.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
         Log.d("fontLog","font size set to 12sp");
     }
     public void setFontMedium16sp(View v){
         // set font size to medium 16sp
-        com.shakespeare.new_app.GlobalClass.fontsizesp = 16;
+        GlobalClass.fontsizesp = 16;
 //        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);
 //        tv_Title.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
         Log.d("fontLog","font size set to 16sp");
     }
     public void setFontLarge20sp(View v){
         // set font size to large 20sp
-        com.shakespeare.new_app.GlobalClass.fontsizesp = 20;
+        GlobalClass.fontsizesp = 20;
 //        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);
 //        tv_Title.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
         Log.d("fontLog","font size set to 20sp");
@@ -118,30 +122,34 @@ public class SettingsHomeActivity extends AppCompatActivity {
 
     public void showLineNumbers(View v){
         // set font size to large 20sp
-        com.shakespeare.new_app.GlobalClass.intShowLineNumbers = 1;
+        GlobalClass.intShowLineNumbers = 1;
         Log.d("line numbers preference","show line numbers");
     }
 
     public void hideLineNumbers(View v){
         // set font size to large 20sp
-        com.shakespeare.new_app.GlobalClass.intShowLineNumbers = 0;
+        GlobalClass.intShowLineNumbers = 0;
         Log.d("line numbers preference","hide line numbers");
     }
 
     public void toggleSoundOnOff(View v) {
         // toggle sound on and off
-        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
-        if(com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)){ // if tts is on, then turn off
+//        TextView tvSoundOnOffInd = findViewById(R.id.txtSoundOnOffIndicator);
+        ImageButton btnSound = findViewById(R.id.btnSound);
+
+        if(GlobalClass.boolSoundOn.equals(Boolean.TRUE)){ // if tts is on, then turn off
 
             // turn off any text to speech that is currently in progress
             MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
 
-            com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.FALSE;
-            tvSoundOnOffInd.setText("Sound off");
+            GlobalClass.boolSoundOn = Boolean.FALSE;
+            btnSound.setImageResource(R.drawable.mute_icon_transparent_bg);
+//            tvSoundOnOffInd.setText("Sound off");
             Toast.makeText(this, "Sound off", Toast.LENGTH_SHORT).show();
         } else{ // if tts is off, then turn on
-            com.shakespeare.new_app.GlobalClass.boolSoundOn = Boolean.TRUE;
-            tvSoundOnOffInd.setText("Sound on");
+            GlobalClass.boolSoundOn = Boolean.TRUE;
+            btnSound.setImageResource(R.drawable.sound_icon_transparent_bg);
+//            tvSoundOnOffInd.setText("Sound on");
             Toast.makeText(this, "Sound on", Toast.LENGTH_SHORT).show();
 
         }

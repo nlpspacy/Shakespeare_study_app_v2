@@ -57,6 +57,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
+        Boolean boolSpeakThisLine;
+        boolSpeakThisLine = Boolean.TRUE;
+
         holder.itemView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         // using https://www.geeksforgeeks.org/how-to-apply-onclicklistener-to-recyclerview-items-in-android/
         holder.itemView.setOnClickListener(view -> {
@@ -67,6 +71,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         });
 
         String strContent = mData.get(position);
+        String strSpokenText;
         Integer intContentLength = strContent.length();
 //        Log.d("show position","ViewHolder position: " + String.valueOf(position) + ". Content length: " + String.valueOf(strContent.length()));
         //        String strContentNew;
@@ -106,10 +111,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 //        holder.myTextView.setMaxHeight(20);
         holder.myTextView.setLineSpacing(1, 1);
 
-        // check whether we can selectively hide a line
+        // Check whether the line is longer than 12 characters otherwise
+        // the check for the substring to indicate it's a reference line will
+        // throw an error.
         if (strContent.length() > 12) {
             // if it is a reference line then hide it
             if (strContent.substring(0, 10).equals("play_code:")) {
+
+                // We do not want to speak aloud the reference information.
+                boolSpeakThisLine = Boolean.FALSE;
+
+                // Put reference information in a hidden line.
                 holder.itemView.setLayoutParams(new ViewGroup.LayoutParams(0, 0));
 //                Log.d("hide line","hide line: " + strContent);
                 holder.myTextView.setTextIsSelectable(false);
@@ -119,18 +131,28 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 holder.myTextView.setLineSpacing(-3, -3);
 //                holder.myTextView.setTextIsSelectable(true);
 //                holder.myTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10);
-            } else {
-                // If it not a reference line, then leave the line visible.
-                // Also, if the user has opted for text to speech, then speak the line out loud.
+            }
+        }
 
-                if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
+        // If this line is a spoken line, check whether the user has turned speech on.
+        if (boolSpeakThisLine.equals(Boolean.TRUE)) {
 
-                    MyApplication.setLanguage(Locale.ENGLISH);
-                    MyApplication.textToSpeech.speak(strContent, TextToSpeech.QUEUE_ADD, null,
-                            UUID.randomUUID().toString());
+            strSpokenText = strContent;
 
+            // If the user has opted for text to speech, then speak the line out loud.
+            if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
+
+                // If there are line numbers, then remove the line number reference
+                // from the spoken text.
+                if (com.shakespeare.new_app.GlobalClass.scriptSceneLineNr!=0) {
+                    if(strContent.contains(" ")) {
+                        strSpokenText = strContent.substring(strContent.indexOf(" "),strContent.length());
+
+                    }
                 }
-
+                MyApplication.setLanguage(Locale.ENGLISH);
+                MyApplication.textToSpeech.speak(strSpokenText, TextToSpeech.QUEUE_ADD, null,
+                        UUID.randomUUID().toString());
 
             }
         }

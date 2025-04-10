@@ -145,7 +145,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 // If there are line numbers, then remove the line number reference
                 // from the spoken text.
                 if (com.shakespeare.new_app.GlobalClass.scriptSceneLineNr!=0) {
-                    if(strContent.contains(" ")) {
+                    if(!strContent.contains("[") && strContent.contains(" ")) {
                         strSpokenText = strContent.substring(strContent.indexOf(" "),strContent.length());
 
                     }

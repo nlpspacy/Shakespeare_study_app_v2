@@ -50,7 +50,9 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.UUID;
 
 
 public class AMSND extends AppCompatActivity {
@@ -543,6 +545,17 @@ public class AMSND extends AppCompatActivity {
                     GlobalClass.selectedSceneNumber = 1;
 
                 }
+
+                // If the user has opted for text to speech, then say the act and scene number.
+                if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
+
+                    MyApplication.setLanguage(Locale.ENGLISH);
+                    MyApplication.textToSpeech.speak("Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), TextToSpeech.QUEUE_ADD, null,
+                            UUID.randomUUID().toString());
+
+                }
+
+
                 Log.d("check position in play","Act " + String.valueOf(GlobalClass.selectedActNumber) + ", scene " + String.valueOf(GlobalClass.selectedSceneNumber));
                 updateScriptDisplay(v, false, false);
                 Log.d("script navigation button", "Act after: " + String.valueOf(GlobalClass.selectedActNumber));
@@ -598,6 +611,16 @@ public class AMSND extends AppCompatActivity {
         Log.d("script navigation button", "Scene before: " + String.valueOf(GlobalClass.selectedSceneNumber));
         if(GlobalClass.selectedSceneNumber > intMinScNr){
             GlobalClass.selectedSceneNumber -= 1;
+
+            // If the user has opted for text to speech, then say the act and scene number.
+            if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
+
+                MyApplication.setLanguage(Locale.ENGLISH);
+                MyApplication.textToSpeech.speak("Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), TextToSpeech.QUEUE_ADD, null,
+                        UUID.randomUUID().toString());
+
+            }
+
             updateScriptDisplay(v, false, false);
         } else if(GlobalClass.selectedActNumber == 0){ // currently at Characters in the Play section
             // do nothing
@@ -628,6 +651,16 @@ public class AMSND extends AppCompatActivity {
         } else if(GlobalClass.selectedSceneNumber < GlobalClass.numberOfScenesInAct){
             Log.d("script navigation button", "Scene before: " + String.valueOf(GlobalClass.selectedSceneNumber));
             GlobalClass.selectedSceneNumber += 1;
+
+            // If the user has opted for text to speech, then say the act and scene number.
+            if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
+
+                MyApplication.setLanguage(Locale.ENGLISH);
+                MyApplication.textToSpeech.speak("Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), TextToSpeech.QUEUE_ADD, null,
+                        UUID.randomUUID().toString());
+
+            }
+
             updateScriptDisplay(v, false, false);
             Log.d("script navigation button", "Scene after: " + String.valueOf(GlobalClass.selectedSceneNumber));
         } else if(Objects.equals(GlobalClass.selectedSceneNumber, GlobalClass.numberOfScenesInAct)){

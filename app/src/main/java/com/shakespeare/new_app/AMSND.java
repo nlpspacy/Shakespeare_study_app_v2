@@ -60,7 +60,6 @@ public class AMSND extends AppCompatActivity {
     private String[] standard_prompts;
     private Spinner standardpromptsspinner;
 
-
     MyRecyclerViewAdapter adapter;
     ArrayList<String> messageList = new ArrayList<>();
 
@@ -962,5 +961,152 @@ public class AMSND extends AppCompatActivity {
         });
 
     }
+
+
+    // read the script from the sqlite database
+    // test version using 2-dimensional array with character name included
+    public void updateScriptDisplay_2d(View v, Boolean boolAtPrologue, Boolean boolAtEpilogue){
+
+        // Clear the list so that the acts and scenes don't accumulate in an ever
+        // increasingly long amount of scrollable text.
+        scriptLinesList.clear();
+        scriptLinesList_2d.clear(); // as at Sunday 13 Apr 2025, the 2d version is in dev.
+
+        DatabaseHandler db = new DatabaseHandler(this) {
+            @Override
+            public void onCreate(SQLiteDatabase db) {
+
+                Log.d("sqllite","onCreate");
+
+            }
+
+            @Override
+            public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+                Log.d("sqllite","onUpgrade");
+
+            }
+        };
+
+        GlobalClass.numberOfScenesInAct = db.getNumberOfScenesInAct();
+        GlobalClass.numberOfActsInPlay = db.getNumberOfActsInPlay();
+
+        int intActNumberSelected = GlobalClass.selectedActNumber;
+        int intSceneNumberSelected = GlobalClass.selectedSceneNumber;
+        // if we are at the prologue then act number selected is -1 and we need scene number to be -1 as well.
+        // if we are at the epilogue then act number selected is -2 and we need scene number to be -2 as well.
+        if (intActNumberSelected<0) {
+            intSceneNumberSelected = intActNumberSelected;
+            GlobalClass.selectedSceneNumber = intSceneNumberSelected;
+        }
+        Log.d("act number and scene number returned","Act and scene number selected:" + String.valueOf(intActNumberSelected) + " " + String.valueOf(intSceneNumberSelected));
+
+        // If the content is the preamble including Dramatis Personae
+        // then don't display act number or scene number.
+        if(intActNumberSelected==0){
+            TextView tvActNumber = findViewById(R.id.textViewActNumber);
+            tvActNumber.setVisibility(View.GONE);
+
+            TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+            tvSceneNumber.setVisibility(View.GONE);
+
+        } else if(intSceneNumberSelected==0){
+            // If the content is the preamble of an Act, then don't display scene number.
+            TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+            tvSceneNumber.setVisibility(View.GONE);
+
+            // Display act number only.
+            TextView tvActNumber = findViewById(R.id.textViewActNumber);
+            tvActNumber.setVisibility(View.VISIBLE);
+            tvActNumber.setText("Act " + String.valueOf(intActNumberSelected) + "/" + GlobalClass.numberOfActsInPlay);
+
+        } else if(intActNumberSelected==-2){
+            // If the content is the preamble of an Act, then don't display scene number.
+            TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+            tvSceneNumber.setVisibility(View.GONE);
+
+            // Display act number only.
+            TextView tvActNumber = findViewById(R.id.textViewActNumber);
+            tvActNumber.setVisibility(View.VISIBLE);
+            tvActNumber.setText("Prol.");
+
+        } else if(intActNumberSelected==-1){
+            // If the content is the preamble of an Act, then don't display scene number.
+            TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+            tvSceneNumber.setVisibility(View.GONE);
+
+            // Display act number only.
+            TextView tvActNumber = findViewById(R.id.textViewActNumber);
+            tvActNumber.setVisibility(View.VISIBLE);
+            tvActNumber.setText("Epil.");
+
+        } else {
+            // Otherwise display act number and scene number.
+            TextView tvActNumber = findViewById(R.id.textViewActNumber);
+            tvActNumber.setVisibility(View.VISIBLE);
+            tvActNumber.setText("Act " + String.valueOf(intActNumberSelected) + "/" + GlobalClass.numberOfActsInPlay);
+
+            TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+            tvSceneNumber.setVisibility(View.VISIBLE);
+            tvSceneNumber.setText("Sc " + String.valueOf(intSceneNumberSelected) + "/" + GlobalClass.numberOfScenesInAct);
+
+        }
+
+        // show the script using recycler view with multiple lines returned from database rows returned
+        // *** start recycler view logic ***
+
+        // add the script as an array or list
+        scriptLinesList = db.getScript(boolAtPrologue, boolAtEpilogue);
+        Log.d("script", "scriptLinesList size: " + scriptLinesList.size());
+
+        // The 2d version is not used yet, but is in testing.
+        scriptLinesList_2d = db.getScript_2d(boolAtPrologue, boolAtEpilogue);
+        Log.d("script_2d", "2d scriptLinesList size: " + scriptLinesList_2d.size());
+
+        RecyclerView rvScript = findViewById(R.id.rvScript);
+        rvScript.setLayoutManager(new LinearLayoutManager(rvScript.getContext()));
+
+        // *** start: loop through ArrayList scriptLinesList
+
+        ArrayList<String> scriptLinesList = null;
+        Integer i = 0;
+
+        for(ArrayList<String> data: scriptLinesList_2d)
+        {
+            // Assign just the script part of the array.
+            // Check whether the character is specified as the user's character
+            // and if so then include a flag to indicate to not speak that text.
+            scriptLinesList.add(String.valueOf(data.get(1)));
+            i++;
+            Log.d("2d adapter view","2d adapter view: " + String.valueOf(data.get(1)));
+        }
+
+        // *** end: loop through ArrayList scriptLinesList
+
+        // script lines list needs alternating line with the playcode, act, scene, play_line_nr reference
+        // to include in the recycler view as a hidden row for bookmark referencing
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
+        rvScript.setAdapter(adapter);
+        int listLength = scriptLinesList.size();
+//        rvScript.smoothScrollToPosition(listLength);
+        rvScript.smoothScrollToPosition(0);
+        // *** end recycler view logic ***
+
+        // set the act number font size which the user has specified
+        TextView tvActNumber = findViewById(R.id.textViewActNumber);
+        tvActNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
+
+        // set the scene number font size which the user has specified
+        TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+        tvSceneNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
+
+        // update database play_position table with current act number and scene number for current play code
+        Integer intUpdateRow = db.updateNavDbWithCurrentActSceneInPlay();
+        Log.d("check", String.valueOf(intUpdateRow));
+
+        updateStandardPromptsList(v);
+
+    }
+
 
 }

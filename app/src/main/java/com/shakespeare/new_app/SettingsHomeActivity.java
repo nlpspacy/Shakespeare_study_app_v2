@@ -46,6 +46,31 @@ public class SettingsHomeActivity extends AppCompatActivity {
 
         }
 
+        if(com.shakespeare.new_app.GlobalClass.fontsizesp == 12) {
+            RadioButton rbtnfontsmall = (RadioButton) findViewById(R.id.rbtnfontsmall); // initiate a radio button
+            rbtnfontsmall.setChecked(true); // check current state of a radio button (true or false).
+            RadioButton rbtnfontmedium = (RadioButton) findViewById(R.id.rbtnfontmedium); // initiate a radio button
+            rbtnfontmedium.setChecked(false); // check current state of a radio button (true or false).
+            RadioButton rbtnfontlarge = (RadioButton) findViewById(R.id.rbtnfontlarge); // initiate a radio button
+            rbtnfontlarge.setChecked(false); // check current state of a radio button (true or false).
+
+        } else if(com.shakespeare.new_app.GlobalClass.fontsizesp == 16) {
+            RadioButton rbtnfontsmall = (RadioButton) findViewById(R.id.rbtnfontsmall); // initiate a radio button
+            rbtnfontsmall.setChecked(false); // check current state of a radio button (true or false).
+            RadioButton rbtnfontmedium = (RadioButton) findViewById(R.id.rbtnfontmedium); // initiate a radio button
+            rbtnfontmedium.setChecked(true); // check current state of a radio button (true or false).
+            RadioButton rbtnfontlarge = (RadioButton) findViewById(R.id.rbtnfontlarge); // initiate a radio button
+            rbtnfontlarge.setChecked(false); // check current state of a radio button (true or false).
+
+        } else if(com.shakespeare.new_app.GlobalClass.fontsizesp == 20) {
+            RadioButton rbtnfontsmall = (RadioButton) findViewById(R.id.rbtnfontsmall); // initiate a radio button
+            rbtnfontsmall.setChecked(false); // check current state of a radio button (true or false).
+            RadioButton rbtnfontmedium = (RadioButton) findViewById(R.id.rbtnfontmedium); // initiate a radio button
+            rbtnfontmedium.setChecked(false); // check current state of a radio button (true or false).
+            RadioButton rbtnfontlarge = (RadioButton) findViewById(R.id.rbtnfontlarge); // initiate a radio button
+            rbtnfontlarge.setChecked(true); // check current state of a radio button (true or false).
+
+        } ;
 
 //        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);
 //        tv_Title.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);

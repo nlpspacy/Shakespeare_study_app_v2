@@ -10,8 +10,8 @@ android {
         applicationId = "com.shakespeare.new_app"
         minSdk = 24
         targetSdk = 34
-        versionCode = 15
-        versionName = "1.25"
+        versionCode = 16
+        versionName = "1.26"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

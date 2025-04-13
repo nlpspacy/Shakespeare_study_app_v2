@@ -30,9 +30,10 @@
     <string name="font_btn_label_small">T</string>
     <string name="font_btn_label_medium">T</string>
     <string name="font_btn_label_large">T</string>
-    <string name="font_settings_btn_label_small">Text small</string>
-    <string name="font_settings_btn_label_medium">Text medium</string>
-    <string name="font_settings_btn_label_large">Text large</string>
+    <string name="font_size_setting_label">Text size:</string>
+    <string name="font_settings_btn_label_small">small</string>
+    <string name="font_settings_btn_label_medium">medium</string>
+    <string name="font_settings_btn_label_large">large</string>
     <string name="nav_btn_label_back">Back</string>
     <string name="nav_btn_label_return_to_home">Home</string>
     <string name="txt_Message_Send_Box_Hint">Write here</string>

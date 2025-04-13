@@ -66,7 +66,7 @@ public class AMSND extends AppCompatActivity {
 
     MyRecyclerViewAdapter adapterScript;
     ArrayList<String> scriptLinesList = new ArrayList<>();
-
+    ArrayList<ArrayList<String>> scriptLinesList_2d = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,6 +242,7 @@ public class AMSND extends AppCompatActivity {
         // Clear the list so that the acts and scenes don't accumulate in an ever
         // increasingly long amount of scrollable text.
         scriptLinesList.clear();
+        scriptLinesList_2d.clear(); // as at Sunday 13 Apr 2025, the 2d version is in dev.
 
         DatabaseHandler db = new DatabaseHandler(this) {
             @Override
@@ -338,7 +339,11 @@ public class AMSND extends AppCompatActivity {
 
         // but, instead, we want to add as an array or list
         scriptLinesList = db.getScript(boolAtPrologue, boolAtEpilogue);
-        Log.d("script", "scriptLinesList: " + scriptLinesList.size());
+        Log.d("script", "scriptLinesList size: " + scriptLinesList.size());
+
+        // The 2d version is not used yet, but is in testing.
+        scriptLinesList_2d = db.getScript_2d(boolAtPrologue, boolAtEpilogue);
+        Log.d("script_2d", "2d scriptLinesList size: " + scriptLinesList_2d.size());
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
         rvScript.setLayoutManager(new LinearLayoutManager(rvScript.getContext()));

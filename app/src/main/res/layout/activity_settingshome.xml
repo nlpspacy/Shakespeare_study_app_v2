@@ -80,35 +80,59 @@
             android:text="View current information"
             android:textAllCaps="false" />
 
-        <Button
-            android:id="@+id/btnfontsmall"
-            android:layout_width="wrap_content"
-            android:layout_height="50sp"
-            android:layout_margin="8dp"
-            android:onClick="setFontSmall12sp"
-            android:text="@string/font_settings_btn_label_small"
-            android:textAllCaps="false"
-            android:textSize="10sp" />
 
-        <Button
-            android:id="@+id/btnfontmedium"
+        <TextView
+            android:id="@+id/txtFontSize"
             android:layout_width="wrap_content"
-            android:layout_height="50sp"
-            android:layout_margin="8dp"
-            android:onClick="setFontMedium16sp"
-            android:text="@string/font_settings_btn_label_medium"
-            android:textAllCaps="false"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0sp"
+            android:layout_marginTop="10sp"
+            android:text="@string/font_size_setting_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnfontlarge" />
 
-        <Button
-            android:id="@+id/btnfontlarge"
-            android:layout_width="wrap_content"
-            android:layout_height="50sp"
-            android:layout_margin="8dp"
-            android:onClick="setFontLarge20sp"
-            android:text="@string/font_settings_btn_label_large"
-            android:textAllCaps="false"
-            android:textSize="16sp" />
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbtnfontsmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100sp"
+                android:layout_marginTop="10sp"
+                android:onClick="setFontSmall12sp"
+                android:text="@string/font_settings_btn_label_small"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtShowHideLineNumbers" />
+
+            <RadioButton
+                android:id="@+id/rbtnfontmedium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100sp"
+                android:layout_marginTop="10sp"
+                android:onClick="setFontMedium16sp"
+                android:text="@string/font_settings_btn_label_medium"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rbtnShowLineNumbers" />
+
+            <RadioButton
+                android:id="@+id/rbtnfontlarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="100sp"
+                android:layout_marginTop="10sp"
+                android:onClick="setFontLarge20sp"
+                android:text="@string/font_settings_btn_label_large"
+                android:textSize="20sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rbtnShowLineNumbers" />
+
+        </RadioGroup>
 
         <TextView
             android:id="@+id/txtShowHideLineNumbers"

@@ -218,6 +218,16 @@
             android:textAllCaps="false"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <Button
+            android:id="@+id/btnSharedDbActivity"
+            android:layout_width="80sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
+            android:onClick="openSharedDbActivity"
+            android:text="@string/btnSharedDbTest"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="parent" />
+
 
     </LinearLayout>
 

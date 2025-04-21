@@ -34,40 +34,40 @@ public class SettingsHomeActivity extends AppCompatActivity {
         });
 
         if(GlobalClass.intShowLineNumbers==1){
-            RadioButton rbShowLineNumbers = (RadioButton) findViewById(R.id.rbtnShowLineNumbers); // initiate a radio button
+            RadioButton rbShowLineNumbers = findViewById(R.id.rbtnShowLineNumbers); // initiate a radio button
             rbShowLineNumbers.setChecked(true); // check current state of a radio button (true or false).
 
         } else {
-            RadioButton rbShowLineNumbers = (RadioButton) findViewById(R.id.rbtnShowLineNumbers); // initiate a radio button
+            RadioButton rbShowLineNumbers = findViewById(R.id.rbtnShowLineNumbers); // initiate a radio button
             rbShowLineNumbers.setChecked(false); // check current state of a radio button (true or false).
 
-            RadioButton rbHideLineNumbers = (RadioButton) findViewById(R.id.rbtnHideLineNumbers); // initiate a radio button
+            RadioButton rbHideLineNumbers = findViewById(R.id.rbtnHideLineNumbers); // initiate a radio button
             rbHideLineNumbers.setChecked(true); // check current state of a radio button (true or false).
 
         }
 
         if(com.shakespeare.new_app.GlobalClass.fontsizesp == 12) {
-            RadioButton rbtnfontsmall = (RadioButton) findViewById(R.id.rbtnfontsmall); // initiate a radio button
+            RadioButton rbtnfontsmall = findViewById(R.id.rbtnfontsmall); // initiate a radio button
             rbtnfontsmall.setChecked(true); // check current state of a radio button (true or false).
-            RadioButton rbtnfontmedium = (RadioButton) findViewById(R.id.rbtnfontmedium); // initiate a radio button
+            RadioButton rbtnfontmedium = findViewById(R.id.rbtnfontmedium); // initiate a radio button
             rbtnfontmedium.setChecked(false); // check current state of a radio button (true or false).
-            RadioButton rbtnfontlarge = (RadioButton) findViewById(R.id.rbtnfontlarge); // initiate a radio button
+            RadioButton rbtnfontlarge = findViewById(R.id.rbtnfontlarge); // initiate a radio button
             rbtnfontlarge.setChecked(false); // check current state of a radio button (true or false).
 
         } else if(com.shakespeare.new_app.GlobalClass.fontsizesp == 16) {
-            RadioButton rbtnfontsmall = (RadioButton) findViewById(R.id.rbtnfontsmall); // initiate a radio button
+            RadioButton rbtnfontsmall = findViewById(R.id.rbtnfontsmall); // initiate a radio button
             rbtnfontsmall.setChecked(false); // check current state of a radio button (true or false).
-            RadioButton rbtnfontmedium = (RadioButton) findViewById(R.id.rbtnfontmedium); // initiate a radio button
+            RadioButton rbtnfontmedium = findViewById(R.id.rbtnfontmedium); // initiate a radio button
             rbtnfontmedium.setChecked(true); // check current state of a radio button (true or false).
-            RadioButton rbtnfontlarge = (RadioButton) findViewById(R.id.rbtnfontlarge); // initiate a radio button
+            RadioButton rbtnfontlarge = findViewById(R.id.rbtnfontlarge); // initiate a radio button
             rbtnfontlarge.setChecked(false); // check current state of a radio button (true or false).
 
         } else if(com.shakespeare.new_app.GlobalClass.fontsizesp == 20) {
-            RadioButton rbtnfontsmall = (RadioButton) findViewById(R.id.rbtnfontsmall); // initiate a radio button
+            RadioButton rbtnfontsmall = findViewById(R.id.rbtnfontsmall); // initiate a radio button
             rbtnfontsmall.setChecked(false); // check current state of a radio button (true or false).
-            RadioButton rbtnfontmedium = (RadioButton) findViewById(R.id.rbtnfontmedium); // initiate a radio button
+            RadioButton rbtnfontmedium = findViewById(R.id.rbtnfontmedium); // initiate a radio button
             rbtnfontmedium.setChecked(false); // check current state of a radio button (true or false).
-            RadioButton rbtnfontlarge = (RadioButton) findViewById(R.id.rbtnfontlarge); // initiate a radio button
+            RadioButton rbtnfontlarge = findViewById(R.id.rbtnfontlarge); // initiate a radio button
             rbtnfontlarge.setChecked(true); // check current state of a radio button (true or false).
 
         } ;
@@ -97,6 +97,16 @@ public class SettingsHomeActivity extends AppCompatActivity {
         // go back to previous screen/activity
 
         getOnBackPressedDispatcher().onBackPressed();
+
+//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
+//        startActivity(i);
+    }
+
+    public void openSharedDbActivity(View v) {
+        // go back to previous screen/activity
+
+        Intent i = new Intent(this, ShowPlaySharedDb.class);
+        startActivity(i);
 
 //        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
 //        startActivity(i);

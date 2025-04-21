@@ -1,4 +1,7 @@
 <resources>
+    <string name="trialclouddb">Trial sqlite cloud database</string>
+    <string name="btnSharedDbTest">Db test</string>
+
     <string name="app_name">Shakes works</string>
     <string name="home_screen_title">Shakespeare\'s works</string>
     <string name="btn_settings_label">Settings</string>

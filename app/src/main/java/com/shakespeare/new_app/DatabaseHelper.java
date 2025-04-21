@@ -15,7 +15,6 @@ import java.io.OutputStream;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASENAME = "play_navigation.db"; //<<<<<<<<< MUST match file name in assets/databases
-//    private static String DATABASEPATH = Environment.getDataDirectory().getAbsolutePath() + "/data/com.example.new_app/databases/";
     private static String DATABASEPATH = Environment.getDataDirectory().getAbsolutePath() + "/data/com.shakespeare.new_app/databases/";
     public static final int DATABASEVERSION = 1;
     private final Context dbContext;

@@ -63,6 +63,11 @@
             android:exported="false"
             android:label="@string/removebookmark"
             android:theme="@style/Theme.New_app.Popup" />
+        <activity
+            android:name=".ShowPlaySharedDb"
+            android:exported="false"
+            android:label="@string/trialclouddb"
+            android:theme="@style/Theme.Design" />
     </application>
 
 </manifest>

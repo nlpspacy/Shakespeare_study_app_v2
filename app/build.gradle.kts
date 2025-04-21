@@ -42,38 +42,22 @@ android {
     }
 
 }
-
 dependencies {
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.activity:activity:1.9.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.0")
 
-    implementation(libs.appcompat)
-    implementation(libs.material)
-    implementation(libs.activity)
-    implementation(libs.constraintlayout)
-    implementation(libs.core)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0") // ✅ OkHttp is back
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("androidx.test:core:1.5.0")
+
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
     implementation(project(":sqlitecloud"))
-//    implementation("com.sqlitecloud:sqlitecloud-kotlin:1.9.22")
-
-//    implementation("org.jetbrains.kotlin:kotlin-stdlib:$1.9.0")
-
-
-//    androidTestImplementation(androidx.test:runner:1.1.0)
-
-//    androidTestImplementation(com.android.support.test:runner:1.0.2)
-
-//    implementation(androidx.recyclerview:recyclerview:1.1.0)
-//    implementation(androidx.appcompat:appcompat:1.1.0)
-
-        // Kotlin core extensions (required for coroutine and AndroidX interop)
-        implementation("androidx.core:core-ktx:1.12.0")
-
-        // Kotlin standard library
-        implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
-
-        // If you're using coroutines (which you are via RemoteDatabaseHelper)
-        implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
-
 }

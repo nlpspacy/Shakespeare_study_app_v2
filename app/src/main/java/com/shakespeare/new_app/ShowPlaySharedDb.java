@@ -1,11 +1,13 @@
 package com.shakespeare.new_app;
 
-import android.util.Log;
+//import static android.os.Build.VERSION_CODES.R;
+
 import com.example.database.RemoteDatabaseHelper;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -13,6 +15,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ShowPlaySharedDb extends AppCompatActivity  {
 
@@ -33,27 +41,28 @@ public class ShowPlaySharedDb extends AppCompatActivity  {
 
     public void runTestQuery(View v) {
 
-        RemoteDatabaseHelper helper = new RemoteDatabaseHelper();
+        AtomicReference<TextView> status = new AtomicReference<>((TextView) findViewById(R.id.result_text));
+        String url = "sqlitecloud://cgdjyovjhk.g2.sqlite.cloud:8860/play_navigation.db?apikey=SFR0f2mYTxb3bbOiaALxEyatvEt2WDn5hYygAXiuE2o";
+        RemoteDatabaseHelper helper = new RemoteDatabaseHelper(this, url);
+//        RemoteDatabaseHelper helper = new RemoteDatabaseHelper(this);
 
         helper.runQueryFromJava("SELECT * FROM play_character", result -> {
-//            if (result.getSuccess()) {
-//                String output = result.getData();
-//                Log.d("DatabaseCaller", "Query success: " + output);
-//            } else {
-//                Throwable error = result.getError();
-//                Log.e("DatabaseCaller", "Query failed", error);
-//            }
-
-            TextView resultText = findViewById(R.id.result_text);
+            RecyclerView recyclerView = findViewById(R.id.query_result_list);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
             if (result.getSuccess()) {
-                resultText.setText("Query success:\n" + result.getData());
+                List<Map<String, String>> data = result.getData();
+                QueryResultAdapter adapter = new QueryResultAdapter(data);
+                recyclerView.setAdapter(adapter);
+                status.set(findViewById(R.id.result_text));
+                status.get().setText("Query succeeded: " + result.getData().size() + " rows");
             } else {
-                resultText.setText("Query failed:\n" + result.getError().getMessage());
+                Toast.makeText(this, "Query failed: " + result.getError().getMessage(), Toast.LENGTH_LONG).show();
+                status.get().setText("Query failed: " + result.getError().getMessage());
             }
-
             return null;
         });
+
 
     }
 

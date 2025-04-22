@@ -36,7 +36,7 @@ public class ShowPlaySharedDb extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showplayshareddb);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainlayout), (v, insets) -> {
             v.setPadding(0, insets.getInsets(Type.systemBars()).top, 0, 0);
             return insets;
         });

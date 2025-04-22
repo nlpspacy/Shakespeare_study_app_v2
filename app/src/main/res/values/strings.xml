@@ -242,4 +242,25 @@
         <item>Richard III</item>
     </string-array>
 
+    <string name="AllsWellThatEndsWell">All\'s Well That Ends Well</string>
+    <string name="AAC">Antony and Cleopatra</string>
+    <string name="AsYouLikeIt">As You Like It</string>
+    <string name="ComedyOfErrors">The Comedy of Errors</string>
+    <string name="Hamlet">Hamlet, Prince of Denmark</string>
+    <string name="HenryIVPart1">Henry IV, Part I</string>
+    <string name="HenryIVPart2">Henry IV, Part II</string>
+    <string name="HenryV">Henry V</string>
+    <string name="JuliusCaesar">Julius Caesar</string>
+    <string name="KingJohn">King John</string>
+    <string name="RichardII">Richard II</string>
+    <string name="RichardIII">Richard III</string>
+    <string name="KingLear">The Tragedy of King Lear</string>
+    <string name="Macbeth">The Tragedy of Macbeth</string>
+    <string name="MerchantOfVenice">The Merchant of Venice</string>
+    <string name="AMSND">A Midsummer Night\'s Dream</string>
+    <string name="MuchAdo">Much Ado about Nothing</string>
+    <string name="Othello">Othello, the Moor of Venice</string>
+    <string name="RomeoAndJuliet">Romeo and Juliet</string>
+    <string name="Tempest">The Tempest</string>
+
 </resources>

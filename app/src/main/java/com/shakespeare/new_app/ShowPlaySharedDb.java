@@ -1,50 +1,43 @@
+// This will be your updated activity logic with sorted play codes and grouped character display
+
 package com.shakespeare.new_app;
-
-//import static android.os.Build.VERSION_CODES.R;
-
-import android.annotation.SuppressLint;
-import android.widget.Spinner;
-import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import com.example.database.RemoteDatabaseHelperHttp;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
-import androidx.core.graphics.Insets;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.WindowInsetsCompat.Type;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.database.RemoteDatabaseHelperHttp;
+import com.shakespeare.new_app.R;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-public class ShowPlaySharedDb extends AppCompatActivity  {
+public class ShowPlaySharedDb extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_showplayshareddb);
-        this.setTitle(getResources().getString(R.string.home_screen_title));
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(0, insets.getInsets(Type.systemBars()).top, 0, 0);
             return insets;
         });
 
@@ -55,16 +48,16 @@ public class ShowPlaySharedDb extends AppCompatActivity  {
             if (result.isSuccess()) {
                 List<Map<String, String>> allRows = result.getData();
 
-                // Get unique play codes
                 Set<String> playCodeSet = new HashSet<>();
                 for (Map<String, String> row : allRows) {
                     playCodeSet.add(row.get("play_code"));
                 }
 
                 List<String> playCodes = new ArrayList<>(playCodeSet);
+                Collections.sort(playCodes); // sort alphabetically
+
                 List<String> displayNames = new ArrayList<>();
                 Map<String, String> codeToDisplay = new HashMap<>();
-
                 for (String code : playCodes) {
                     int resId = getResources().getIdentifier(code, "string", getPackageName());
                     String display = resId != 0 ? getString(resId) : code;
@@ -80,21 +73,41 @@ public class ShowPlaySharedDb extends AppCompatActivity  {
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        if (view == null) return; // user hasn't made a selection yet, just initial draw
                         String selectedPlayName = displayNames.get(position);
-                        TextView tvSelectedPlayName = findViewById(R.id.play_selected_heading);
-                        tvSelectedPlayName.setText("Characters in " + selectedPlayName); // show play name as a heading
-                        String selectedPlayCodeForUserChr = codeToDisplay.get(selectedPlayName);
-                        String sql = "SELECT * FROM play_character WHERE play_code = '" + selectedPlayCodeForUserChr + "';";
-                        Log.d("query", sql);
+                        String selectedPlayCode = codeToDisplay.get(selectedPlayName);
+                        String sql = "SELECT * FROM play_character WHERE play_code = '" + selectedPlayCode + "'";
 
                         helper.runQueryFromJava(sql, filteredResult -> {
                             if (filteredResult.isSuccess()) {
                                 List<Map<String, String>> filteredRows = filteredResult.getData();
-                                CharacterAdapter charAdapter = new CharacterAdapter(ShowPlaySharedDb.this, filteredRows);
+                                List<Map<String, String>> structuredRows = new ArrayList<>();
+                                Map<String, List<Map<String, String>>> grouped = new LinkedHashMap<>();
+
+                                for (Map<String, String> row : filteredRows) {
+                                    String group = row.get("is_a_group");
+                                    if (group != null && !group.equals("null") && !group.isEmpty()) {
+                                        grouped.computeIfAbsent(group, k -> new ArrayList<>()).add(row);
+                                    } else {
+                                        grouped.computeIfAbsent("__ungrouped__", k -> new ArrayList<>()).add(row);
+                                    }
+                                }
+
+                                for (Map.Entry<String, List<Map<String, String>>> entry : grouped.entrySet()) {
+                                    if (!"__ungrouped__".equals(entry.getKey())) {
+                                        Map<String, String> groupHeader = new HashMap<>();
+                                        groupHeader.put("row_type", "group");
+                                        groupHeader.put("is_a_group", entry.getKey());
+                                        structuredRows.add(groupHeader);
+                                    }
+                                    for (Map<String, String> charRow : entry.getValue()) {
+                                        charRow.put("row_type", "character");
+                                        structuredRows.add(charRow);
+                                    }
+                                }
+
+                                CharacterAdapter charAdapter = new CharacterAdapter(ShowPlaySharedDb.this, structuredRows);
                                 recyclerView.setAdapter(charAdapter);
                             } else {
                                 Log.e("SQL Query", "Failed to get characters", filteredResult.getError());
@@ -112,7 +125,4 @@ public class ShowPlaySharedDb extends AppCompatActivity  {
             return null;
         });
     }
-
-
 }
-

@@ -2,12 +2,14 @@
 
 package com.shakespeare.new_app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
@@ -54,6 +56,7 @@ public class ShowPlaySharedDb extends AppCompatActivity {
                 }
 
                 List<String> playCodes = new ArrayList<>(playCodeSet);
+                playCodes.add(" Select a play..."); // placeholder
                 Collections.sort(playCodes); // sort alphabetically
 
                 List<String> displayNames = new ArrayList<>();
@@ -75,6 +78,18 @@ public class ShowPlaySharedDb extends AppCompatActivity {
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                        // Update title using the selected play name
+                        String selectedPlayCodeForTitle = parent.getItemAtPosition(position).toString();
+
+                        // Check whether a valid play has been selected
+                        if (selectedPlayCodeForTitle.equals(" Select a play...")) {
+                            return;
+                        }
+
+                        TextView tvTitle = findViewById(R.id.play_selected_heading);
+                        tvTitle.setText("Characters in " + selectedPlayCodeForTitle);
+
                         String selectedPlayName = displayNames.get(position);
                         String selectedPlayCode = codeToDisplay.get(selectedPlayName);
                         String sql = "SELECT * FROM play_character WHERE play_code = '" + selectedPlayCode + "'";
@@ -103,9 +118,17 @@ public class ShowPlaySharedDb extends AppCompatActivity {
                                     }
                                     for (Map<String, String> charRow : entry.getValue()) {
                                         charRow.put("row_type", "character");
+
+                                        // ✅ If character is part of a group, mark it
+                                        if (charRow.containsKey("is_a_group") && charRow.get("is_a_group") != null && !charRow.get("is_a_group").equals("null") && !charRow.get("is_a_group").isEmpty()) {
+                                            charRow.put("belongs_to_group", "true");
+                                        }
+
+                                        // ✅ Remove is_a_group to avoid adapter misclassifying characters as group headers
+                                        charRow.remove("is_a_group");
+
                                         structuredRows.add(charRow);
-                                    }
-                                }
+                                    }                                }
 
                                 CharacterAdapter charAdapter = new CharacterAdapter(ShowPlaySharedDb.this, structuredRows);
                                 recyclerView.setAdapter(charAdapter);
@@ -125,4 +148,31 @@ public class ShowPlaySharedDb extends AppCompatActivity {
             return null;
         });
     }
+
+
+    public void returnToMain(View v) {
+        // launch a new activity
+
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+    }
+    public void goBack(View v) {
+        // go back to previous screen/activity
+
+        getOnBackPressedDispatcher().onBackPressed();
+
+//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
+//        startActivity(i);
+    }
+
+    public void refreshScreen(View v) {
+        // go back to previous screen/activity
+
+        Intent i = new Intent(this, ShowPlaySharedDb.class);
+        startActivity(i);
+
+//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
+//        startActivity(i);
+    }
+
 }

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,6 +22,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.database.RemoteDatabaseHelperHttp;
 import com.shakespeare.new_app.R;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -32,12 +36,57 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class ShowPlaySharedDb extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showplayshareddb);
+
+        // Set default username (only needed once, or after login)
+        UserManager.saveUsername(this, "dan");
+
+// Attempt to create user on server
+        OkHttpClient client = new OkHttpClient();
+        JSONObject json = new JSONObject();
+        try {
+            json.put("username", UserManager.getUsername(this));
+            RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+
+            Request request = new Request.Builder()
+                    .url("https://android-sqlitecloud-api-production.up.railway.app/create_user")
+                    .post(body)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                    Log.e("CreateUser", "Failed to create user", e);
+                }
+
+                @Override
+                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        Log.e("CreateUser", "Server error: " + response.code());
+                    } else {
+                        Log.d("CreateUser", "User created successfully or already exists");
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e("CreateUser", "Exception", e);
+        }
+
+
+        // ... your existing code to setup spinner, RecyclerView etc.
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainlayout), (v, insets) -> {
             v.setPadding(0, insets.getInsets(Type.systemBars()).top, 0, 0);
             return insets;

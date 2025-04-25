@@ -14,5 +14,12 @@ android:padding="12dp">
         android:paddingTop="0dp"
         android:paddingBottom="0dp" />
 
+    <CheckBox
+        android:id="@+id/checkbox_character_select"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp" />
+
 </LinearLayout>
 

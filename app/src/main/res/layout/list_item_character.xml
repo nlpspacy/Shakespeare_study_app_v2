@@ -5,14 +5,17 @@ android:layout_height="wrap_content"
 android:orientation="horizontal"
 android:padding="12dp">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    <TextView
         android:id="@+id/text_character_display_text"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:textSize="16sp"
-        android:paddingStart="0dp"
-        android:paddingTop="0dp"
-        android:paddingBottom="0dp" />
+        android:paddingEnd="8dp"
+        android:lineSpacingExtra="1dp"
+        android:minHeight="10dp"
+        android:maxLines="3"
+        android:ellipsize="end" />
 
     <CheckBox
         android:id="@+id/checkbox_character_select"

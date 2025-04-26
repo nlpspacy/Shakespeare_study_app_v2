@@ -95,7 +95,9 @@ public class ShowPlaySharedDb extends AppCompatActivity {
         String url = "sqlitecloud://cgdjyovjhk.g2.sqlite.cloud:8860/play_navigation.db?apikey=SFR0f2mYTxb3bbOiaALxEyatvEt2WDn5hYygAXiuE2o";
         RemoteDatabaseHelperHttp helper = new RemoteDatabaseHelperHttp(this, url);
 
-        helper.runQueryFromJava("SELECT * FROM play_character", result -> {
+        // This query is used to populate the play names in the dropdown list / spinner list.
+        helper.runQueryFromJava("SELECT DISTINCT play_code FROM play_character ORDER BY play_code", result -> {
+
             if (result.isSuccess()) {
                 List<Map<String, String>> allRows = result.getData();
 
@@ -141,7 +143,17 @@ public class ShowPlaySharedDb extends AppCompatActivity {
 
                         String selectedPlayName = displayNames.get(position);
                         String selectedPlayCode = codeToDisplay.get(selectedPlayName);
-                        String sql = "SELECT * FROM play_character WHERE play_code = '" + selectedPlayCode + "'";
+
+//                        String selectedPlayShortName = parent.getItemAtPosition(position).toString();
+                        String username = UserManager.getUsername(ShowPlaySharedDb.this);
+
+                        // Escape dangerous characters
+                        String safePlay = escapeSqlString(selectedPlayCode);
+                        String safeUsername = escapeSqlString(username);
+
+                        String sql = "SELECT * FROM play_character_user WHERE play_code = '"
+                                + safePlay + "' AND username = '" + safeUsername + "';";
+                        Log.d("sql check","safe sql: " + sql);
 
                         helper.runQueryFromJava(sql, filteredResult -> {
                             if (filteredResult.isSuccess()) {
@@ -224,4 +236,8 @@ public class ShowPlaySharedDb extends AppCompatActivity {
 //        startActivity(i);
     }
 
+    private String escapeSqlString(String input) {
+        if (input == null) return "";
+        return input.replace("'", "''");
+    }
 }

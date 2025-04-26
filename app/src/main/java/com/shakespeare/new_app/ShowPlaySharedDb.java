@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import androidx.core.view.WindowInsetsCompat.Type;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.database.HttpCallback;
 import com.example.database.RemoteDatabaseHelperHttp;
 import com.shakespeare.new_app.R;
 
@@ -93,10 +95,31 @@ public class ShowPlaySharedDb extends AppCompatActivity {
         });
 
         String url = "sqlitecloud://cgdjyovjhk.g2.sqlite.cloud:8860/play_navigation.db?apikey=SFR0f2mYTxb3bbOiaALxEyatvEt2WDn5hYygAXiuE2o";
-        RemoteDatabaseHelperHttp helper = new RemoteDatabaseHelperHttp(this, url);
+        RemoteDatabaseHelperHttp helperHttp = new RemoteDatabaseHelperHttp(this, url);
+
+// Create the user when launching the activity
+        String username = UserManager.getUsername(this);
+        helperHttp.createUser(username, new HttpCallback() {
+            @Override
+            public void onSuccess(String message) {
+                runOnUiThread(() -> {
+                    Toast.makeText(ShowPlaySharedDb.this, "Welcome back, " + username, Toast.LENGTH_SHORT).show();
+                    Log.d("CreateUser", "Success: " + message);
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                runOnUiThread(() -> {
+                    Log.e("CreateUser", "Error: ", e);
+                    Toast.makeText(ShowPlaySharedDb.this, "Error contacting server.", Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+
 
         // This query is used to populate the play names in the dropdown list / spinner list.
-        helper.runQueryFromJava("SELECT DISTINCT play_code FROM play_character ORDER BY play_code", result -> {
+        helperHttp.runQueryFromJava("SELECT DISTINCT play_code FROM play_character ORDER BY play_code", result -> {
 
             if (result.isSuccess()) {
                 List<Map<String, String>> allRows = result.getData();
@@ -155,7 +178,7 @@ public class ShowPlaySharedDb extends AppCompatActivity {
                                 + safePlay + "' AND username = '" + safeUsername + "';";
                         Log.d("sql check","safe sql: " + sql);
 
-                        helper.runQueryFromJava(sql, filteredResult -> {
+                        helperHttp.runQueryFromJava(sql, filteredResult -> {
                             if (filteredResult.isSuccess()) {
                                 List<Map<String, String>> filteredRows = filteredResult.getData();
                                 List<Map<String, String>> structuredRows = new ArrayList<>();

@@ -164,6 +164,44 @@ public class CharacterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return characterList.size();
     }
 
+    public static List<Map<String, String>> structureGroupedList(List<Map<String, String>> rows) {
+        List<Map<String, String>> structuredRows = new java.util.ArrayList<>();
+
+        String currentGroup = null;
+
+        for (Map<String, String> row : rows) {
+            String groupName = row.get("is_a_group");
+
+            // If a group header is encountered
+            if (groupName != null && !groupName.equals("null") && !groupName.isEmpty()) {
+                Map<String, String> groupRow = new java.util.HashMap<>();
+                groupRow.put("row_type", "group");
+                groupRow.put("is_a_group", groupName);
+                structuredRows.add(groupRow);
+
+                currentGroup = groupName;
+            }
+
+            // Regular character row
+            Map<String, String> charRow = new java.util.HashMap<>(row);
+            charRow.put("row_type", "character");
+
+            // If inside a group, mark character as belonging to a group
+            if (currentGroup != null) {
+                charRow.put("belongs_to_group", "true");
+            }
+
+            structuredRows.add(charRow);
+
+            // If character is not part of any group, reset current group
+            if (groupName == null || groupName.equals("null") || groupName.isEmpty()) {
+                currentGroup = null;
+            }
+        }
+
+        return structuredRows;
+    }
+
     public static class CharacterViewHolder extends RecyclerView.ViewHolder {
         TextView nameText;
         CheckBox selectCheckBox;

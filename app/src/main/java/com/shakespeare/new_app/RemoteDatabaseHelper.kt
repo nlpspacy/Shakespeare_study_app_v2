@@ -1,78 +1,64 @@
 package com.example.database
 
 import android.util.Log
-import com.shakespeare.new_app.ShowPlaySharedDb
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.Call
-import okhttp3.Callback
+import kotlinx.coroutines.*
+import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
-class RemoteDatabaseHelperHttp(
-    showPlaySharedDb: ShowPlaySharedDb,
-    url: String
-) {
+class RemoteDatabaseHelperHttp {
 
-    private val client = OkHttpClient()
-//    private val endpoint = "http://10.0.2.2:8000/query" // use 10.0.2.2 to refer to localhost from Android emulator
-    private val endpoint = "https://android-sqlitecloud-api-production.up.railway.app/query"
     private val baseUrl = "https://android-sqlitecloud-api-production.up.railway.app"
+    private val client = OkHttpClient()
 
-    fun runQueryFromJava(sql: String, callback: (QueryResult) -> Unit) {
+    fun runQueryFromJava(sql: String, callback: (QueryResult<List<Map<String, String>>>) -> Unit) {
+        val fullUrl = "$baseUrl/query"  // ✅ query endpoint
+        val json = JSONObject().apply {
+            put("sql", sql)
+        }
+        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
+
+        val request = Request.Builder()
+            .url(fullUrl)
+            .post(requestBody)
+            .build()
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val json = JSONObject().put("sql", sql).toString()
-                val body = json.toRequestBody("application/json".toMediaTypeOrNull())
+                val response = client.newCall(request).execute()
+                val resultBody = response.body?.string()
+                Log.d("RemoteHttp", "Response: $resultBody")
 
-                val request = Request.Builder()
-                    .url(endpoint)
-                    .post(body)
-                    .build()
-
-                client.newCall(request).execute().use { response ->
-                    val resultBody = response.body?.string()
-                    Log.d("RemoteHttp", "Response: $resultBody")
-
-                    if (!response.isSuccessful || resultBody == null) {
-                        withContext(Dispatchers.Main) {
-                            callback(QueryResult(false, null, Exception("HTTP error")))
-                        }
-                        return@use
+                if (!response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        callback(QueryResult(false, null, Exception("HTTP error")))
                     }
+                    return@launch
+                }
 
-                    val jsonObj = JSONObject(resultBody)
-                    if (jsonObj.optBoolean("success", false)) {
-                        val rows = mutableListOf<Map<String, String>>()
-                        val jsonRows = jsonObj.getJSONArray("rows")
-                        for (i in 0 until jsonRows.length()) {
-                            val rowObj = jsonRows.getJSONObject(i)
-                            val rowMap = mutableMapOf<String, String>()
-                            for (key in rowObj.keys()) {
-                                rowMap[key] = rowObj.getString(key)
-                            }
-                            rows.add(rowMap)
-                        }
-                        withContext(Dispatchers.Main) {
-                            callback(QueryResult(true, rows))
-                        }
-                    } else {
-                        val error = jsonObj.optString("error", "Unknown error")
-                        withContext(Dispatchers.Main) {
-                            callback(QueryResult(false, null, Exception(error)))
-                        }
+//                val rows = JsonUtils.parseJsonRows(resultBody!!)
+
+                val json = JSONObject(resultBody!!)
+                val rows = mutableListOf<Map<String, String>>()
+
+                val columns = json.getJSONArray("columns")
+                val values = json.getJSONArray("values")
+
+                for (i in 0 until values.length()) {
+                    val row = values.getJSONArray(i)
+                    val map = mutableMapOf<String, String>()
+                    for (j in 0 until columns.length()) {
+                        map[columns.getString(j)] = row.getString(j)
                     }
+                    rows.add(map)
+                }
+
+                withContext(Dispatchers.Main) {
+                    callback(QueryResult(true, rows, null))
                 }
             } catch (e: Exception) {
-                Log.e("RemoteHttp", "Query failed", e)
+                Log.e("RemoteHttp", "Exception during query", e)
                 withContext(Dispatchers.Main) {
                     callback(QueryResult(false, null, e))
                 }
@@ -80,56 +66,68 @@ class RemoteDatabaseHelperHttp(
         }
     }
 
-    interface SimpleCallback {
-        fun onResult(success: Boolean, message: String?)
-    }
-
-
     fun createUser(username: String, callback: HttpCallback) {
-        val json = JSONObject()
-        json.put("username", username)
+        val fullUrl = "$baseUrl/create_user"  // ✅ create_user endpoint
+        val json = JSONObject().apply {
+            put("username", username)
+        }
+        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
 
-        val body = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
         val request = Request.Builder()
-            .url("$baseUrl/create_user")
-            .post(body)
+            .url(fullUrl)
+            .post(requestBody)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-//                callback.onResult(false, null)
-                callback.onError(e) // ✅ NEW way
+                callback.onError(e)
             }
 
             override fun onResponse(call: Call, response: Response) {
-                if (response.isSuccessful) {
-//                    val responseBody = response.body?.string()
-//                    callback.onResult(true, responseBody)
-
-                    Log.d("createUser", "Success")
-                    callback.onSuccess("User created successfully") // <<✅ This is where you call success
-
-                } else {
-//                    callback.onResult(false, null)
-
+                if (!response.isSuccessful) {
                     callback.onError(IOException("Unexpected code $response"))
-
+                } else {
+                    callback.onSuccess("User created successfully")
                 }
             }
         })
     }
-}
 
-// Shared data class
+    fun updateSelection(username: String, characterName: String, isUser: Boolean) {
+        val fullUrl = "$baseUrl/update_selection"  // ✅ update_selection endpoint
+        val json = JSONObject().apply {
+            put("username", username)
+            put("character_full_name", characterName)
+            put("is_user", isUser)
+        }
+        val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), json.toString())
 
-data class QueryResult(
-    val isSuccess: Boolean,
-    val data: List<Map<String, String>>? = null,
-    val error: Throwable? = null
-)
+        val request = Request.Builder()
+            .url(fullUrl)
+            .post(requestBody)
+            .build()
 
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("UpdateServer", "Failed to update server", e)
+            }
 
-interface HttpCallback {
-    fun onSuccess(message: String)
-    fun onError(e: Exception)
+            override fun onResponse(call: Call, response: Response) {
+                if (!response.isSuccessful) {
+                    Log.e("UpdateServer", "Server error: ${response.code}")
+                } else {
+                    Log.d("UpdateServer", "Update successful")
+                }
+            }
+        })
+    }
+
+    interface HttpCallback {
+        fun onSuccess(message: String)
+        fun onError(e: Exception)
+//        fun exceptionOrNull(e: Exception) // ChatGPT makes it clear this should not be included:
+        // exceptionOrNull() is not something you call manually —
+        //it was part of the QueryResult class (to read an error), not something the HTTP callback needs.
+        //In fact, exceptionOrNull is a method for results, not for HTTP callbacks.
+    }
 }

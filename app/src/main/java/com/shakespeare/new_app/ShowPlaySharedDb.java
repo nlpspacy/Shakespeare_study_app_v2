@@ -1,8 +1,7 @@
-// This will be your updated activity logic with sorted play codes and grouped character display
-
 package com.shakespeare.new_app;
 
-import android.content.Intent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,257 +9,210 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsCompat.Type;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.database.HttpCallback;
+import com.example.database.RemoteDatabaseHelperHttp.HttpCallback;
+import com.example.database.QueryResult;
 import com.example.database.RemoteDatabaseHelperHttp;
-import com.shakespeare.new_app.R;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import kotlin.Unit;
 
 public class ShowPlaySharedDb extends AppCompatActivity {
+
+    private RemoteDatabaseHelperHttp helperHttp;
+    private Spinner spinner;
+    private RecyclerView recyclerView;
+    private TextView tvTitle;
+    private CharacterAdapter adapter;
+    private List<Map<String, String>> characterList = new ArrayList<>();
+    private ArrayAdapter<String> spinnerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showplayshareddb);
 
-        // Set default username (only needed once, or after login)
-        UserManager.saveUsername(this, "dan");
+        // Initialize views
+        spinner = findViewById(R.id.spinner_play_list);
+        recyclerView = findViewById(R.id.recycler_characters);
+        tvTitle = findViewById(R.id.play_selected_heading);
 
-// Attempt to create user on server
-        OkHttpClient client = new OkHttpClient();
-        JSONObject json = new JSONObject();
-        try {
-            json.put("username", UserManager.getUsername(this));
-            RequestBody body = RequestBody.create(json.toString(), MediaType.parse("application/json"));
+        // Initialize HTTP Helper
+//        helperHttp = new RemoteDatabaseHelperHttp(this, "https://android-sqlitecloud-api-production.up.railway.app");
+        helperHttp = new RemoteDatabaseHelperHttp();
 
-            Request request = new Request.Builder()
-                    .url("https://android-sqlitecloud-api-production.up.railway.app/create_user")
-                    .post(body)
-                    .build();
+        // Setup RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new CharacterAdapter(this, characterList);
+        recyclerView.setAdapter(adapter);
 
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                    Log.e("CreateUser", "Failed to create user", e);
+        // Setup Spinner
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<>());
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(spinnerAdapter);
+
+        // Spinner Listener
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedPlayCode = parent.getItemAtPosition(position).toString();
+                if (!selectedPlayCode.equals("Select a play...")) {
+                    runQueryForPlay(selectedPlayCode);
+                    tvTitle.setText("Characters in " + selectedPlayCode);
                 }
-
-                @Override
-                public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                    if (!response.isSuccessful()) {
-                        Log.e("CreateUser", "Server error: " + response.code());
-                    } else {
-                        Log.d("CreateUser", "User created successfully or already exists");
-                    }
-                }
-            });
-        } catch (Exception e) {
-            Log.e("CreateUser", "Exception", e);
-        }
-
-
-        // ... your existing code to setup spinner, RecyclerView etc.
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainlayout), (v, insets) -> {
-            v.setPadding(0, insets.getInsets(Type.systemBars()).top, 0, 0);
-            return insets;
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
-        String url = "sqlitecloud://cgdjyovjhk.g2.sqlite.cloud:8860/play_navigation.db?apikey=SFR0f2mYTxb3bbOiaALxEyatvEt2WDn5hYygAXiuE2o";
-        RemoteDatabaseHelperHttp helperHttp = new RemoteDatabaseHelperHttp(this, url);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.topContent), (v, insets) -> insets);
 
-// Create the user when launching the activity
+        askForUsernameIfNeeded();  // Important: Only load after checking username!
+    }
+
+    private void askForUsernameIfNeeded() {
         String username = UserManager.getUsername(this);
+        if (username == null || username.isEmpty()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Enter your username");
+            final EditText input = new EditText(this);
+            input.setHint("Username");
+            builder.setView(input);
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                String enteredUsername = input.getText().toString().trim();
+                if (!enteredUsername.isEmpty()) {
+                    UserManager.saveUsername(this, enteredUsername);
+                    createUser(enteredUsername);
+                } else {
+                    Toast.makeText(this, "Username cannot be empty", Toast.LENGTH_SHORT).show();
+                    // 🔥 Re-show the dialog until they type something valid
+                    askForUsernameIfNeeded();
+                }
+            });
+
+            builder.setCancelable(false);
+            builder.show();
+        } else {
+            Toast.makeText(this, "Welcome back, " + username, Toast.LENGTH_SHORT).show();
+            loadInitialData();
+        }
+    }
+
+    private void createUser(String username) {
         helperHttp.createUser(username, new HttpCallback() {
+            public void exceptionOrNull(@NonNull Exception e) {
+
+            }
+
             @Override
             public void onSuccess(String message) {
                 runOnUiThread(() -> {
-                    Toast.makeText(ShowPlaySharedDb.this, "Welcome back, " + username, Toast.LENGTH_SHORT).show();
-                    Log.d("CreateUser", "Success: " + message);
+                    Toast.makeText(ShowPlaySharedDb.this, "Welcome, " + username, Toast.LENGTH_SHORT).show();
+                    loadInitialData();
                 });
             }
 
             @Override
             public void onError(Exception e) {
                 runOnUiThread(() -> {
-                    Log.e("CreateUser", "Error: ", e);
-                    Toast.makeText(ShowPlaySharedDb.this, "Error contacting server.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShowPlaySharedDb.this, "Error creating user", Toast.LENGTH_SHORT).show();
                 });
             }
         });
+    }
 
+//    private void loadInitialData() {
+//        helperHttp.runQueryFromJava("SELECT DISTINCT play_code FROM play_character ORDER BY play_code", this::invoke2);
+//    }
 
-        // This query is used to populate the play names in the dropdown list / spinner list.
+    private void loadInitialData() {
         helperHttp.runQueryFromJava("SELECT DISTINCT play_code FROM play_character ORDER BY play_code", result -> {
-
             if (result.isSuccess()) {
-                List<Map<String, String>> allRows = result.getData();
-
-                Set<String> playCodeSet = new HashSet<>();
-                for (Map<String, String> row : allRows) {
-                    playCodeSet.add(row.get("play_code"));
+                List<Map<String, String>> rows = result.getData();
+                List<String> playCodes = new ArrayList<>();
+                for (Map<String, String> row : rows) {
+                    playCodes.add(row.get("play_code"));
                 }
-
-                List<String> playCodes = new ArrayList<>(playCodeSet);
-                playCodes.add(" Select a play..."); // placeholder
-                Collections.sort(playCodes); // sort alphabetically
-
-                List<String> displayNames = new ArrayList<>();
-                Map<String, String> codeToDisplay = new HashMap<>();
-                for (String code : playCodes) {
-                    int resId = getResources().getIdentifier(code, "string", getPackageName());
-                    String display = resId != 0 ? getString(resId) : code;
-                    displayNames.add(display);
-                    codeToDisplay.put(display, code);
-                }
-
-                Spinner spinner = findViewById(R.id.spinnerPlayFilter);
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, displayNames);
-                spinner.setAdapter(adapter);
-
-                RecyclerView recyclerView = findViewById(R.id.recyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                        // Update title using the selected play name
-                        String selectedPlayCodeForTitle = parent.getItemAtPosition(position).toString();
-
-                        // Check whether a valid play has been selected
-                        if (selectedPlayCodeForTitle.equals(" Select a play...")) {
-                            return;
-                        }
-
-                        TextView tvTitle = findViewById(R.id.play_selected_heading);
-                        tvTitle.setText("Characters in " + selectedPlayCodeForTitle);
-
-                        String selectedPlayName = displayNames.get(position);
-                        String selectedPlayCode = codeToDisplay.get(selectedPlayName);
-
-//                        String selectedPlayShortName = parent.getItemAtPosition(position).toString();
-                        String username = UserManager.getUsername(ShowPlaySharedDb.this);
-
-                        // Escape dangerous characters
-                        String safePlay = escapeSqlString(selectedPlayCode);
-                        String safeUsername = escapeSqlString(username);
-
-                        String sql = "SELECT * FROM play_character_user WHERE play_code = '"
-                                + safePlay + "' AND username = '" + safeUsername + "';";
-                        Log.d("sql check","safe sql: " + sql);
-
-                        helperHttp.runQueryFromJava(sql, filteredResult -> {
-                            if (filteredResult.isSuccess()) {
-                                List<Map<String, String>> filteredRows = filteredResult.getData();
-                                List<Map<String, String>> structuredRows = new ArrayList<>();
-                                Map<String, List<Map<String, String>>> grouped = new LinkedHashMap<>();
-
-                                for (Map<String, String> row : filteredRows) {
-                                    String group = row.get("is_a_group");
-                                    if (group != null && !group.equals("null") && !group.isEmpty()) {
-                                        grouped.computeIfAbsent(group, k -> new ArrayList<>()).add(row);
-                                    } else {
-                                        grouped.computeIfAbsent("__ungrouped__", k -> new ArrayList<>()).add(row);
-                                    }
-                                }
-
-                                for (Map.Entry<String, List<Map<String, String>>> entry : grouped.entrySet()) {
-                                    if (!"__ungrouped__".equals(entry.getKey())) {
-                                        Map<String, String> groupHeader = new HashMap<>();
-                                        groupHeader.put("row_type", "group");
-                                        groupHeader.put("is_a_group", entry.getKey());
-                                        structuredRows.add(groupHeader);
-                                    }
-                                    for (Map<String, String> charRow : entry.getValue()) {
-                                        charRow.put("row_type", "character");
-
-                                        // ✅ If character is part of a group, mark it
-                                        if (charRow.containsKey("is_a_group") && charRow.get("is_a_group") != null && !charRow.get("is_a_group").equals("null") && !charRow.get("is_a_group").isEmpty()) {
-                                            charRow.put("belongs_to_group", "true");
-                                        }
-
-                                        // ✅ Remove is_a_group to avoid adapter misclassifying characters as group headers
-                                        charRow.remove("is_a_group");
-
-                                        structuredRows.add(charRow);
-                                    }                                }
-
-                                CharacterAdapter charAdapter = new CharacterAdapter(ShowPlaySharedDb.this, structuredRows);
-                                recyclerView.setAdapter(charAdapter);
-                            } else {
-                                Log.e("SQL Query", "Failed to get characters", filteredResult.getError());
-                            }
-                            return null;
-                        });
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {}
-                });
+                setupSpinner(playCodes);
             } else {
-                Log.e("HTTP Helper", "Failed to get play list", result.getError());
+                // Handle query failure
+                Log.e("LoadInitialData", "Failed to fetch play codes", result.getException());
             }
-            return null;
+            return null; // ✅ RETURN here INSIDE the lambda (not from loadInitialData itself)
         });
     }
 
-
-    public void returnToMain(View v) {
-        // launch a new activity
-
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-    }
-    public void goBack(View v) {
-        // go back to previous screen/activity
-
-        getOnBackPressedDispatcher().onBackPressed();
-
-//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
-//        startActivity(i);
+    private void setupSpinner(List<String> playCodes) {
+        runOnUiThread(() -> {
+            spinnerAdapter.clear();
+            spinnerAdapter.addAll(playCodes);
+            spinnerAdapter.notifyDataSetChanged();
+        });
     }
 
-    public void refreshScreen(View v) {
-        // go back to previous screen/activity
+    private void runQueryForPlay(String playName) {
+        String username = UserManager.getUsername(this);
+        String sql = "SELECT * FROM play_character_user WHERE play_code = '" + playName + "' AND username = '" + username + "' ORDER BY character_nr";
 
-        Intent i = new Intent(this, ShowPlaySharedDb.class);
-        startActivity(i);
-
-//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
-//        startActivity(i);
+        helperHttp.runQueryFromJava(sql, this::invoke);
     }
 
-    private String escapeSqlString(String input) {
-        if (input == null) return "";
-        return input.replace("'", "''");
+    private Unit invoke(QueryResult<List<Map<String, String>>> filteredResult) {
+        if (filteredResult.isSuccess()) {
+            List<Map<String, String>> rows = filteredResult.getData();
+
+            List<Map<String, String>> structuredList = CharacterAdapter.structureGroupedList(rows);
+//            List<Map<String, String>> structuredList = QueryResultAdapter.structureGroupedList(rows);
+
+            runOnUiThread(() -> {
+                characterList.clear();
+                characterList.addAll(structuredList);
+                adapter.notifyDataSetChanged();
+            });
+        } else {
+            Throwable error = filteredResult.exceptionOrNull();
+            if (error != null) {
+                error.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    private Unit invoke2(QueryResult<List<Map<String, String>>> result) {
+        if (result.isSuccess()) {
+            List<Map<String, String>> plays = result.getData();
+            List<String> playNames = new ArrayList<>();
+            playNames.add("Select a play...");
+
+            for (Map<String, String> row : plays) {
+                playNames.add(row.get("play_code"));
+            }
+
+            runOnUiThread(() -> {
+                spinnerAdapter.clear();
+                spinnerAdapter.addAll(playNames);
+                spinnerAdapter.notifyDataSetChanged();
+            });
+        } else {
+            Throwable error = result.exceptionOrNull();
+            if (error != null) {
+                error.printStackTrace();
+            }
+        }
+        return null;
     }
 }

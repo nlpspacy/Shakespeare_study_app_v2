@@ -1,6 +1,6 @@
 <resources>
-    <string name="trialclouddb">Trial sqlite cloud database</string>
-    <string name="btnSharedDbTest">Db test</string>
+    <string name="userselectcharacters_clouddb">Select your character(s)</string>
+    <string name="btnUserSelectCharacters">Select your character(s)</string>
     <string name="btnRefresh">Refresh</string>
 
     <string name="app_name">Shakes works</string>

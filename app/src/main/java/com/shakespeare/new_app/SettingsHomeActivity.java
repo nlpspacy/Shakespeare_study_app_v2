@@ -102,7 +102,7 @@ public class SettingsHomeActivity extends AppCompatActivity {
 //        startActivity(i);
     }
 
-    public void openSharedDbActivity(View v) {
+    public void openUserSelectCharacters(View v) {
         // go back to previous screen/activity
 
         Intent i = new Intent(this, ShowPlaySharedDb.class);

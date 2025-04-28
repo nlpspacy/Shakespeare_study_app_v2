@@ -80,6 +80,19 @@
             android:text="View current information"
             android:textAllCaps="false" />
 
+        <Button
+            android:id="@+id/btnUserSelectCharacters"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="10sp"
+            android:onClick="openUserSelectCharacters"
+            android:text="@string/btnUserSelectCharacters"
+            android:textAllCaps="false"
+            app:layout_constraintTop_toBottomOf="@+id/btnViewSystemPrompt"
+            app:layout_constraintStart_toStartOf="@+id/btnViewSystemPrompt" />
+
+
 
         <TextView
             android:id="@+id/txtFontSize"
@@ -89,7 +102,7 @@
             android:layout_marginTop="10sp"
             android:text="@string/font_size_setting_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnfontlarge" />
+            app:layout_constraintTop_toBottomOf="@+id/btnUserSelectCharacters" />
 
         <RadioGroup
             android:layout_width="match_parent"
@@ -139,7 +152,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0sp"
-            android:layout_marginTop="10sp"
+            android:layout_marginTop="20sp"
             android:text="Show or hide line numbers:"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnfontlarge" />
@@ -180,7 +193,7 @@
             android:ems="10"
             android:gravity="center_horizontal"
             android:inputType="text"
-            android:text="Version code 16 version name 1.26"
+            android:text="Version code 17 version name 1.27"
             android:layout_marginTop="20sp"
             app:layout_constraintTop_toBottomOf="@+id/rbtnHideLineNumbers" />
 
@@ -215,16 +228,6 @@
             android:layout_marginStart="20sp"
             android:onClick="goBack"
             android:text="@string/nav_btn_label_back"
-            android:textAllCaps="false"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/btnSharedDbActivity"
-            android:layout_width="80sp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20sp"
-            android:onClick="openSharedDbActivity"
-            android:text="@string/btnSharedDbTest"
             android:textAllCaps="false"
             app:layout_constraintStart_toStartOf="parent" />
 

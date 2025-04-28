@@ -85,6 +85,11 @@ public class CharacterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             String name = toTitleCase(item.get("character_full_name"));
             String desc = item.get("character_description");
             String belongsToGroup = item.get("belongs_to_group");
+            String isUser = item.get("is_user");
+
+            // 🔥 New voice fields
+            String voiceModel = item.get("voice_model");
+            String voiceInstructions = item.get("voice_instructions");
 
             String displayText = name;
             if ((belongsToGroup == null || !belongsToGroup.equals("true")) && desc != null && !desc.equals("null") && !desc.isEmpty()) {
@@ -101,7 +106,20 @@ public class CharacterAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             charHolder.nameText.setLayoutParams(params);
 
+            final String finalDisplayText =displayText;
+
             // Handle checkbox and other logic (already working)
+
+            // we have now added more logic relating to the checkbox.
+            charHolder.selectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                Log.d("Checkbox", finalDisplayText + " set to: " + isChecked);
+                String username = UserManager.getUsername(context);
+                String characterName = item.get("character_full_name");
+                sendDebouncedUpdate(username, characterName, isChecked);
+            });
+
+            // ✅ [Optional] If you want to debug
+            Log.d("VoiceInfo", name + " | Model: " + voiceModel + " | Instructions: " + voiceInstructions);
         }
     }
 

@@ -113,4 +113,12 @@ public class VoiceSynthesizer {
             playbackLock.notifyAll();
         }
     }
+
+    public static void stopPlayback() {
+        synchronized (playbackLock) {
+            isPlaying = false;
+            playbackLock.notifyAll();
+        }
+    }
+
 }

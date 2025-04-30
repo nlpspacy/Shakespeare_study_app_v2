@@ -418,7 +418,8 @@ public class AMSND extends AppCompatActivity {
 
     public void goToStartOfPlay(View v) {
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         // decrement act number
         Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
@@ -431,7 +432,8 @@ public class AMSND extends AppCompatActivity {
     }
     public void decrementAct(View v) {
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         // decrement act number
         Log.d("script navigation button", "Act before: " + String.valueOf(GlobalClass.selectedActNumber));
@@ -489,7 +491,8 @@ public class AMSND extends AppCompatActivity {
     public void incrementAct(View v) {
 
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         DatabaseHandler db = new DatabaseHandler(this) {
             @Override
@@ -585,7 +588,8 @@ public class AMSND extends AppCompatActivity {
     public void decrementScene(View v) {
 
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         DatabaseHandler db = new DatabaseHandler(this) {
             @Override
@@ -640,7 +644,8 @@ public class AMSND extends AppCompatActivity {
     public void incrementScene(View v) {
 
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
         // attempt to clear the recycler view
@@ -679,7 +684,8 @@ public class AMSND extends AppCompatActivity {
         // launch a new activity
 
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
@@ -689,7 +695,8 @@ public class AMSND extends AppCompatActivity {
         // launch a new activity
 
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         Intent i = new Intent(this, Bookmarks.class);
 //        i.putExtra("sourceScreen","PlayScreen");
@@ -787,7 +794,8 @@ public class AMSND extends AppCompatActivity {
     }
     public void showSystemPrompt(View v) {
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         // launch a new activity
         Intent i = new Intent(this, SystemPromptActivity.class);
@@ -836,7 +844,8 @@ public class AMSND extends AppCompatActivity {
     public void callChatGPT(View v) {
 
         // pause text to speech as user requested to navigate to another part of the play
-        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+//        MyApplication.textToSpeech.speak("", TextToSpeech.QUEUE_FLUSH, null);
+        VoiceSynthesizer.stopPlayback();
 
         Log.d("check","Chat GPT button pressed");
 

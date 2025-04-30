@@ -620,8 +620,9 @@ public class AMSND extends AppCompatActivity {
             if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
 
                 MyApplication.setLanguage(Locale.ENGLISH);
-                MyApplication.textToSpeech.speak("Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), TextToSpeech.QUEUE_ADD, null,
-                        UUID.randomUUID().toString());
+//                MyApplication.textToSpeech.speak("Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), TextToSpeech.QUEUE_ADD, null,
+//                        UUID.randomUUID().toString());
+                VoiceSynthesizer.synthesizeAndPlay(this, "Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), "nova");
 
             }
 

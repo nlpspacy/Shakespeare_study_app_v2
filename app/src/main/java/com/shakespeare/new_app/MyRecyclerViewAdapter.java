@@ -151,8 +151,10 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                     }
                 }
                 MyApplication.setLanguage(Locale.ENGLISH);
-                MyApplication.textToSpeech.speak(strSpokenText, TextToSpeech.QUEUE_ADD, null,
-                        UUID.randomUUID().toString());
+//                MyApplication.textToSpeech.speak(strSpokenText, TextToSpeech.QUEUE_ADD, null,
+//                        UUID.randomUUID().toString());
+//                VoiceSynthesizer.synthesizeAndPlay(this, strSpokenText, "nova");
+                VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova");
 
             }
         }

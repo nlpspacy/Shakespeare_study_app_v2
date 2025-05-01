@@ -22,19 +22,26 @@ import okhttp3.Response;
 
 public class VoiceSynthesizer {
 
+    private static MediaPlayer currentPlayer = null;
+    private static int currentGeneration = 0; // 🔁 Tracks latest playback
+
     private static final OkHttpClient client = new OkHttpClient();
     private static final String OPENAI_API_KEY = "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"; // 🔒 Keep secret in production
 
     // 🔒 Lock object to ensure only one speech at a time
     private static final Object playbackLock = new Object();
     private static boolean isPlaying = false;
+    private static Call currentCall = null; // ✅ Track the HTTP request
 
-    public static void synthesizeAndPlay(Context context, String text, String voice) {
+    public static void synthesizeAndPlay(Context context, String text, String voice, int generation) {
+//    public static void synthesizeAndPlay(Context context, String text, String voice) {
+//        final int generation = ++currentGeneration;  // 🔁 Unique ID per request
+
         new Thread(() -> {
             synchronized (playbackLock) {
                 try {
                     while (isPlaying) {
-                        playbackLock.wait();  // ⏳ Wait until the previous audio finishes
+                        playbackLock.wait();
                     }
                     isPlaying = true;
                 } catch (InterruptedException e) {
@@ -59,7 +66,10 @@ public class VoiceSynthesizer {
                             .post(body)
                             .build();
 
-                    client.newCall(request).enqueue(new Callback() {
+                    Call call = client.newCall(request);
+                    currentCall = call;
+
+                    call.enqueue(new Callback() {
                         @Override
                         public void onFailure(@NonNull Call call, @NonNull IOException e) {
                             Log.e("VoiceSynth", "Request failed", e);
@@ -68,31 +78,88 @@ public class VoiceSynthesizer {
 
                         @Override
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                            Log.d("generation tracking", "currentGeneration: " + String.valueOf(currentGeneration) + ", generation: " + String.valueOf(generation));
+                            if (generation != currentGeneration) {
+                                Log.d("VoiceSynth", "Discarding old generation playback");
+                                releasePlayback();
+                                return;
+                            }
+
                             if (response.isSuccessful() && response.body() != null) {
                                 byte[] audioData = response.body().bytes();
-                                playAudio(context, audioData);
+                                if (generation == currentGeneration) {
+                                    playAudio(context, audioData);
+                                } else {
+                                    Log.d("VoiceSynth", "Playback canceled before playing");
+                                    releasePlayback();
+                                }
                             } else {
                                 Log.e("VoiceSynth", "Response error: " + response.code() + " " + response.message());
                                 releasePlayback();
                             }
                         }
                     });
+
                 } catch (Exception e) {
-                    Log.e("VoiceSynth", "Exception building request", e);
+                    Log.e("VoiceSynth", "Exception", e);
                     releasePlayback();
                 }
             }
         }).start();
     }
 
+    public static int nextGeneration() {
+        Log.d("generation tracking", "currentGeneration: " + String.valueOf(currentGeneration));
+        return ++currentGeneration;
+    }
+
+    public static int getCurrentGeneration() {
+        Log.d("generation tracking", "currentGeneration: " + String.valueOf(currentGeneration));
+        return currentGeneration;
+    }
+
+    public static void stopPlayback() {
+        synchronized (playbackLock) {
+            isPlaying = false;
+
+            // ✅ Cancel any in-flight HTTP request
+            if (currentCall != null) {
+                currentCall.cancel();
+                currentCall = null;
+            }
+
+            if (currentPlayer != null) {
+                try {
+                    currentPlayer.stop();
+                } catch (IllegalStateException e) {
+                    Log.w("VoiceSynth", "Tried to stop player not in started state");
+                }
+
+                try {
+                    currentPlayer.release();
+                } catch (Exception e) {
+                    Log.w("VoiceSynth", "Error releasing player", e);
+                }
+
+                currentPlayer = null;
+            }
+
+            playbackLock.notifyAll();
+        }
+    }
+
+
     private static void playAudio(Context context, byte[] audioData) {
         try {
             File tempFile = File.createTempFile("openai_audio", ".mp3", context.getCacheDir());
+            Log.d("file location", "mp3 file location " + tempFile.toString());
             try (FileOutputStream fos = new FileOutputStream(tempFile)) {
                 fos.write(audioData);
             }
 
             MediaPlayer mediaPlayer = new MediaPlayer();
+            currentPlayer = mediaPlayer;  // Track this instance globally
+
             mediaPlayer.setDataSource(tempFile.getAbsolutePath());
             mediaPlayer.setOnPreparedListener(MediaPlayer::start);
             mediaPlayer.setOnCompletionListener(mp -> {
@@ -107,18 +174,12 @@ public class VoiceSynthesizer {
         }
     }
 
-    private static void releasePlayback() {
+    public static void releasePlayback() {
         synchronized (playbackLock) {
             isPlaying = false;
             playbackLock.notifyAll();
         }
     }
 
-    public static void stopPlayback() {
-        synchronized (playbackLock) {
-            isPlaying = false;
-            playbackLock.notifyAll();
-        }
-    }
 
 }

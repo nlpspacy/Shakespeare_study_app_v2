@@ -626,7 +626,11 @@ public class AMSND extends AppCompatActivity {
                 MyApplication.setLanguage(Locale.ENGLISH);
 //                MyApplication.textToSpeech.speak("Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), TextToSpeech.QUEUE_ADD, null,
 //                        UUID.randomUUID().toString());
-                VoiceSynthesizer.synthesizeAndPlay(this, "Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), "nova");
+//                VoiceSynthesizer.synthesizeAndPlay(this, "Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), "nova");
+
+                int currentGen = VoiceSynthesizer.nextGeneration();
+                Log.d("generation tracking", "AMSND currentGeneration: " + String.valueOf(currentGen));
+                VoiceSynthesizer.synthesizeAndPlay(this, "Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), "nova", currentGen);
 
             }
 

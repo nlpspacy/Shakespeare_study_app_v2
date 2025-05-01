@@ -145,16 +145,25 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 // If there are line numbers, then remove the line number reference
                 // from the spoken text.
                 if (com.shakespeare.new_app.GlobalClass.scriptSceneLineNr!=0) {
-                    if(!strContent.contains("[") && strContent.contains(" ")) {
-                        strSpokenText = strContent.substring(strContent.indexOf(" "),strContent.length());
-
+                    if (com.shakespeare.new_app.GlobalClass.selectedSceneNumber != 0) {
+                        if (!strContent.contains("[") && strContent.contains(" ")) {
+                            strSpokenText = strContent.substring(strContent.indexOf(" "), strContent.length());
+                        } else {
+                            strSpokenText = strContent;
+                        }
+                    } else {
+                        strSpokenText = strContent;
                     }
                 }
+
                 MyApplication.setLanguage(Locale.ENGLISH);
 //                MyApplication.textToSpeech.speak(strSpokenText, TextToSpeech.QUEUE_ADD, null,
 //                        UUID.randomUUID().toString());
 //                VoiceSynthesizer.synthesizeAndPlay(this, strSpokenText, "nova");
-                VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova");
+//                VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova");
+                int currentGen = VoiceSynthesizer.getCurrentGeneration();
+                VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova", currentGen);
+                Log.d("strSpokenText", strSpokenText);
 
             }
         }

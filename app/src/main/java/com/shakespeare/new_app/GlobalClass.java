@@ -14,6 +14,7 @@ public class GlobalClass {
 
     public static Integer selectedActNumber = 0; // added for database navigation
     public static Integer selectedSceneNumber = 0; // added for database navigation
+    public static Integer selectedSceneNumberSpoken = 0; // added for database navigation
     public static Integer numberOfScenesInAct = 0; // added for database navigation
     public static Integer numberOfActsInPlay = 0; // added for database navigation
 

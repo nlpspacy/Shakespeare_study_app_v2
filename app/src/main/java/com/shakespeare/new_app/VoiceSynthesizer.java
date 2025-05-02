@@ -23,19 +23,23 @@ import okhttp3.Response;
 public class VoiceSynthesizer {
 
     private static MediaPlayer currentPlayer = null;
-    private static int currentGeneration = 0; // 🔁 Tracks latest playback
-
-    private static final OkHttpClient client = new OkHttpClient();
-    private static final String OPENAI_API_KEY = "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"; // 🔒 Keep secret in production
-
-    // 🔒 Lock object to ensure only one speech at a time
     private static final Object playbackLock = new Object();
     private static boolean isPlaying = false;
-    private static Call currentCall = null; // ✅ Track the HTTP request
+    private static Call currentCall = null;
+    private static String currentPlayKey = "";
 
-    public static void synthesizeAndPlay(Context context, String text, String voice, int generation) {
-//    public static void synthesizeAndPlay(Context context, String text, String voice) {
-//        final int generation = ++currentGeneration;  // 🔁 Unique ID per request
+    private static final OkHttpClient client = new OkHttpClient();
+    private static final String OPENAI_API_KEY = "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" ; // 🔒 Your real API key
+
+    public static void synthesizeAndPlay(Context context, String text, String voice, String sceneKey) {
+        synchronized (playbackLock) {
+            // If switching scenes, cancel current
+            if (isPlaying && !sceneKey.equals(currentPlayKey)) {
+                Log.d("VoiceSynth", "Scene switched, stopping previous playback");
+                stopPlayback();
+            }
+            currentPlayKey = sceneKey;
+        }
 
         new Thread(() -> {
             synchronized (playbackLock) {
@@ -55,10 +59,7 @@ public class VoiceSynthesizer {
                     json.put("input", text);
                     json.put("voice", voice);
 
-                    RequestBody body = RequestBody.create(
-                            MediaType.parse("application/json"),
-                            json.toString()
-                    );
+                    RequestBody body = RequestBody.create(MediaType.parse("application/json"), json.toString());
 
                     Request request = new Request.Builder()
                             .url("https://api.openai.com/v1/audio/speech")
@@ -78,23 +79,19 @@ public class VoiceSynthesizer {
 
                         @Override
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                            Log.d("generation tracking", "currentGeneration: " + String.valueOf(currentGeneration) + ", generation: " + String.valueOf(generation));
-                            if (generation != currentGeneration) {
-                                Log.d("VoiceSynth", "Discarding old generation playback");
-                                releasePlayback();
-                                return;
+                            synchronized (playbackLock) {
+                                if (!sceneKey.equals(currentPlayKey)) {
+                                    Log.d("VoiceSynth", "Discarding response from old scene");
+                                    releasePlayback();
+                                    return;
+                                }
                             }
 
                             if (response.isSuccessful() && response.body() != null) {
                                 byte[] audioData = response.body().bytes();
-                                if (generation == currentGeneration) {
-                                    playAudio(context, audioData);
-                                } else {
-                                    Log.d("VoiceSynth", "Playback canceled before playing");
-                                    releasePlayback();
-                                }
+                                playAudio(context, audioData, sceneKey);
                             } else {
-                                Log.e("VoiceSynth", "Response error: " + response.code() + " " + response.message());
+                                Log.e("VoiceSynth", "Response error: " + response.code());
                                 releasePlayback();
                             }
                         }
@@ -108,21 +105,52 @@ public class VoiceSynthesizer {
         }).start();
     }
 
-    public static int nextGeneration() {
-        Log.d("generation tracking", "currentGeneration: " + String.valueOf(currentGeneration));
-        return ++currentGeneration;
-    }
+    private static void playAudio(Context context, byte[] audioData, String sceneKey) {
+        try {
+            File tempFile = File.createTempFile("openai_audio", ".mp3", context.getCacheDir());
+            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
+                fos.write(audioData);
+            }
 
-    public static int getCurrentGeneration() {
-        Log.d("generation tracking", "currentGeneration: " + String.valueOf(currentGeneration));
-        return currentGeneration;
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            currentPlayer = mediaPlayer;
+            mediaPlayer.setDataSource(tempFile.getAbsolutePath());
+
+            mediaPlayer.setOnPreparedListener(mp -> {
+                synchronized (playbackLock) {
+                    String currentScene = GlobalClass.selectedPlayCode + "_" +
+                            GlobalClass.selectedActNumber + "_" +
+                            GlobalClass.selectedSceneNumber;
+
+                    if (!sceneKey.equals(currentScene)) {
+                        Log.d("VoiceSynth", "Scene changed mid-download, skipping playback.");
+                        mp.release();
+                        isPlaying = false;
+                        return;
+                    }
+
+                    mp.start();
+                }
+            });
+
+            mediaPlayer.setOnCompletionListener(mp -> {
+                mp.release();
+                tempFile.delete();
+                releasePlayback();
+            });
+
+            mediaPlayer.prepareAsync();
+        } catch (IOException e) {
+            Log.e("VoiceSynth", "Error playing audio", e);
+            releasePlayback();
+        }
     }
 
     public static void stopPlayback() {
         synchronized (playbackLock) {
             isPlaying = false;
+            currentPlayKey = "";
 
-            // ✅ Cancel any in-flight HTTP request
             if (currentCall != null) {
                 currentCall.cancel();
                 currentCall = null;
@@ -132,13 +160,13 @@ public class VoiceSynthesizer {
                 try {
                     currentPlayer.stop();
                 } catch (IllegalStateException e) {
-                    Log.w("VoiceSynth", "Tried to stop player not in started state");
+                    Log.w("VoiceSynth", "Tried to stop non-started player");
                 }
 
                 try {
                     currentPlayer.release();
                 } catch (Exception e) {
-                    Log.w("VoiceSynth", "Error releasing player", e);
+                    Log.w("VoiceSynth", "Player release error", e);
                 }
 
                 currentPlayer = null;
@@ -148,37 +176,16 @@ public class VoiceSynthesizer {
         }
     }
 
-
-    private static void playAudio(Context context, byte[] audioData) {
-        try {
-            File tempFile = File.createTempFile("openai_audio", ".mp3", context.getCacheDir());
-            Log.d("file location", "mp3 file location " + tempFile.toString());
-            try (FileOutputStream fos = new FileOutputStream(tempFile)) {
-                fos.write(audioData);
-            }
-
-            MediaPlayer mediaPlayer = new MediaPlayer();
-            currentPlayer = mediaPlayer;  // Track this instance globally
-
-            mediaPlayer.setDataSource(tempFile.getAbsolutePath());
-            mediaPlayer.setOnPreparedListener(MediaPlayer::start);
-            mediaPlayer.setOnCompletionListener(mp -> {
-                mp.release();
-                tempFile.delete();
-                releasePlayback();
-            });
-            mediaPlayer.prepareAsync();
-        } catch (IOException e) {
-            Log.e("VoiceSynth", "Error playing audio", e);
-            releasePlayback();
-        }
-    }
-
-    public static void releasePlayback() {
+    private static void releasePlayback() {
         synchronized (playbackLock) {
             isPlaying = false;
             playbackLock.notifyAll();
         }
+    }
+
+    public static boolean isSceneActive(String key) {
+        Log.d("key", "currentPlayKey:" + currentPlayKey + "; key: " + key);
+        return currentPlayKey.equals(key);
     }
 
 

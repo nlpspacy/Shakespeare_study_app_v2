@@ -136,34 +136,38 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         // If this line is a spoken line, check whether the user has turned speech on.
         if (boolSpeakThisLine.equals(Boolean.TRUE)) {
-
             strSpokenText = strContent;
 
-            // If the user has opted for text to speech, then speak the line out loud.
             if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
-
-                // If there are line numbers, then remove the line number reference
-                // from the spoken text.
-                if (com.shakespeare.new_app.GlobalClass.scriptSceneLineNr!=0) {
-                    if (com.shakespeare.new_app.GlobalClass.selectedSceneNumber != 0) {
-                        if (!strContent.contains("[") && strContent.contains(" ")) {
-                            strSpokenText = strContent.substring(strContent.indexOf(" "), strContent.length());
-                        } else {
-                            strSpokenText = strContent;
-                        }
-                    } else {
-                        strSpokenText = strContent;
-                    }
+                if (com.shakespeare.new_app.GlobalClass.scriptSceneLineNr != 0 &&
+                        com.shakespeare.new_app.GlobalClass.selectedSceneNumber != 0 &&
+                        !strContent.contains("[") && strContent.contains(" ")) {
+                    strSpokenText = strContent.substring(strContent.indexOf(" "));
                 }
 
                 MyApplication.setLanguage(Locale.ENGLISH);
-//                MyApplication.textToSpeech.speak(strSpokenText, TextToSpeech.QUEUE_ADD, null,
-//                        UUID.randomUUID().toString());
-//                VoiceSynthesizer.synthesizeAndPlay(this, strSpokenText, "nova");
-//                VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova");
-                int currentGen = VoiceSynthesizer.getCurrentGeneration();
-                VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova", currentGen);
-                Log.d("strSpokenText", strSpokenText);
+
+//                String sceneKey = com.shakespeare.new_app.GlobalClass.selectedPlayCode + "_" +
+//                        com.shakespeare.new_app.GlobalClass.selectedActNumber + "_" +
+//                        com.shakespeare.new_app.GlobalClass.selectedSceneNumber;
+//
+//                VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova", sceneKey);
+//                Log.d("strSpokenText", strSpokenText);
+
+                // 🧠 Only speak if the current line's scene matches the active scene
+                String currentSceneKey = com.shakespeare.new_app.GlobalClass.selectedPlayCode + "_" +
+                        com.shakespeare.new_app.GlobalClass.selectedActNumber + "_" +
+                        com.shakespeare.new_app.GlobalClass.selectedSceneNumber;
+
+                Log.d("VoiceSynth", "currentSceneKey:" + currentSceneKey + "; isSceneActive(currentSceneKey): " + String.valueOf(VoiceSynthesizer.isSceneActive(currentSceneKey)));
+
+                if (VoiceSynthesizer.isSceneActive(currentSceneKey)) {
+                    VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova", currentSceneKey);
+                    Log.d("VoiceSynth", "Speaking: " + strSpokenText);
+                } else {
+                    Log.d("VoiceSynth", "Skipping line due to scene mismatch: " + strSpokenText);
+                }
+
 
             }
         }
@@ -183,7 +187,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         ViewHolder(View itemView) {
             super(itemView);
-            myTextView = itemView.findViewById(R.id.tvAnimalName);
+            myTextView = itemView.findViewById(R.id.tv_script_line);
 
             itemView.setOnClickListener(this);
 

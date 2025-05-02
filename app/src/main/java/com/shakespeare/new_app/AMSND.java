@@ -628,9 +628,13 @@ public class AMSND extends AppCompatActivity {
 //                        UUID.randomUUID().toString());
 //                VoiceSynthesizer.synthesizeAndPlay(this, "Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), "nova");
 
-                int currentGen = VoiceSynthesizer.nextGeneration();
-                Log.d("generation tracking", "AMSND currentGeneration: " + String.valueOf(currentGen));
-                VoiceSynthesizer.synthesizeAndPlay(this, "Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), "nova", currentGen);
+//                int currentGen = VoiceSynthesizer.nextGeneration();
+                String sceneKey = com.shakespeare.new_app.GlobalClass.selectedPlayCode + "_" +
+                        com.shakespeare.new_app.GlobalClass.selectedActNumber + "_" +
+                        com.shakespeare.new_app.GlobalClass.selectedSceneNumber;
+
+                Log.d("generation tracking", "sceneKey: " + sceneKey);
+                VoiceSynthesizer.synthesizeAndPlay(this, "Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString(), "nova", sceneKey);
 
             }
 

@@ -159,14 +159,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                         com.shakespeare.new_app.GlobalClass.selectedActNumber + "_" +
                         com.shakespeare.new_app.GlobalClass.selectedSceneNumber;
 
-                Log.d("VoiceSynth", "currentSceneKey:" + currentSceneKey + "; isSceneActive(currentSceneKey): " + String.valueOf(VoiceSynthesizer.isSceneActive(currentSceneKey)));
+//                Log.d("VoiceSynth", "currentSceneKey:" + currentSceneKey + "; isSceneActive(currentSceneKey): " + String.valueOf(VoiceSynthesizer.isSceneActive(currentSceneKey)));
 
-                if (VoiceSynthesizer.isSceneActive(currentSceneKey)) {
-                    VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova", currentSceneKey);
-                    Log.d("VoiceSynth", "Speaking: " + strSpokenText);
-                } else {
-                    Log.d("VoiceSynth", "Skipping line due to scene mismatch: " + strSpokenText);
-                }
+                String sceneKey = GlobalClass.selectedPlayCode + "_" +
+                        GlobalClass.selectedActNumber + "_" +
+                        GlobalClass.selectedSceneNumber;
+
+                VoiceSynthesizer.prepareScenePlayback(sceneKey);
+
+                VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova", sceneKey);
+
+//                if (VoiceSynthesizer.isSceneActive(currentSceneKey)) {
+//                    VoiceSynthesizer.synthesizeAndPlay(mInflater.getContext(), strSpokenText, "nova", currentSceneKey);
+//                    Log.d("VoiceSynth", "Speaking: " + strSpokenText);
+//                } else {
+//                    Log.d("VoiceSynth", "Skipping line due to scene mismatch: " + strSpokenText);
+//                }
 
 
             }

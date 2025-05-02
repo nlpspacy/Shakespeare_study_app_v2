@@ -29,16 +29,22 @@ public class VoiceSynthesizer {
     private static String currentPlayKey = "";
 
     private static final OkHttpClient client = new OkHttpClient();
-    private static final String OPENAI_API_KEY = "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" ; // 🔒 Your real API key
+    private static final String OPENAI_API_KEY = "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"; // 🔒 Replace with your key
+
+    // ✅ Set the active scene key explicitly before playback begins
+    public static void prepareScenePlayback(String key) {
+        synchronized (playbackLock) {
+            currentPlayKey = key;
+        }
+    }
 
     public static void synthesizeAndPlay(Context context, String text, String voice, String sceneKey) {
         synchronized (playbackLock) {
-            // If switching scenes, cancel current
+            // Cancel if scene changed mid-play
             if (isPlaying && !sceneKey.equals(currentPlayKey)) {
-                Log.d("VoiceSynth", "Scene switched, stopping previous playback");
+                Log.d("VoiceSynth", "Stopping due to scene change");
                 stopPlayback();
             }
-            currentPlayKey = sceneKey;
         }
 
         new Thread(() -> {
@@ -81,7 +87,7 @@ public class VoiceSynthesizer {
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                             synchronized (playbackLock) {
                                 if (!sceneKey.equals(currentPlayKey)) {
-                                    Log.d("VoiceSynth", "Discarding response from old scene");
+                                    Log.d("VoiceSynth", "Discarding old scene response");
                                     releasePlayback();
                                     return;
                                 }
@@ -123,7 +129,7 @@ public class VoiceSynthesizer {
                             GlobalClass.selectedSceneNumber;
 
                     if (!sceneKey.equals(currentScene)) {
-                        Log.d("VoiceSynth", "Scene changed mid-download, skipping playback.");
+                        Log.d("VoiceSynth", "Scene mismatch at playAudio");
                         mp.release();
                         isPlaying = false;
                         return;
@@ -141,7 +147,7 @@ public class VoiceSynthesizer {
 
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
-            Log.e("VoiceSynth", "Error playing audio", e);
+            Log.e("VoiceSynth", "Audio playback failed", e);
             releasePlayback();
         }
     }
@@ -160,13 +166,13 @@ public class VoiceSynthesizer {
                 try {
                     currentPlayer.stop();
                 } catch (IllegalStateException e) {
-                    Log.w("VoiceSynth", "Tried to stop non-started player");
+                    Log.w("VoiceSynth", "Stop failed");
                 }
 
                 try {
                     currentPlayer.release();
                 } catch (Exception e) {
-                    Log.w("VoiceSynth", "Player release error", e);
+                    Log.w("VoiceSynth", "Release failed");
                 }
 
                 currentPlayer = null;
@@ -182,11 +188,4 @@ public class VoiceSynthesizer {
             playbackLock.notifyAll();
         }
     }
-
-    public static boolean isSceneActive(String key) {
-        Log.d("key", "currentPlayKey:" + currentPlayKey + "; key: " + key);
-        return currentPlayKey.equals(key);
-    }
-
-
 }

@@ -6,7 +6,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:8.2.0") // Only needed if not using version catalogs
+//        classpath("com.android.tools.build:gradle:8.2.0") // Only needed if not using version catalogs
+        classpath("com.android.tools.build:gradle:8.3.0") // Only needed if not using version catalogs
         // ❌ Remove kotlin-gradle-plugin to avoid plugin conflict
     }
 }

@@ -1,6 +1,7 @@
 package com.example.database
 
 import android.util.Log
+import com.example.database.QueryResult
 import kotlinx.coroutines.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -130,4 +131,22 @@ class RemoteDatabaseHelperHttp {
         //it was part of the QueryResult class (to read an error), not something the HTTP callback needs.
         //In fact, exceptionOrNull is a method for results, not for HTTP callbacks.
     }
+
+    fun runInsert(sql: String, callback: InsertCallback) {
+        runQueryFromJava(sql) { result ->
+            if (result.success) {
+                Log.d("RemoteInsert", "✅ Insert succeeded.")
+                callback.onInsertSuccess()
+            } else {
+                Log.e("RemoteInsert", "❌ Insert failed", result.exception)
+                callback.onInsertFailure(result.exception)
+            }
+        }
+    }
+
+    interface InsertCallback {
+        fun onInsertSuccess()
+        fun onInsertFailure(exception: Throwable?)
+    }
+
 }

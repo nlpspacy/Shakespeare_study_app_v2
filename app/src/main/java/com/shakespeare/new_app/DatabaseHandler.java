@@ -5,9 +5,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import com.example.database.RemoteDatabaseHelperHttp;
+//import com.shakespeare.new_app.RemoteDatabaseHelperHttp;
+//import com.shakespeare.new_app.InsertCallback;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public abstract class DatabaseHandler extends SQLiteOpenHelper {
@@ -400,21 +404,45 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
+      // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
+
     public int addBookmark(Integer intRvPosition, String strScriptText, String strUserNote, Integer intSceneLineNr, Integer intPlayLineNr) {
+        String sql = "INSERT INTO bookmark (" +
+                "username, date_time_added, play_code, play_full_name, act_nr, scene_nr, " +
+                "scene_line_nr, play_line_nr, position_in_view, script_text, annotation, active_0_or_1) " +
+                "VALUES ('dan', datetime('now'), '" + GlobalClass.selectedPlayCode + "', '" + GlobalClass.selectedPlay + "', " +
+                GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", " +
+                intSceneLineNr + ", " + intPlayLineNr + ", " + intRvPosition + ", '" +
+                strScriptText.replace("'", "''") + "', '" + strUserNote.replace("'", "''") + "', 1);";
 
-        SQLiteDatabase db;
-        String insertQuery = "INSERT INTO bookmark (username, date_time_added, play_code, play_full_name, act_nr, scene_nr, scene_line_nr, play_line_nr, position_in_view, script_text, annotation, active_0_or_1) ";
-        insertQuery += "VALUES ('blank', strftime('%Y-%m-%d %H:%M:%S', datetime('now')), '" + GlobalClass.selectedPlayCode + "','" + GlobalClass.selectedPlay + "', " + GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", " + intSceneLineNr + ", " + intPlayLineNr + ", " + intRvPosition + ", '" + strScriptText + "', '" + strUserNote + "', 1);";
-        Log.d("insert query",insertQuery);
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
+//        remoteDb.runInsert(sql);  // ✅ simpler, lambda-free
 
-        db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(insertQuery, null);
+        remoteDb.runInsert(sql, new RemoteDatabaseHelperHttp.InsertCallback() {
+            @Override
+            public void onInsertSuccess() {
+                Log.d("bookmark", "✅ Bookmark saved to SQLiteCloud.");
+            }
 
-        cursor.moveToFirst();
+            @Override
+            public void onInsertFailure(Throwable e) {
+                Log.e("bookmark", "❌ Failed to save bookmark", e);
+            }
+        });
+
+//        // Asynchronous cloud insert
+//        remoteDb.runQueryFromJava(sql, result -> {
+//            if (result.isSuccess()) {
+//                Log.d("bookmark", "✅ Bookmark saved to SQLiteCloud.");
+//            } else {
+//                Log.e("bookmark", "❌ Failed to save bookmark", result.getException());
+//            }
+//        });
+
+        // Return immediately (assume success for now)
         return 1;
-
     }
+
 
     // Get script
     public ArrayList getBookmarks() {

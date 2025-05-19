@@ -94,6 +94,11 @@ public class NewBookmarkPop extends AppCompatActivity {
         db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr);
         Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
 
+        Intent result = new Intent();
+        result.putExtra("bookmarkSaved", true);
+        setResult(RESULT_OK, result);
+        finish(); // closes NewBookmarkPop and triggers onActivityResult
+
         getOnBackPressedDispatcher().onBackPressed();
 
     }

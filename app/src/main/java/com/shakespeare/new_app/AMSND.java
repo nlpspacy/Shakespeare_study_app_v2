@@ -1,5 +1,7 @@
 package com.shakespeare.new_app;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +23,9 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,6 +61,8 @@ import java.util.UUID;
 
 
 public class AMSND extends AppCompatActivity {
+
+    private ActivityResultLauncher<Intent> bookmarkLauncher;
 
     private String[] standard_prompts;
     private Spinner standardpromptsspinner;
@@ -233,6 +240,42 @@ public class AMSND extends AppCompatActivity {
 
         Log.d("check","progress 1002");
 
+        bookmarkLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getBooleanExtra("bookmarkSaved", false)) {
+                            updateScriptDisplay(findViewById(R.id.rvScript), false, false);
+                            Log.d("refresh", "🔄 Script refreshed after bookmark");
+                        }
+                    }
+                }
+        );
+    }
+
+    public void launchNewBookmarkActivity(String scriptRef) {
+        Intent intent = new Intent(this, NewBookmarkPop.class);
+        intent.putExtra("scriptRef", scriptRef);
+        bookmarkLauncher.launch(intent);
+    }
+
+    @Override
+    protected void onResume() {
+
+        Log.d("resuming after adding bookmark","about to run super.onResume()");
+        super.onResume();
+
+        Log.d("resuming after adding bookmark","resuming after adding bookmark");
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d("resuming after adding bookmark","set SharedPreferences prefs variable");
+        boolean shouldRefresh = prefs.getBoolean("refresh_script_on_return", false);
+
+        if (shouldRefresh) {
+            Log.d("refresh", "🔄 Refreshing script after new bookmark");
+            updateScriptDisplay(findViewById(R.id.rvScript), false, false);
+            prefs.edit().putBoolean("refresh_script_on_return", false).apply(); // reset flag
+        }
     }
 
     // read the script from the sqlite database

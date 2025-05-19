@@ -1,5 +1,7 @@
 package com.shakespeare.new_app;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,10 +25,13 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_PLAY_POSITION = "play_position";
     private static final String KEY_ID = "line_number";
     private static final String KEY_NAME = "line_text";
+    private Context context;
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         //3rd argument to be passed is CursorFactory instance
+
+        this.context = context; // ✅ Save the context for later use
 
         Log.d("progress update", "DatabaseHandler constructor");
 
@@ -525,12 +530,19 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
             @Override
             public void onInsertSuccess() {
                 Log.d("bookmark", "✅ Bookmark saved to SQLiteCloud.");
+//                callback.onBookmarkSaved(); // ✅ notify AMSND
+
+                // Set shared preference flag to trigger refresh in AMSND
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                prefs.edit().putBoolean("refresh_script_on_return", true).apply();
+
             }
 
             @Override
             public void onInsertFailure(Throwable e) {
                 Log.e("bookmark", "❌ Failed to save bookmark", e);
-            }
+//                callback.onBookmarkSaveFailed(e);
+                }
         });
 
 //        // Asynchronous cloud insert

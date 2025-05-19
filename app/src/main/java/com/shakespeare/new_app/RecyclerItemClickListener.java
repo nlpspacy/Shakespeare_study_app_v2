@@ -4,6 +4,7 @@ package com.shakespeare.new_app;
 
 import static androidx.core.content.ContextCompat.startActivity;
 
+import android.app.Activity;
 import android.content.Context;
 //import android.support.v7.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,10 +95,17 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
                     Log.d("new bookmark pop", "RecyclerItemClickListener: global variables assigned");
 
-                    Intent i;
-                    i = new Intent(context.getApplicationContext(), NewBookmarkPop.class);
-                    i.putExtra("scriptRef", strScriptRef);
-                    child.getContext().startActivity(i);
+                    // Previous version in which the screen did not refresh after adding a new bookmark:
+//                    Intent i;
+//                    i = new Intent(context.getApplicationContext(), NewBookmarkPop.class);
+//                    i.putExtra("scriptRef", strScriptRef);
+//                    child.getContext().startActivity(i);
+
+                    // New version to refresh screen after adding a new bookmark:
+                    Context context = child.getContext();
+                    if (context instanceof AMSND) {
+                        ((AMSND) context).launchNewBookmarkActivity(strScriptRef);
+                    }
 
 //                    db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);
 //                    Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");

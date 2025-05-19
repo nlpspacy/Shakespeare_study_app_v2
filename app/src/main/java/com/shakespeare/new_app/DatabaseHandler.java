@@ -659,16 +659,36 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 
     // Get current scene number in case the user is returning to the play, so navigation goes to where they left off last time.
+    // This is the version for the local sqlite db.
+//    public void removeBookmarkLongClicked(Integer intBookmarkReference) {
+//
+//        SQLiteDatabase db;
+//        String updateQuery = "UPDATE bookmark SET active_0_or_1 = 0 WHERE bookmark_row_id = "+String.valueOf(intBookmarkReference)+";";
+//
+//        db = this.getWritableDatabase();
+//        db.execSQL(updateQuery);
+//
+//        Log.d("response", "completed");
+//
+//    }
+
+    // This is the version for the sqlite cloud db.
     public void removeBookmarkLongClicked(Integer intBookmarkReference) {
+        String sql = "UPDATE bookmark SET active_0_or_1 = 0 WHERE bookmark_row_id = " + intBookmarkReference + ";";
 
-        SQLiteDatabase db;
-        String updateQuery = "UPDATE bookmark SET active_0_or_1 = 0 WHERE bookmark_row_id = "+String.valueOf(intBookmarkReference)+";";
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
 
-        db = this.getWritableDatabase();
-        db.execSQL(updateQuery);
+        remoteDb.runInsert(sql, new RemoteDatabaseHelperHttp.InsertCallback() {
+            @Override
+            public void onInsertSuccess() {
+                Log.d("bookmark", "✅ Bookmark deactivated in SQLiteCloud.");
+            }
 
-        Log.d("response", "completed");
-
+            @Override
+            public void onInsertFailure(Throwable e) {
+                Log.e("bookmark", "❌ Failed to deactivate bookmark", e);
+            }
+        });
     }
 
 

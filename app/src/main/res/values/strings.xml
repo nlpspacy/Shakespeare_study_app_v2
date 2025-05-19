@@ -27,7 +27,7 @@
     <string name="font_size">Settings</string>
     <string name="large_text">large text</string>
     <string name="btn_label_save">Save</string>
-    <string name="btn_label_save_and_close">Close</string>
+    <string name="btn_label_save_and_close">Save &amp; close</string>
     <string name="btn_label_cancel">Cancel</string>
     <string name="btn_label_yes">Yes</string>
     <string name="btn_label_no">No</string>

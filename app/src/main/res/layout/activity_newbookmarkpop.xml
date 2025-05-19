@@ -66,18 +66,8 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="95sp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20sp"
-            android:onClick="closePopupWithoutSaving"
-            android:text="@string/btn_label_cancel"
-            android:textAllCaps="false"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
             android:id="@+id/btnSaveAndClose"
-            android:layout_width="85sp"
+            android:layout_width="140sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10sp"
             android:onClick="saveBookmarkClosePopup"
@@ -86,15 +76,14 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/btnSave"
-            android:layout_width="85sp"
+            android:id="@+id/btnCancel"
+            android:layout_width="95sp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10sp"
-            android:onClick="saveBookmarkKeepTyping"
-            android:text="@string/btn_label_save"
+            android:layout_marginStart="20sp"
+            android:onClick="closePopupWithoutSaving"
+            android:text="@string/btn_label_cancel"
             android:textAllCaps="false"
-            app:layout_constraintStart_toStartOf="parent" />
-
+            app:layout_constraintStart_toEndOf="@+id/btnSaveAndClose" />
 
     </LinearLayout>
 

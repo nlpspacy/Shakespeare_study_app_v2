@@ -337,7 +337,36 @@ public class AMSND extends AppCompatActivity {
 //        scriptLinesList.add(String.valueOf(db.getScript()));
 
         // but, instead, we want to add as an array or list
-        scriptLinesList = db.getScript(boolAtPrologue, boolAtEpilogue);
+        //scriptLinesList = db.getScript(boolAtPrologue, boolAtEpilogue);
+        db.getScriptFromCloud(boolAtPrologue, boolAtEpilogue, new ScriptCallback() {
+            @Override
+            public void onScriptFetched(ArrayList<String> scriptLines) {
+                scriptLinesList.clear();
+                scriptLinesList.addAll(scriptLines);
+
+                RecyclerView rvScript = findViewById(R.id.rvScript);
+                rvScript.setLayoutManager(new LinearLayoutManager(rvScript.getContext()));
+
+                adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
+                rvScript.setAdapter(adapter);
+                rvScript.smoothScrollToPosition(0);
+
+                Log.d("script", "✅ scriptLinesList loaded: " + scriptLinesList.size());
+
+                // Set the font size for act and scene number
+                TextView tvActNumber = findViewById(R.id.textViewActNumber);
+                TextView tvSceneNumber = findViewById(R.id.textViewSceneNumber);
+                tvActNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
+                tvSceneNumber.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("script", "❌ Error loading script from cloud", e);
+                Toast.makeText(AMSND.this, "Failed to load script from cloud", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         Log.d("script", "scriptLinesList size: " + scriptLinesList.size());
 
         // The 2d version is not used yet, but is in testing.
@@ -1073,11 +1102,11 @@ public class AMSND extends AppCompatActivity {
         // show the script using recycler view with multiple lines returned from database rows returned
         // *** start recycler view logic ***
 
-        // add the script as an array or list
+        // add the script as an array or list - this is the earlier 1-d version which is no longer user
         scriptLinesList = db.getScript(boolAtPrologue, boolAtEpilogue);
         Log.d("script", "scriptLinesList size: " + scriptLinesList.size());
 
-        // The 2d version is not used yet, but is in testing.
+        // This is the 2-d version which is now being used.
         scriptLinesList_2d = db.getScript_2d(boolAtPrologue, boolAtEpilogue);
         Log.d("script_2d", "2d scriptLinesList size: " + scriptLinesList_2d.size());
 

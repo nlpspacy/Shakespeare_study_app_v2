@@ -41,6 +41,9 @@ public class Bookmarks extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_bookmarks);
 
+        RecyclerView rvBookmarks = findViewById(R.id.rvBookmarks);
+        rvBookmarks.setLayoutManager(new LinearLayoutManager(rvBookmarks.getContext()));
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.bookmarkspage), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -96,17 +99,66 @@ public class Bookmarks extends AppCompatActivity {
 //        rvBookmarks.smoothScrollToPosition(0);
 //        // *** end recycler view logic ***
 
-        // new version which is a 2-D list
-        bookmarkEntriesList.clear();
+//        // new version which is a 2-D list
+//        bookmarkEntriesList.clear(); // This was for the local sqlite db.
 
         // but, instead, we want to add as an array or list
-        bookmarkEntriesList = db.getBookmarks();
+    //        bookmarkEntriesList = db.getBookmarks(); // This is based on local sqlite db.
+        // Now we are replacing with a call to the cloud sqlite db:
+        db.getBookmarksFromCloud(new BookmarkCallback() {
+            @Override
+            public void onBookmarksFetched(ArrayList<List<String>> bookmarks) {
+                bookmarkEntriesList.clear();
+                bookmarkEntriesList.addAll(bookmarks);
+
+                bookmarksList.clear(); // ✅ clear any old data
+                String strBmk = "", strPlayFullName = "", strFirstPlayFullName = "";
+                int bookmarkID, actNr, scNr;
+
+                for (List<String> bookmarkEntry : bookmarkEntriesList) {
+                    bookmarkID = Integer.parseInt(bookmarkEntry.get(0));
+                    actNr = Integer.parseInt(bookmarkEntry.get(3));
+                    scNr = Integer.parseInt(bookmarkEntry.get(4));
+
+                    if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(2))) {
+                        if (!strBmk.equals("")) {
+                            bookmarksList.add(String.valueOf(Html.fromHtml(strBmk)));
+                        }
+                        strPlayFullName = bookmarkEntry.get(2);
+                        strBmk = "<br><h2>" + strPlayFullName + "</h2>";
+
+                        if (strFirstPlayFullName.equals("")) {
+                            strFirstPlayFullName = strPlayFullName;
+                        }
+                    }
+
+                    strBmk += "Note {" + bookmarkID + "}: " + bookmarkEntry.get(6);
+                    if (actNr == 0 && scNr == 0) {
+                        strBmk += "<br>Characters in play";
+                    } else {
+                        strBmk += "<br>Act " + actNr + " Scene " + scNr;
+                    }
+                    strBmk += "<br>" + bookmarkEntry.get(5);
+
+                    bookmarksList.add(String.valueOf(Html.fromHtml(strBmk)));
+                    strBmk = "";
+                }
+
+                adapter = new MyRecyclerViewAdapter(Bookmarks.this, bookmarksList);
+                rvBookmarks.setAdapter(adapter);
+                rvBookmarks.smoothScrollToPosition(0);
+            }
+            @Override
+            public void onError(Throwable e) {
+                Log.e("BookmarkFetch", "Error loading bookmarks", e);
+            }
+        });
+
 //        Log.d("bookmarkEntriesList", "bookmarkEntriesList: " + bookmarkEntriesList.toString());
 //        Log.d("script", "bookmarkEntriesList: " + bookmarkEntriesList.size());
 
-        RecyclerView rvBookmarks = findViewById(R.id.rvBookmarks);
-
-        rvBookmarks.setLayoutManager(new LinearLayoutManager(rvBookmarks.getContext()));
+//                RecyclerView rvBookmarks = findViewById(R.id.rvBookmarks);
+//                rvBookmarks.setLayoutManager(new LinearLayoutManager(rvBookmarks.getContext()));
 
         // *** start: loop through ArrayList bookmarks
         String strBmk = "";
@@ -195,8 +247,8 @@ public class Bookmarks extends AppCompatActivity {
 
 //        Log.d("bookmarksList","final bookmarksList: " + bookmarksList.toString());
 
-        adapter = new MyRecyclerViewAdapter(rvBookmarks.getContext(), bookmarksList);
-        rvBookmarks.setAdapter(adapter);
+//        adapter = new MyRecyclerViewAdapter(rvBookmarks.getContext(), bookmarksList);
+//        rvBookmarks.setAdapter(adapter);
 
         int listLength = bookmarksList.size();
 //        rvScript.smoothScrollToPosition(listLength);

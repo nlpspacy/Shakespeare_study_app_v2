@@ -5,14 +5,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.example.database.QueryResult;
 import com.example.database.RemoteDatabaseHelperHttp;
 //import com.shakespeare.new_app.RemoteDatabaseHelperHttp;
 //import com.shakespeare.new_app.InsertCallback;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 public abstract class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
@@ -263,6 +264,108 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    public void getScriptFromCloud(boolean isPrologue, boolean isEpilogue, ScriptCallback callback) {
+        String baseQuery =
+                "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, " +
+                        "p.play_line_number, COALESCE(b.bookmark_count, 0) AS bookmark_count, " +
+                        "p.line_text, p.indent_text " +
+                        "FROM play_nav_detailed p " +
+                        "LEFT OUTER JOIN (" +
+                        "    SELECT play_code, play_line_nr, COUNT(DISTINCT bookmark_row_id) AS bookmark_count " +
+                        "    FROM bookmark " +
+                        "    WHERE active_0_or_1 = 1 " +
+                        "    GROUP BY play_code, play_line_nr" +
+                        ") b ON p.play_code = b.play_code AND p.play_line_number = b.play_line_nr " +
+                        "WHERE p.play_code = '" + GlobalClass.selectedPlayCode + "' ";
+
+        if (isPrologue) {
+            baseQuery += "AND act_nr_roman = 'Prologue' ";
+        } else if (isEpilogue) {
+            baseQuery += "AND act_nr_roman = 'Epilogue' ";
+        } else {
+            baseQuery += "AND act_nr = " + GlobalClass.selectedActNumber +
+                    " AND scene_nr = " + GlobalClass.selectedSceneNumber + " ";
+        }
+
+        baseQuery += "ORDER BY p.play_line_number;";
+
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
+
+        remoteDb.runQueryFromJava(baseQuery, new kotlin.jvm.functions.Function1<QueryResult<List<Map<String, String>>>, kotlin.Unit>() {
+            @Override
+            public kotlin.Unit invoke(QueryResult<List<Map<String, String>>> result) {
+                if (result.isSuccess()) {
+                    ArrayList<String> scriptLinesList = new ArrayList<>();
+                    String strPreviousCharacter = "";
+                    int intPreviousLineNumber = -9;
+
+                    for (Map<String, String> row : result.getData()) {
+                        String character = row.get("character_short_name") + "+";
+                        int lineNumber = Integer.parseInt(row.get("scene_line_number"));
+                        int playLineNumber = Integer.parseInt(row.get("play_line_number"));
+                        int bookmarkCount = Integer.parseInt(row.get("bookmark_count"));
+                        String lineText = row.get("script_text");
+                        String indentFlag = row.get("indent_text");
+                        String characterSectionTitle = row.get("line_text");
+
+                        // Handle Characters in the play section
+                        if ("Characters in the play".equals(characterSectionTitle)) {
+                            if ("N.A.".equals(row.get("character_short_name")) &&
+                                    "Characters in the Play".equals(lineText)) {
+                                lineText = row.get("script_text");
+                            } else {
+                                lineText = row.get("character_short_name") + row.get("script_text");
+                                if ("1".equals(indentFlag)) {
+                                    lineText = "   " + lineText;
+                                }
+                            }
+                        }
+
+                        if (bookmarkCount > 0) {
+                            lineText += " <" + bookmarkCount + ">";
+                        }
+
+                        scriptLinesList.add("play_code: " + GlobalClass.selectedPlayCode +
+                                " Act " + GlobalClass.selectedActNumber +
+                                " Scene " + GlobalClass.selectedSceneNumber +
+                                " scene_line_nr " + lineNumber +
+                                " play_line_nr " + playLineNumber);
+
+                        // Output logic
+                        if (GlobalClass.selectedActNumber == 0 && GlobalClass.selectedSceneNumber == 0) {
+                            scriptLinesList.add(lineText);
+                        } else if (!character.equalsIgnoreCase("N.A.+") &&
+                                !character.equalsIgnoreCase(strPreviousCharacter)) {
+                            scriptLinesList.add(character);
+                            scriptLinesList.add(lineText);
+                        } else {
+                            if (lineNumber == intPreviousLineNumber) {
+                                scriptLinesList.add(lineText);
+                            } else {
+                                if (lineNumber == 0) {
+                                    scriptLinesList.add(lineText);
+                                } else if (GlobalClass.intShowLineNumbers == 1) {
+                                    scriptLinesList.add(lineNumber + " " + lineText);
+                                } else {
+                                    scriptLinesList.add(lineText);
+                                }
+                            }
+                        }
+
+                        strPreviousCharacter = character;
+                        intPreviousLineNumber = lineNumber;
+                    }
+
+                    callback.onScriptFetched(scriptLinesList);
+                } else {
+                    callback.onError(result.getException());
+                }
+
+                return kotlin.Unit.INSTANCE;
+            }
+        });
+    }
+
     // Get number of acts in the selected play
     public int getNumberOfActsInPlay() {
         SQLiteDatabase db;
@@ -443,8 +546,68 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         return 1;
     }
 
+    public void getBookmarksFromCloud(BookmarkCallback callback) {
+        String sql = "SELECT DISTINCT bookmark_row_id, username, play_code, play_full_name, act_nr, scene_nr, " +
+                "play_line_nr, scene_line_nr, position_in_view, script_text, annotation " +
+                "FROM bookmark WHERE active_0_or_1 = 1 ORDER BY play_code, date_time_added DESC;";
 
-    // Get script
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
+
+//        remoteDb.runQueryFromJava(sql, result -> {
+//            if (result.isSuccess()) {
+//                ArrayList<List<String>> bookmarkEntriesList = new ArrayList<>();
+//
+//                for (Map<String, String> row : result.getData()) {
+//                    ArrayList<String> entry = new ArrayList<>();
+//                    entry.add(row.get("bookmark_row_id"));
+//                    entry.add(row.get("play_code"));
+//                    entry.add(row.get("play_full_name"));
+//                    entry.add(row.get("act_nr"));
+//                    entry.add(row.get("scene_nr"));
+//                    entry.add(row.get("script_text"));
+//                    entry.add(row.get("annotation"));
+//                    bookmarkEntriesList.add(entry);
+//                }
+//
+//                callback.onBookmarksFetched(bookmarkEntriesList);
+//
+//            } else {
+//                callback.onError(result.getException());
+//            }
+//        });
+
+        remoteDb.runQueryFromJava(sql, new kotlin.jvm.functions.Function1<QueryResult<List<Map<String, String>>>, kotlin.Unit>() {
+            @Override
+            public kotlin.Unit invoke(QueryResult<List<Map<String, String>>> result) {
+                if (result.isSuccess()) {
+                    ArrayList<List<String>> bookmarkEntriesList = new ArrayList<>();
+
+                    for (Map<String, String> row : result.getData()) {
+                        ArrayList<String> entry = new ArrayList<>();
+                        entry.add(row.get("bookmark_row_id"));
+                        entry.add(row.get("play_code"));
+                        entry.add(row.get("play_full_name"));
+                        entry.add(row.get("act_nr"));
+                        entry.add(row.get("scene_nr"));
+                        entry.add(row.get("script_text"));
+                        entry.add(row.get("annotation"));
+                        bookmarkEntriesList.add(entry);
+                    }
+
+                    callback.onBookmarksFetched(bookmarkEntriesList);
+
+                } else {
+                    callback.onError(result.getException());
+                }
+
+                return kotlin.Unit.INSTANCE; // ✅ Return Unit to satisfy Kotlin function type
+            }
+        });
+
+    }
+
+
+        // Get script
     public ArrayList getBookmarks() {
 
         //ArrayList<String> bookmarksList = new ArrayList<>();
@@ -710,3 +873,4 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 }
+

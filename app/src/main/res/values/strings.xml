@@ -8,7 +8,7 @@
     <string name="btn_settings_label">Settings</string>
     <string name="btn_savesettings_label">Save</string>
     <string name="btn_saveandclosesettings_label">Save and Close</string>
-    <string name="btn_closesettings_label">Close Settings</string>
+    <string name="btn_closesettings_label">Close</string>
     <string name="txt_mainscreen_head">Shakespeare app</string>
     <string name="txt_settingsscreen_head">View and update settings</string>
     <string name="txt_genrefilter">Filter to genre</string>
@@ -34,7 +34,7 @@
     <string name="font_btn_label_small">T</string>
     <string name="font_btn_label_medium">T</string>
     <string name="font_btn_label_large">T</string>
-    <string name="font_size_setting_label">Text size:</string>
+    <string name="script_font_size_setting_label">Text size for script, bookmarks and Q&amp;A:</string>
     <string name="font_settings_btn_label_small">small</string>
     <string name="font_settings_btn_label_medium">medium</string>
     <string name="font_settings_btn_label_large">large</string>

@@ -21,8 +21,13 @@ import com.shakespeare.new_app.R;
 
 public class SettingsHomeActivity extends AppCompatActivity {
 
+    private Integer font_size_when_open;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        font_size_when_open = GlobalClass.fontsizesp;
+
         Log.d("settings", "open settings home activity");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -95,6 +100,12 @@ public class SettingsHomeActivity extends AppCompatActivity {
     }
     public void goBack(View v) {
         // go back to previous screen/activity
+
+        if (GlobalClass.fontsizesp != font_size_when_open) {
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("fontSizeChanged", true);
+            setResult(RESULT_OK, resultIntent);
+        }
 
         getOnBackPressedDispatcher().onBackPressed();
 

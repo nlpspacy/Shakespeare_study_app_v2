@@ -32,6 +32,16 @@ public class SystemPromptActivity  extends AppCompatActivity  {
         startActivity(i);
     }
 
+    public void goBack(View v) {
+        // go back to previous screen/activity
+
+        Intent resultIntent = new Intent();
+        getOnBackPressedDispatcher().onBackPressed();
+
+//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
+//        startActivity(i);
+    }
+
     public void returnToMain(View v) {
         // launch a new activity
 

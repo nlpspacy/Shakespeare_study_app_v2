@@ -34,21 +34,19 @@
             android:id="@+id/btnReturnToMain"
             android:layout_width="80sp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20sp"
             android:onClick="returnToMain"
             android:textAllCaps="false"
             android:text="@string/nav_btn_label_return_to_home" />
 
-        <ImageButton
-            android:id="@+id/btnSettings"
-            android:layout_width="60sp"
+        <Button
+            android:id="@+id/btnGoBack"
+            android:layout_width="80sp"
             android:layout_height="wrap_content"
-            android:background="@drawable/settings_cog"
-            android:contentDescription="Settings"
-            android:onClick="launchSettings"
-            android:layout_marginTop="10sp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:scaleX="0.5"
-            android:scaleY="1" />
+            android:layout_marginStart="20sp"
+            android:onClick="goBack"
+            android:textAllCaps="false"
+            android:text="@string/nav_btn_label_back" />
 
     </LinearLayout>
 

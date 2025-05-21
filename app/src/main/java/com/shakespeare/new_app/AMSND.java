@@ -281,6 +281,22 @@ public class AMSND extends AppCompatActivity {
     // read the script from the sqlite database
     public void updateScriptDisplay(View v, Boolean boolAtPrologue, Boolean boolAtEpilogue){
 
+        // Capture scroll position before reset.
+        RecyclerView rvScript = findViewById(R.id.rvScript);
+        LinearLayoutManager layoutManager = (LinearLayoutManager) rvScript.getLayoutManager();
+
+        int scrollPosition = RecyclerView.NO_POSITION;
+        int scrollOffset = 0;
+
+        if (layoutManager != null && layoutManager.getChildCount() > 0) {
+            View firstVisibleView = layoutManager.getChildAt(0);
+            scrollPosition = layoutManager.findFirstVisibleItemPosition();
+            scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
+        }
+
+        final int finalScrollPosition = scrollPosition;
+        final int finalScrollOffset = scrollOffset;
+
         // Clear the list so that the acts and scenes don't accumulate in an ever
         // increasingly long amount of scrollable text.
         scriptLinesList.clear();
@@ -302,9 +318,6 @@ public class AMSND extends AppCompatActivity {
             }
         };
 
-//        int intActNumberReturned = db.getActNumber();
-//        int intSceneNumberReturned = db.getSceneNumber();
-//        Log.d("act number and scene number returned","Act and scene number returned:" + String.valueOf(intActNumberReturned) + " " + String.valueOf(intSceneNumberReturned));
         GlobalClass.numberOfScenesInAct = db.getNumberOfScenesInAct();
         GlobalClass.numberOfActsInPlay = db.getNumberOfActsInPlay();
 
@@ -369,12 +382,17 @@ public class AMSND extends AppCompatActivity {
 
         }
 
-        // show the script using text view and single database row returned
-//        TextView tvScript = findViewById(R.id.textViewScript);
-//        tvScript.setText(String.valueOf(db.getScript()));
-
         // show the script using recycler view with multiple lines returned from database rows returned
         // *** start recycler view logic ***
+
+        // Here we save scroll position so we can return to the same place
+        // if we jump out to settings or to add a bookmark and then return.
+
+        if (layoutManager != null && layoutManager.getChildCount() > 0) {
+            View firstVisibleView = layoutManager.getChildAt(0);
+            scrollPosition = layoutManager.findFirstVisibleItemPosition();
+            scrollOffset = (firstVisibleView != null) ? firstVisibleView.getTop() : 0;
+        }
 
         // this adds the script as a single string
 //        scriptLinesList.add(String.valueOf(db.getScript()));
@@ -390,9 +408,34 @@ public class AMSND extends AppCompatActivity {
                 RecyclerView rvScript = findViewById(R.id.rvScript);
                 rvScript.setLayoutManager(new LinearLayoutManager(rvScript.getContext()));
 
-                adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
-                rvScript.setAdapter(adapter);
-                rvScript.smoothScrollToPosition(0);
+                // 21 May 2025: When returning to this page the scene script jumps to the top.
+                // So commenting out this code...
+//                adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
+//                rvScript.setAdapter(adapter);
+//                rvScript.smoothScrollToPosition(0);
+
+                 // 21 May 2025: ...and replacing with this to return the user to where they were.
+//                saveAndRestoreScrollPosition(rvScript, () -> {
+//                    adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
+//                    rvScript.setAdapter(adapter);
+//                });
+                LinearLayoutManager layoutManager = new LinearLayoutManager(rvScript.getContext());
+                rvScript.setLayoutManager(layoutManager);
+
+//// Set adapter
+//                adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
+//                rvScript.setAdapter(adapter);
+//
+//// Restore scroll AFTER layout
+
+                if (finalScrollPosition != RecyclerView.NO_POSITION) {
+                    rvScript.post(() -> {
+                        LinearLayoutManager lm = (LinearLayoutManager) rvScript.getLayoutManager();
+                        if (lm != null) {
+                            lm.scrollToPositionWithOffset(finalScrollPosition, finalScrollOffset);
+                        }
+                    });
+                }
 
                 Log.d("script", "✅ scriptLinesList loaded: " + scriptLinesList.size());
 
@@ -416,7 +459,7 @@ public class AMSND extends AppCompatActivity {
         scriptLinesList_2d = db.getScript_2d(boolAtPrologue, boolAtEpilogue);
         Log.d("script_2d", "2d scriptLinesList size: " + scriptLinesList_2d.size());
 
-        RecyclerView rvScript = findViewById(R.id.rvScript);
+//        RecyclerView rvScript = findViewById(R.id.rvScript);
         rvScript.setLayoutManager(new LinearLayoutManager(rvScript.getContext()));
 
         // *** start: loop through ArrayList scriptLinesList
@@ -424,8 +467,6 @@ public class AMSND extends AppCompatActivity {
         for(String string1: scriptLinesList)
         {
             i++;
-//            System.out.println(i);
-//            System.out.println("list item is " + string1);
         }
         // *** end: loop through ArrayList scriptLinesList
 
@@ -467,6 +508,31 @@ public class AMSND extends AppCompatActivity {
 
         updateStandardPromptsList(v);
 
+    }
+
+    private void saveAndRestoreScrollPosition(RecyclerView recyclerView, Runnable updateBlock) {
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        if (!(layoutManager instanceof LinearLayoutManager)) {
+            updateBlock.run();
+            return;
+        }
+
+        LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+        View firstVisibleView = linearLayoutManager.getChildAt(0);
+        int scrollPosition = linearLayoutManager.findFirstVisibleItemPosition();
+        int scrollOffset = firstVisibleView != null ? firstVisibleView.getTop() : 0;
+
+        // Run adapter update block
+        updateBlock.run();
+
+        recyclerView.post(() -> {
+            LinearLayoutManager newManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            if (scrollPosition != RecyclerView.NO_POSITION) {
+                newManager.scrollToPositionWithOffset(scrollPosition, scrollOffset);
+            } else {
+                newManager.scrollToPosition(0);
+            }
+        });
     }
 
     public void updateStandardPromptsList(View v){
@@ -657,6 +723,17 @@ public class AMSND extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK && data != null && data.getBooleanExtra("fontSizeChanged", false)) {
+            Log.d("fontSize", "🆕 Font size changed — refreshing script display with scroll preservation");
+            updateScriptDisplay(findViewById(R.id.rvScript), false, false); // refresh with scroll retention
+        }
+    }
+
     public void decrementScene(View v) {
 
         // pause text to speech as user requested to navigate to another part of the play
@@ -788,7 +865,9 @@ public class AMSND extends AppCompatActivity {
         // launch a new activity
 
         Intent i = new Intent(this, SettingsHomeActivity.class);
-        startActivity(i);
+//        startActivity(i);
+        startActivityForResult(i, 2001);
+
     }
 
     public void showHideMessaging(View v) {
@@ -931,32 +1010,8 @@ public class AMSND extends AppCompatActivity {
 
         LinearLayout llChat = (LinearLayout) findViewById(R.id.mainLinearLayout);
 
-        // webview version
-        //WebView tvScript = (WebView) findViewById(R.id.textviewAMSND);
-
-        // textview version
-//        TextView tvScript = (TextView) findViewById(R.id.textViewScript);
         // RecyclerView version
         RecyclerView rvScript = (RecyclerView) findViewById(R.id.rvScript);
-
-//        int llChatHeight = llChat.getHeight();
-//        Log.d("info","chat linear layout height: " + Integer.toString(llChatHeight));
-//
-////            RelativeLayout.LayoutParams layoutparams = new RelativeLayout.LayoutParams(100,250);
-////            layoutparams.setMargins(10,20,10,20);
-//
-//        ViewGroup.LayoutParams llChatLayoutParams = llChat.getLayoutParams();
-//
-//        // Changes the height and width to the specified *pixels*
-////            llChatLayoutParams.height = screenHeight/2;
-//        int screenWidth = 0;
-//        llChatLayoutParams.width = screenWidth;
-//        llChat.setLayoutParams(llChatLayoutParams);
-//
-//        RecyclerView rvMessages = (RecyclerView) findViewById(R.id.rvMessages);
-//        int rvMessagesHeight = rvMessages.getHeight();
-//        Log.d("info","chat text height: " + Integer.toString(rvMessagesHeight));
-////            rvMessagesHeight.setHeight() = 100;
 
         String userPrompt;
 

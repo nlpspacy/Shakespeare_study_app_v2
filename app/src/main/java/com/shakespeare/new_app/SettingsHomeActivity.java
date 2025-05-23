@@ -123,6 +123,18 @@ public class SettingsHomeActivity extends AppCompatActivity {
 //        startActivity(i);
     }
 
+    public void openBookmarkSharingPreferences(View v) {
+        // go back to previous screen/activity
+
+        Intent i = new Intent(this, BookmarkSharingPreferences.class);
+        startActivity(i);
+
+//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
+//        startActivity(i);
+    }
+
+//    prefs.edit().putString("sharedUsersToShow", "sophie,dan,julia").apply();
+
     public void launchUserInfoScreen(View v) {
         // launch a new activity
 

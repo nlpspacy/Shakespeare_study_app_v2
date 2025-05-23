@@ -49,6 +49,11 @@
             android:label="@string/title_activity_viewsystemprompt"
             android:theme="@style/Theme.Design" />
         <activity
+            android:name=".BookmarkSharingPreferences"
+            android:exported="false"
+            android:label="@string/title_activity_bookmarksharingpreferences"
+            android:theme="@style/Theme.Design" />
+        <activity
             android:name=".Bookmarks"
             android:exported="false"
             android:label="@string/bookmarks"

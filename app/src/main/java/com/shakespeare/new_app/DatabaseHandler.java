@@ -14,8 +14,10 @@ import com.example.database.RemoteDatabaseHelperHttp;
 //import com.shakespeare.new_app.InsertCallback;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
@@ -109,15 +111,32 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         String selectQuery;
         Cursor cursor;
 
+        String currentUser = UserManager.getUsername(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> visibleUsers = prefs.getStringSet("visible_bookmark_users", new HashSet<>());
+
+        StringBuilder inClause = new StringBuilder();
+        for (String user : visibleUsers) {
+            if (!user.equals(currentUser)) {
+                inClause.append("'").append(user).append("',");
+            }
+        }
+        if (inClause.length() > 0) {
+            inClause.setLength(inClause.length() - 1); // remove trailing comma
+        } else {
+            inClause.append("''"); // prevent SQL error if empty
+        }
+
+
 //        selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY play_line_number;";
         if (boolAtPrologue) {
-            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Prologue' ORDER BY p.play_line_number;";
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Prologue' ORDER BY p.play_line_number;";
 
         } else if (boolAtEpilogue) {
-            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Epilogue' ORDER BY p.play_line_number;";
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Epilogue' ORDER BY p.play_line_number;";
 
         } else {
-            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr=" + GlobalClass.selectedActNumber + " AND scene_nr=" + GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr=" + GlobalClass.selectedActNumber + " AND scene_nr=" + GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
 
         }
 
@@ -134,6 +153,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         Integer intLineNumber = cursor.getInt(0);
         Integer intPlayLineNumber = cursor.getInt(4);
         Integer intBookmarkCount = cursor.getInt(5);
+        Integer intSharedBookmarkCount = cursor.getInt(8);
         String strShowLineOnScreen;
         Integer intIndentFlag = 0;
 
@@ -162,6 +182,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 // add line reference which will be included as a hidden row for reference purposes
                 intPlayLineNumber = cursor.getInt(4);
                 intBookmarkCount = cursor.getInt(5);
+                intSharedBookmarkCount = cursor.getInt(8);
                 intIndentFlag = cursor.getInt(7);
                 strScriptIndividualRow.clear();
 
@@ -185,9 +206,16 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 }
 
+                Log.d("bookmark counter","own bookmarks <" + String.valueOf(intBookmarkCount) + ">, shared bookmarks <" + String.valueOf(intSharedBookmarkCount) + ">");
+
                 if(intBookmarkCount>0){
                     strScriptText += " <" + String.valueOf(intBookmarkCount) + ">";
                     Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intBookmarkCount));
+                }
+
+                if(intSharedBookmarkCount>0){
+                    strScriptText += " <" + String.valueOf(intSharedBookmarkCount) + ">";
+                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intSharedBookmarkCount));
                 }
 
                 scriptLinesList.add("play_code: " + GlobalClass.selectedPlayCode + " Act " + GlobalClass.selectedActNumber + " Scene " + GlobalClass.selectedSceneNumber + " scene_line_nr " + intLineNumber + " play_line_nr " + String.valueOf(intPlayLineNumber));
@@ -270,18 +298,48 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void getScriptFromCloud(boolean isPrologue, boolean isEpilogue, ScriptCallback callback) {
+
+        Log.d("tracking","getScriptFromCloud");
+
+        String currentUser = UserManager.getUsername(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> visibleUsers = prefs.getStringSet("visible_bookmark_users", new HashSet<>());
+
+        StringBuilder inClause = new StringBuilder();
+        for (String user : visibleUsers) {
+            if (!user.equals(currentUser)) {
+                inClause.append("'").append(user).append("',");
+            }
+        }
+        if (inClause.length() > 0) {
+            inClause.setLength(inClause.length() - 1); // remove trailing comma
+        } else {
+            inClause.append("''"); // prevent SQL error if empty
+        }
+
+        Log.d("users whose shared bookmarks to view","users whose shared bookmarks to view: "+String.valueOf(inClause));
+
         String baseQuery =
                 "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, " +
                         "p.play_line_number, COALESCE(b.bookmark_count, 0) AS bookmark_count, " +
-                        "p.line_text, p.indent_text " +
+                        "p.line_text, p.indent_text, " +
+                        "COALESCE(shared_b.bookmark_count, 0) AS shared_bookmark_count " +
                         "FROM play_nav_detailed p " +
                         "LEFT OUTER JOIN (" +
                         "    SELECT play_code, play_line_nr, COUNT(DISTINCT bookmark_row_id) AS bookmark_count " +
                         "    FROM bookmark " +
-                        "    WHERE active_0_or_1 = 1 " +
+                        "    WHERE username = '" + currentUser + "' AND active_0_or_1 = 1 " +
                         "    GROUP BY play_code, play_line_nr" +
                         ") b ON p.play_code = b.play_code AND p.play_line_number = b.play_line_nr " +
+                        "LEFT OUTER JOIN (" +
+                        "    SELECT play_code, play_line_nr, COUNT(DISTINCT bookmark_row_id) AS bookmark_count " +
+                        "    FROM bookmark " +
+                        "    WHERE username IN (" + inClause + ") AND active_0_or_1 = 1 " +
+                        "    GROUP BY play_code, play_line_nr" +
+                        ") shared_b ON p.play_code = shared_b.play_code AND p.play_line_number = shared_b.play_line_nr " +
                         "WHERE p.play_code = '" + GlobalClass.selectedPlayCode + "' ";
+
+        Log.d("sql check","sql:" + baseQuery);
 
         if (isPrologue) {
             baseQuery += "AND act_nr_roman = 'Prologue' ";
@@ -309,6 +367,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         int lineNumber = Integer.parseInt(row.get("scene_line_number"));
                         int playLineNumber = Integer.parseInt(row.get("play_line_number"));
                         int bookmarkCount = Integer.parseInt(row.get("bookmark_count"));
+                        int sharedBookmarkCount = Integer.parseInt(row.get("shared_bookmark_count"));
                         String lineText = row.get("script_text");
                         String indentFlag = row.get("indent_text");
                         String characterSectionTitle = row.get("line_text");
@@ -326,8 +385,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                             }
                         }
 
+//                        Log.d("bookmark counter","own bookmarks <" + String.valueOf(bookmarkCount) + ">, shared bookmarks <" + String.valueOf(sharedBookmarkCount) + ">");
+
                         if (bookmarkCount > 0) {
-                            lineText += " <" + bookmarkCount + ">";
+                            lineText += " <" + String.valueOf(bookmarkCount) + ">";
+                        }
+
+                        if (sharedBookmarkCount > 0) {
+                            lineText += " <" + String.valueOf(sharedBookmarkCount) + ">";
                         }
 
                         scriptLinesList.add("play_code: " + GlobalClass.selectedPlayCode +
@@ -516,12 +581,12 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
     public int addBookmark(Integer intRvPosition, String strScriptText, String strUserNote, Integer intSceneLineNr, Integer intPlayLineNr) {
         String sql = "INSERT INTO bookmark (" +
-                "username, date_time_added, play_code, play_full_name, act_nr, scene_nr, " +
-                "scene_line_nr, play_line_nr, position_in_view, script_text, annotation, active_0_or_1) " +
+                "username, date_time_added, play_code, play_full_name, act_nr, scene_nr, scene_line_nr, " +
+                "play_line_nr, position_in_view, script_text, annotation, active_0_or_1, share_with_others) " +
                 "VALUES ('dan', datetime('now'), '" + GlobalClass.selectedPlayCode + "', '" + GlobalClass.selectedPlay + "', " +
                 GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", " +
                 intSceneLineNr + ", " + intPlayLineNr + ", " + intRvPosition + ", '" +
-                strScriptText.replace("'", "''") + "', '" + strUserNote.replace("'", "''") + "', 1);";
+                strScriptText.replace("'", "''") + "', '" + strUserNote.replace("'", "''") + "', 1 ,1);";
 
         RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
 //        remoteDb.runInsert(sql);  // ✅ simpler, lambda-free
@@ -559,9 +624,40 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void getBookmarksFromCloud(BookmarkCallback callback) {
-        String sql = "SELECT DISTINCT bookmark_row_id, username, play_code, play_full_name, act_nr, scene_nr, " +
+
+//        String currentUser = UserManager.getUsername(context);
+//
+//        String sql = "SELECT DISTINCT bookmark_row_id, username, play_code, play_full_name, act_nr, scene_nr, " +
+//                "play_line_nr, scene_line_nr, position_in_view, script_text, annotation " +
+//                "FROM bookmark WHERE active_0_or_1 = 1 " +
+////                "(username = \"" + currentUser + "\" OR (share_with_others = 1 AND username IN (" + usersToShow + ")))" +
+//                "ORDER BY play_code, date_time_added DESC;";
+
+        String currentUser = UserManager.getUsername(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> visibleUsers = prefs.getStringSet("visible_bookmark_users", new HashSet<>());
+
+        StringBuilder inClause = new StringBuilder();
+        for (String user : visibleUsers) {
+            if (!user.equals(currentUser)) {
+                inClause.append("'").append(user).append("',");
+            }
+        }
+        if (inClause.length() > 0) {
+            inClause.setLength(inClause.length() - 1); // remove trailing comma
+        } else {
+            inClause.append("''"); // prevent SQL error if empty
+        }
+
+        String sql = "SELECT DISTINCT bookmark_row_id, username, play_code, play_full_name, " +
+                "act_nr, scene_nr, " +
                 "play_line_nr, scene_line_nr, position_in_view, script_text, annotation " +
-                "FROM bookmark WHERE active_0_or_1 = 1 ORDER BY play_code, date_time_added DESC;";
+                "FROM bookmark " +
+                "WHERE active_0_or_1 = 1 AND (" +
+                "username = '" + currentUser + "' " +
+                "OR (share_with_others = 1 AND username IN (" + inClause + "))" +
+                ")";
+
 
         RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
 
@@ -603,6 +699,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         entry.add(row.get("scene_nr"));
                         entry.add(row.get("script_text"));
                         entry.add(row.get("annotation"));
+                        entry.add(row.get("username"));
                         bookmarkEntriesList.add(entry);
                     }
 
@@ -730,7 +827,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 //        selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY play_line_number;";
         if (boolAtPrologue) {
-            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Prologue' ORDER BY p.play_line_number;";
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr,  count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Prologue' ORDER BY p.play_line_number;";
 
         } else if (boolAtEpilogue) {
             selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Epilogue' ORDER BY p.play_line_number;";

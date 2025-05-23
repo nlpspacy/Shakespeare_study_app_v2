@@ -114,9 +114,11 @@ public class Bookmarks extends AppCompatActivity {
                 bookmarksList.clear(); // ✅ clear any old data
                 String strBmk = "", strPlayFullName = "", strFirstPlayFullName = "";
                 int bookmarkID, actNr, scNr;
+                String bookmarkUsername;
 
                 for (List<String> bookmarkEntry : bookmarkEntriesList) {
                     bookmarkID = Integer.parseInt(bookmarkEntry.get(0));
+                    bookmarkUsername = bookmarkEntry.get(7);
                     actNr = Integer.parseInt(bookmarkEntry.get(3));
                     scNr = Integer.parseInt(bookmarkEntry.get(4));
 
@@ -132,7 +134,7 @@ public class Bookmarks extends AppCompatActivity {
                         }
                     }
 
-                    strBmk += "Note {" + bookmarkID + "}: " + bookmarkEntry.get(6);
+                    strBmk += "Note {" + bookmarkID + "} by " + bookmarkUsername + ": " + bookmarkEntry.get(6);
                     if (actNr == 0 && scNr == 0) {
                         strBmk += "<br>Characters in play";
                     } else {
@@ -167,6 +169,7 @@ public class Bookmarks extends AppCompatActivity {
         Integer bookmarkID = 0;
         Integer actNr = 0;
         Integer scNr = 0;
+        String bookmarkUsername = "";
 
         // improvements to make:
         // 1. (Done) group by play so that the name of the play appears once as a heading,
@@ -189,6 +192,7 @@ public class Bookmarks extends AppCompatActivity {
             Log.d("bookmarkEntry", String.valueOf(bookmarkEntry));
 
             bookmarkID = Integer.valueOf(bookmarkEntry.get(0));
+            bookmarkUsername = bookmarkEntry.get(7);
             Log.d("bookmark ID", String.valueOf(bookmarkID));
             actNr = Integer.valueOf(bookmarkEntry.get(3));
             scNr = Integer.valueOf(bookmarkEntry.get(4));
@@ -209,7 +213,7 @@ public class Bookmarks extends AppCompatActivity {
             }
 
             // add annotation
-            strBmk +=  "Note {" + bookmarkID + "}: " + bookmarkEntry.get(6).toString();
+            strBmk +=  "Note {" + bookmarkID + "} by " + bookmarkUsername + ": " + bookmarkEntry.get(6).toString();
 
             if (actNr == 0 && scNr == 0) {
                 strBmk += "<br>Characters in play";

@@ -115,26 +115,19 @@ public class BookmarkSharingUsernameAdapter extends RecyclerView.Adapter<Recycle
             // we have now added more logic relating to the checkbox.
             bookmarkSharingUsernameViewHolder.selectCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 String selectedUsername = item.get("username");
-                Log.d("Checkbox", "User " + selectedUsername + " set to: " + isChecked);
 
-//                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-//                Set<String> selectedUsers = new HashSet<>(prefs.getStringSet("visible_bookmark_users", new HashSet<>()));
-
-//                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-//                Set<String> selectedUsers = prefs.getStringSet("visible_bookmark_users", new HashSet<>());
-//                String thisUsername = item.get("username");
-                bookmarkSharingUsernameViewHolder.selectCheckBox.setChecked(selectedUsers.contains(thisUsername));
+                // ✅ Safe to declare locally here
+                SharedPreferences localprefs = PreferenceManager.getDefaultSharedPreferences(context);
+                Set<String> currentSet = localprefs.getStringSet("visible_bookmark_users", new HashSet<>());
+                Set<String> newSet = new HashSet<>(currentSet);
 
                 if (isChecked) {
-                    selectedUsers.add(selectedUsername);
+                    newSet.add(selectedUsername);
                 } else {
-                    selectedUsers.remove(selectedUsername);
+                    newSet.remove(selectedUsername);
                 }
 
-//                SharedPreferences prefs1 = PreferenceManager.getDefaultSharedPreferences(context);
-                prefs.edit().putStringSet("visible_bookmark_users", selectedUsers).apply();
-                notifyItemChanged(holder.getAdapterPosition());
-
+                localprefs.edit().putStringSet("visible_bookmark_users", newSet).apply();
             });
 
         }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,8 +24,10 @@ import com.example.database.QueryResult;
 import com.example.database.RemoteDatabaseHelperHttp;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class BookmarkSharingPreferences extends AppCompatActivity {
 
@@ -50,11 +54,16 @@ public class BookmarkSharingPreferences extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        Set<String> restored = PreferenceManager.getDefaultSharedPreferences(this)
+                .getStringSet("visible_bookmark_users", new HashSet<>());
+        Log.d("prefs", "Restored on app launch: " + restored);
+
         helperHttp = new RemoteDatabaseHelperHttp();
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainlayout), (v, insets) -> insets);
 
         loadInitialData();
+
     }
 
     private void loadInitialData() {

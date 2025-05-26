@@ -209,13 +209,13 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 Log.d("bookmark counter","own bookmarks <" + String.valueOf(intBookmarkCount) + ">, shared bookmarks <" + String.valueOf(intSharedBookmarkCount) + ">");
 
                 if(intBookmarkCount>0){
-                    strScriptText += " <" + String.valueOf(intBookmarkCount) + ">";
+                    strScriptText += "  <font color='#FFFFFF'>&lt;" + String.valueOf(intBookmarkCount) + "&gt;</font>";
                     Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intBookmarkCount));
                 }
 
                 if(intSharedBookmarkCount>0){
-                    strScriptText += " <" + String.valueOf(intSharedBookmarkCount) + ">";
-                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intSharedBookmarkCount));
+                    strScriptText += " <font color='#0000FF'><i>&lt;" + String.valueOf(intSharedBookmarkCount) + "&gt;</i></font>";
+                    Log.d("indicate bookmark exists", "shared bookmark(s): " + String.valueOf(intSharedBookmarkCount));
                 }
 
                 scriptLinesList.add("play_code: " + GlobalClass.selectedPlayCode + " Act " + GlobalClass.selectedActNumber + " Scene " + GlobalClass.selectedSceneNumber + " scene_line_nr " + intLineNumber + " play_line_nr " + String.valueOf(intPlayLineNumber));
@@ -334,7 +334,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         "LEFT OUTER JOIN (" +
                         "    SELECT play_code, play_line_nr, COUNT(DISTINCT bookmark_row_id) AS bookmark_count " +
                         "    FROM bookmark " +
-                        "    WHERE username IN (" + inClause + ") AND active_0_or_1 = 1 " +
+                        "    WHERE username <> '" + currentUser + "' AND username IN (" + inClause + ") " +
+                        "     AND active_0_or_1 = 1 " +
                         "    GROUP BY play_code, play_line_nr" +
                         ") shared_b ON p.play_code = shared_b.play_code AND p.play_line_number = shared_b.play_line_nr " +
                         "WHERE p.play_code = '" + GlobalClass.selectedPlayCode + "' ";
@@ -385,14 +386,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                             }
                         }
 
-//                        Log.d("bookmark counter","own bookmarks <" + String.valueOf(bookmarkCount) + ">, shared bookmarks <" + String.valueOf(sharedBookmarkCount) + ">");
+                        Log.d("bookmark counter","own bookmarks <" + String.valueOf(bookmarkCount) + ">, shared bookmarks <" + String.valueOf(sharedBookmarkCount) + ">");
 
                         if (bookmarkCount > 0) {
-                            lineText += " <" + String.valueOf(bookmarkCount) + ">";
+                            lineText += " <font color='#FFFFFF'>&lt;" + String.valueOf(bookmarkCount) + "&gt;</font>";
                         }
 
                         if (sharedBookmarkCount > 0) {
-                            lineText += " <" + String.valueOf(sharedBookmarkCount) + ">";
+                            lineText += " <font color='#0000FF'><i>&lt;" + String.valueOf(sharedBookmarkCount) + "&gt;</i></font>";
                         }
 
                         scriptLinesList.add("play_code: " + GlobalClass.selectedPlayCode +

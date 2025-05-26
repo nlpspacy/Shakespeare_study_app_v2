@@ -1,6 +1,7 @@
 package com.shakespeare.new_app;
 
 import static android.app.PendingIntent.getActivity;
+import static android.text.Html.fromHtml;
 
 import static com.shakespeare.new_app.RecyclerBookmarksClickListener.*;
 
@@ -124,17 +125,17 @@ public class Bookmarks extends AppCompatActivity {
 
                     if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(2))) {
                         if (!strBmk.equals("")) {
-                            bookmarksList.add(String.valueOf(Html.fromHtml(strBmk)));
+                            bookmarksList.add(String.valueOf(fromHtml(strBmk)));
                         }
                         strPlayFullName = bookmarkEntry.get(2);
-                        strBmk = "<br><h2>" + strPlayFullName + "</h2>";
+                        strBmk = "<big><b>" + strPlayFullName + "</b></big> <br> ";
 
                         if (strFirstPlayFullName.equals("")) {
                             strFirstPlayFullName = strPlayFullName;
                         }
                     }
 
-                    strBmk += "Note {" + bookmarkID + "} by " + bookmarkUsername + ": " + bookmarkEntry.get(6);
+                    strBmk += "<br> Note {" + bookmarkID + "} by " + bookmarkUsername + ": " + bookmarkEntry.get(6);
                     if (actNr == 0 && scNr == 0) {
                         strBmk += "<br>Characters in play";
                     } else {
@@ -142,7 +143,7 @@ public class Bookmarks extends AppCompatActivity {
                     }
                     strBmk += "<br>" + bookmarkEntry.get(5);
 
-                    bookmarksList.add(String.valueOf(Html.fromHtml(strBmk)));
+                    bookmarksList.add(String.valueOf(fromHtml(strBmk)));
                     strBmk = "";
                 }
 
@@ -204,7 +205,7 @@ public class Bookmarks extends AppCompatActivity {
                     bookmarksList.add(strBmk);
                 }
                 strPlayFullName = bookmarkEntry.get(2).toString(); // play full name
-                strBmk = "<br><h2>" + strPlayFullName + "</h2>";
+                strBmk = " <br><big><b> " + strPlayFullName + " </b></big> <br> ";
 
                 if (strFirstPlayFullName.equals(""))
                 {
@@ -213,7 +214,7 @@ public class Bookmarks extends AppCompatActivity {
             }
 
             // add annotation
-            strBmk +=  "Note {" + bookmarkID + "} by " + bookmarkUsername + ": " + bookmarkEntry.get(6).toString();
+            strBmk +=  "<br>Note {" + bookmarkID + "} by " + bookmarkUsername + ": " + bookmarkEntry.get(6).toString();
 
             if (actNr == 0 && scNr == 0) {
                 strBmk += "<br>Characters in play";
@@ -236,7 +237,7 @@ public class Bookmarks extends AppCompatActivity {
 
             if (!strBmk.equals(("")))
             {
-                bookmarksList.add(String.valueOf(Html.fromHtml(strBmk)));
+                bookmarksList.add(String.valueOf(fromHtml(strBmk)));
             }
 
             strBmk = "";

@@ -5,6 +5,7 @@ import static androidx.test.core.app.ApplicationProvider.*;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.speech.tts.TextToSpeech;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -86,13 +87,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         if (strContent.equals("N.A.+")) {
             strContent = "Stage direction+";
         }
-        holder.myTextView.setText(strContent);
+//        holder.myTextView.setText(strContent);
+        holder.myTextView.setText(Html.fromHtml(strContent, Html.FROM_HTML_MODE_LEGACY));
 
         if (strContent.substring(intContentLength - 1, intContentLength).equals("+")) {
             // If it is a character marker as indicated by the plus sign (+) at the end of the character name,
             // then re-assign the holder without the plus (+) sign at the end of the character name.
             strContent = strContent.substring(0, intContentLength - 1);
-            holder.myTextView.setText(strContent);
+//            holder.myTextView.setText(strContent);
+            holder.myTextView.setText(Html.fromHtml(strContent, Html.FROM_HTML_MODE_LEGACY));
             holder.myTextView.setTypeface(null, Typeface.BOLD);
         } else if (strContent.equals("Characters in the Play")) {
             holder.myTextView.setTypeface(null, Typeface.BOLD);

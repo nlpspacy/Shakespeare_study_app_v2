@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -57,7 +58,7 @@ public class NewBookmarkPop extends AppCompatActivity {
 
         String strLocationHeading = "'" + com.shakespeare.new_app.GlobalClass.selectedPlay + "' Act " + GlobalClass.selectedActNumber + ", Sc " + GlobalClass.selectedSceneNumber + ", Line " + intSceneLineNr;
 
-        vwScriptText.setText(strLocationHeading + "\n" + com.shakespeare.new_app.GlobalClass.scriptText);
+        vwScriptText.setText(Html.fromHtml(strLocationHeading + "\n" + com.shakespeare.new_app.GlobalClass.scriptText, Html.FROM_HTML_MODE_LEGACY));
         vwScriptText.setTypeface(null, Typeface.ITALIC);
 
 

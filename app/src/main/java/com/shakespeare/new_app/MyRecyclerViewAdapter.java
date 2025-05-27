@@ -1,10 +1,7 @@
 package com.shakespeare.new_app;
 
-import static androidx.test.core.app.ApplicationProvider.*;
-
 import android.content.Context;
 import android.graphics.Typeface;
-import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
@@ -14,25 +11,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.test.InstrumentationRegistry;
 
 //import com.example.new_app.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
+
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
-    private List<String> mData;
+    private List<CharSequence> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private OnClickListener onClickListener;
 
+    private boolean contentIsPreStyled;
+
+
     // data is passed into the constructor
-    MyRecyclerViewAdapter(Context context, List<String> data) {
+    MyRecyclerViewAdapter(Context context, ArrayList<CharSequence> data, boolean contentIsPreStyled) {
         this.mInflater = LayoutInflater.from((Context) context);
         this.mData = data;
+        this.contentIsPreStyled = contentIsPreStyled;
     }
 
     // inflates the row layout from xml when needed
@@ -71,7 +72,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             }
         });
 
-        String strContent = mData.get(position);
+        CharSequence strContent = mData.get(position);
+        String strContentAsString = strContent.toString();
         String strSpokenText;
         Integer intContentLength = strContent.length();
 //        Log.d("show position","ViewHolder position: " + String.valueOf(position) + ". Content length: " + String.valueOf(strContent.length()));
@@ -88,14 +90,50 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
             strContent = "Stage direction+";
         }
 //        holder.myTextView.setText(strContent);
-        holder.myTextView.setText(Html.fromHtml(strContent, Html.FROM_HTML_MODE_LEGACY));
+//        Log.d("strContent", "strContent: "+ strContent);
 
-        if (strContent.substring(intContentLength - 1, intContentLength).equals("+")) {
+        // This produces the following error:
+        // E  FATAL EXCEPTION: main
+        // Process: com.shakespeare.new_app, PID: 8986
+        // java.lang.ClassCastException: android.text.SpannableStringBuilder cannot be cast to java.lang.String
+        // at com.shakespeare.new_app.MyRecyclerViewAdapter.onBindViewHolder(MyRecyclerViewAdapter.java:88)
+        //        CharSequence styled = Html.fromHtml((String) strContent, Html.FROM_HTML_MODE_LEGACY);
+
+//        // This styles the play script in HTML but ignores the HTML tags for the bookmarks.
+//        CharSequence styled = Html.fromHtml(strContent.toString(), Html.FROM_HTML_MODE_LEGACY);
+//
+//        // This styles the bookmarks in HTML but not the play script and shows the <font> tags in HTML
+//        // but doesn't use the for styling.
+//        CharSequence styled = strContent; // already styled, no need to re-parse
+//
+//        holder.myTextView.setText(styled);
+        if (contentIsPreStyled) {
+            // Bookmarks: already styled
+            holder.myTextView.setText(strContent);
+        } else {
+            // Play script: still needs HTML parsed
+            holder.myTextView.setText(Html.fromHtml(strContent.toString(), Html.FROM_HTML_MODE_LEGACY));
+        }
+
+        if (strContentAsString.substring(intContentLength - 1, intContentLength).equals("+")) {
             // If it is a character marker as indicated by the plus sign (+) at the end of the character name,
             // then re-assign the holder without the plus (+) sign at the end of the character name.
-            strContent = strContent.substring(0, intContentLength - 1);
+            strContent = strContentAsString.substring(0, intContentLength - 1);
+
+//            // 27 May 2025: convert back to html after applying string processing function
+//            styled = Html.fromHtml((String) strContent, Html.FROM_HTML_MODE_LEGACY);
+//
 //            holder.myTextView.setText(strContent);
-            holder.myTextView.setText(Html.fromHtml(strContent, Html.FROM_HTML_MODE_LEGACY));
+//            holder.myTextView.setText(styled);
+
+            if (contentIsPreStyled) {
+                // Bookmarks: already styled
+                holder.myTextView.setText(strContent);
+            } else {
+                // Play script: still needs HTML parsed
+                holder.myTextView.setText(Html.fromHtml(strContent.toString(), Html.FROM_HTML_MODE_LEGACY));
+            }
+
             holder.myTextView.setTypeface(null, Typeface.BOLD);
         } else if (strContent.equals("Characters in the Play")) {
             holder.myTextView.setTypeface(null, Typeface.BOLD);
@@ -119,7 +157,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         // throw an error.
         if (strContent.length() > 12) {
             // if it is a reference line then hide it
-            if (strContent.substring(0, 10).equals("play_code:")) {
+            if (strContentAsString.substring(0, 10).equals("play_code:")) {
 
                 // We do not want to speak aloud the reference information.
                 boolSpeakThisLine = Boolean.FALSE;
@@ -139,13 +177,13 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         // If this line is a spoken line, check whether the user has turned speech on.
         if (boolSpeakThisLine.equals(Boolean.TRUE)) {
-            strSpokenText = strContent;
+            strSpokenText = strContentAsString;
 
             if (com.shakespeare.new_app.GlobalClass.boolSoundOn.equals(Boolean.TRUE)) {
                 if (com.shakespeare.new_app.GlobalClass.scriptSceneLineNr != 0 &&
                         com.shakespeare.new_app.GlobalClass.selectedSceneNumber != 0 &&
-                        !strContent.contains("[") && strContent.contains(" ")) {
-                    strSpokenText = strContent.substring(strContent.indexOf(" "));
+                        !strContentAsString.contains("[") && strContentAsString.contains(" ")) {
+                    strSpokenText = strContentAsString.substring(strContentAsString.indexOf(" "));
                 }
 
                 MyApplication.setLanguage(Locale.ENGLISH);
@@ -181,7 +219,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
 
             }
-        }
+            }
 
     }
 
@@ -215,7 +253,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
 
     // convenience method for getting data at click position
-    String getItem(int id) {
+    CharSequence getItem(int id) {
         return mData.get(id);
     }
 

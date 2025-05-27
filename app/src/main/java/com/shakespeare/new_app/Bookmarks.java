@@ -29,7 +29,7 @@ import java.util.List;
 
 public class Bookmarks extends AppCompatActivity {
 
-    ArrayList<String> bookmarksList = new ArrayList<>();
+    ArrayList<CharSequence> bookmarksList = new ArrayList<>();
     ArrayList<List<String>> bookmarkEntriesList = new ArrayList<List<String>>();
     // this is the 1-D array which is the list of items within each bookmark in the "outer" list
     ArrayList<String> bookmarkEntries = new ArrayList<>();
@@ -116,6 +116,7 @@ public class Bookmarks extends AppCompatActivity {
                 String strBmk = "", strPlayFullName = "", strFirstPlayFullName = "";
                 int bookmarkID, actNr, scNr;
                 String bookmarkUsername;
+                String stringHeading;
 
                 for (List<String> bookmarkEntry : bookmarkEntriesList) {
                     bookmarkID = Integer.parseInt(bookmarkEntry.get(0));
@@ -123,16 +124,20 @@ public class Bookmarks extends AppCompatActivity {
                     actNr = Integer.parseInt(bookmarkEntry.get(3));
                     scNr = Integer.parseInt(bookmarkEntry.get(4));
 
+                    // If the play name is new, i.e. has changed, then add another play name heading.
                     if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(2))) {
                         if (!strBmk.equals("")) {
                             bookmarksList.add(String.valueOf(fromHtml(strBmk)));
                         }
                         strPlayFullName = bookmarkEntry.get(2);
-                        strBmk = "<big><b>" + strPlayFullName + "</b></big> <br> ";
+                        stringHeading = "<br><i><big>" + strPlayFullName + "</big></i>";
+                        bookmarksList.add(Html.fromHtml(stringHeading, Html.FROM_HTML_MODE_LEGACY));
 
                         if (strFirstPlayFullName.equals("")) {
                             strFirstPlayFullName = strPlayFullName;
                         }
+
+                        strBmk = ""; // start a fresh bookmark text string.
                     }
 
                     strBmk += "<br> Note {" + bookmarkID + "} by " + bookmarkUsername + ": " + bookmarkEntry.get(6);
@@ -143,11 +148,12 @@ public class Bookmarks extends AppCompatActivity {
                     }
                     strBmk += "<br>" + bookmarkEntry.get(5);
 
-                    bookmarksList.add(String.valueOf(fromHtml(strBmk)));
+                    bookmarksList.add(Html.fromHtml(strBmk, Html.FROM_HTML_MODE_LEGACY));
+//                    bookmarksList.add(String.valueOf(fromHtml(strBmk)));
                     strBmk = "";
                 }
 
-                adapter = new MyRecyclerViewAdapter(Bookmarks.this, bookmarksList);
+                adapter = new MyRecyclerViewAdapter(Bookmarks.this, bookmarksList, true);
                 rvBookmarks.setAdapter(adapter);
                 rvBookmarks.smoothScrollToPosition(0);
             }
@@ -171,6 +177,7 @@ public class Bookmarks extends AppCompatActivity {
         Integer actNr = 0;
         Integer scNr = 0;
         String bookmarkUsername = "";
+        String stringHeading = "";
 
         // improvements to make:
         // 1. (Done) group by play so that the name of the play appears once as a heading,
@@ -198,6 +205,7 @@ public class Bookmarks extends AppCompatActivity {
             actNr = Integer.valueOf(bookmarkEntry.get(3));
             scNr = Integer.valueOf(bookmarkEntry.get(4));
 
+            // If the play name is new, i.e. has changed, then add another play name heading.
             if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(2).toString()))
             {
                 if (!strBmk.equals(("")))
@@ -205,12 +213,15 @@ public class Bookmarks extends AppCompatActivity {
                     bookmarksList.add(strBmk);
                 }
                 strPlayFullName = bookmarkEntry.get(2).toString(); // play full name
-                strBmk = " <br><big><b> " + strPlayFullName + " </b></big> <br> ";
+                stringHeading = "<br><i><b>" + strPlayFullName + "</b></i>";
+                bookmarksList.add(Html.fromHtml(stringHeading, Html.FROM_HTML_MODE_LEGACY));
 
                 if (strFirstPlayFullName.equals(""))
                 {
                     strFirstPlayFullName = strPlayFullName;
                 }
+
+                strBmk = ""; // start a fresh bookmark text string.
             }
 
             // add annotation
@@ -271,19 +282,20 @@ public class Bookmarks extends AppCompatActivity {
                         // do whatever
 //                        Log.d("script line of text",recyclerView.position);
                         MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
-                        String strBookmarks = myAdapter.getItem(position);
+                        String strBookmarks = myAdapter.getItem(position).toString();
                         // We would like to get the text of the string which is long-clicked to save in the bookmark.
                         Log.d("check","onItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
                         MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
-                        String strBookmarks = myAdapter.getItem(position);
+                        String strBookmarks = myAdapter.getItem(position).toString();
                         // *** request confirmation to remove this bookmark
                         // which will be actioned by setting the active_0_or_1 to 0.
                         Log.d("check","onLongItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
 
                     }
+
                 })
 
         );

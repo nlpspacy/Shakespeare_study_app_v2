@@ -68,11 +68,11 @@ public class AMSND extends AppCompatActivity {
     private Spinner standardpromptsspinner;
 
     MyRecyclerViewAdapter adapter;
-    ArrayList<String> messageList = new ArrayList<>();
+    ArrayList<CharSequence> messageList = new ArrayList<>();
 
     MyRecyclerViewAdapter adapterScript;
-    ArrayList<String> scriptLinesList = new ArrayList<>();
-    ArrayList<ArrayList<String>> scriptLinesList_2d = new ArrayList<>();
+    ArrayList<CharSequence> scriptLinesList = new ArrayList<>();
+    ArrayList<ArrayList<CharSequence>> scriptLinesList_2d = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,14 +224,14 @@ public class AMSND extends AppCompatActivity {
                         // do whatever
 //                        Log.d("script line of text",recyclerView.position);
                         MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
-                        String strScriptText = myAdapter.getItem(position);
+                        CharSequence strScriptText = myAdapter.getItem(position);
                         // We would like to get the text of the string which is long-clicked to save in the bookmark.
                         Log.d("check","onItemClick item clicked in AMNSD.java class: position " + String.valueOf(position) + ", text " + strScriptText);
                     }
 
                     @Override public void onLongItemClick(View view, int position) {
                         MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
-                        String strScriptText = myAdapter.getItem(position);
+                        CharSequence strScriptText = myAdapter.getItem(position);
                         // do whatever
                         Log.d("check","onLongItemClick item clicked in AMNSD.java class: position " + String.valueOf(position) + ", text " + strScriptText);
                     }
@@ -464,7 +464,7 @@ public class AMSND extends AppCompatActivity {
 
         // *** start: loop through ArrayList scriptLinesList
         Integer i = 0;
-        for(String string1: scriptLinesList)
+        for(CharSequence list_entry: scriptLinesList)
         {
             i++;
         }
@@ -472,7 +472,7 @@ public class AMSND extends AppCompatActivity {
 
         // script lines list needs alternating line with the playcode, act, scene, play_line_nr reference
         // to include in the recycler view as a hidden row for bookmark referencing
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList, false);
         rvScript.setAdapter(adapter);
         int listLength = scriptLinesList.size();
 //        rvScript.smoothScrollToPosition(listLength);
@@ -760,7 +760,7 @@ public class AMSND extends AppCompatActivity {
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
         // attempt to clear the recycler view
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null, false);
         rvScript.setAdapter(adapter);
         rvScript.smoothScrollToPosition(0);
 
@@ -806,7 +806,7 @@ public class AMSND extends AppCompatActivity {
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
         // attempt to clear the recycler view
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null);
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null, false);
 //        rvScript.setAdapter(adapter);
         //rvScript.setAdapter(null);
         rvScript.smoothScrollToPosition(0);
@@ -1079,7 +1079,7 @@ public class AMSND extends AppCompatActivity {
                         RecyclerView recyclerView = findViewById(R.id.rvMessages);
                         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
 
-                        adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), messageList);
+                        adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), messageList, false);
                         recyclerView.setAdapter(adapter);
                         int listLength = messageList.size();
                         recyclerView.smoothScrollToPosition(listLength);
@@ -1213,10 +1213,10 @@ public class AMSND extends AppCompatActivity {
 
         // *** start: loop through ArrayList scriptLinesList
 
-        ArrayList<String> scriptLinesList = null;
+        ArrayList<CharSequence> scriptLinesList = null;
         Integer i = 0;
 
-        for(ArrayList<String> data: scriptLinesList_2d)
+        for(ArrayList<CharSequence> data: scriptLinesList_2d)
         {
             // Assign just the script part of the array.
             // Check whether the character is specified as the user's character
@@ -1230,7 +1230,7 @@ public class AMSND extends AppCompatActivity {
 
         // script lines list needs alternating line with the playcode, act, scene, play_line_nr reference
         // to include in the recycler view as a hidden row for bookmark referencing
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList);
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList ,false);
         rvScript.setAdapter(adapter);
         int listLength = scriptLinesList.size();
 //        rvScript.smoothScrollToPosition(listLength);

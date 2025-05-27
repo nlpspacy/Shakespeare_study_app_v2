@@ -206,16 +206,16 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 }
 
-                Log.d("bookmark counter","own bookmarks <" + String.valueOf(intBookmarkCount) + ">, shared bookmarks <" + String.valueOf(intSharedBookmarkCount) + ">");
+//                Log.d("bookmark counter","own bookmarks <" + String.valueOf(intBookmarkCount) + ">, shared bookmarks <" + String.valueOf(intSharedBookmarkCount) + ">");
 
                 if(intBookmarkCount>0){
                     strScriptText += "  <font color='#FFFFFF'>&lt;" + String.valueOf(intBookmarkCount) + "&gt;</font>";
-                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intBookmarkCount));
+//                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intBookmarkCount));
                 }
 
                 if(intSharedBookmarkCount>0){
                     strScriptText += " <font color='#0000FF'><i>&lt;" + String.valueOf(intSharedBookmarkCount) + "&gt;</i></font>";
-                    Log.d("indicate bookmark exists", "shared bookmark(s): " + String.valueOf(intSharedBookmarkCount));
+//                    Log.d("indicate bookmark exists", "shared bookmark(s): " + String.valueOf(intSharedBookmarkCount));
                 }
 
                 scriptLinesList.add("play_code: " + GlobalClass.selectedPlayCode + " Act " + GlobalClass.selectedActNumber + " Scene " + GlobalClass.selectedSceneNumber + " scene_line_nr " + intLineNumber + " play_line_nr " + String.valueOf(intPlayLineNumber));
@@ -260,20 +260,26 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 //                    Log.d("flag", "line numbers: " + intLineNumber +", "+ intPreviousLineNumber+", difference: "+String.valueOf(intLineNumber-intPreviousLineNumber));
                     if((intLineNumber-intPreviousLineNumber)==0){
 //                        Log.d("flag", "option 2: add script text without line number " +strCharacter + " line nr " + strScriptText);
-                        scriptLinesList.add(strScriptText);
+
+                        if(GlobalClass.intShowLineNumbers==1){
+                            scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
+                            //Log.d("flag", "option 3: add script text with line number " +strCharacter + " line nr " + strScriptText);
+                        } else {
+                            scriptLinesList.add(strScriptText);
+                        }
 
                     } else{
                         if(intLineNumber==0){
                             scriptLinesList.add(strScriptText );
                         } else {
+
                             if(GlobalClass.intShowLineNumbers==1){
                                 scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
                                 //Log.d("flag", "option 3: add script text with line number " +strCharacter + " line nr " + strScriptText);
                             } else {
                                 scriptLinesList.add(strScriptText);
-
-
                             }
+
                         }
 
                     }
@@ -292,14 +298,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        Log.d("list info", "list size: " + scriptLinesList.size());
+//        Log.d("list info", "list size: " + scriptLinesList.size());
         return scriptLinesList;
 
     }
 
     public void getScriptFromCloud(boolean isPrologue, boolean isEpilogue, ScriptCallback callback) {
 
-        Log.d("tracking","getScriptFromCloud");
+//        Log.d("tracking","getScriptFromCloud");
 
         String currentUser = UserManager.getUsername(context);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
@@ -317,7 +323,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
             inClause.append("''"); // prevent SQL error if empty
         }
 
-        Log.d("users whose shared bookmarks to view","users whose shared bookmarks to view: "+String.valueOf(inClause));
+//        Log.d("users whose shared bookmarks to view","users whose shared bookmarks to view: "+String.valueOf(inClause));
 
         String baseQuery =
                 "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, " +
@@ -386,7 +392,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                             }
                         }
 
-                        Log.d("bookmark counter","own bookmarks <" + String.valueOf(bookmarkCount) + ">, shared bookmarks <" + String.valueOf(sharedBookmarkCount) + ">");
+//                        Log.d("bookmark counter","own bookmarks <" + String.valueOf(bookmarkCount) + ">, shared bookmarks <" + String.valueOf(sharedBookmarkCount) + ">");
 
                         if (bookmarkCount > 0) {
                             lineText += " <font color='#FFFFFF'>&lt;" + String.valueOf(bookmarkCount) + "&gt;</font>";
@@ -408,7 +414,13 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         } else if (!character.equalsIgnoreCase("N.A.+") &&
                                 !character.equalsIgnoreCase(strPreviousCharacter)) {
                             scriptLinesList.add(character);
-                            scriptLinesList.add(lineText);
+
+                            if (GlobalClass.intShowLineNumbers == 1) {
+                                scriptLinesList.add(lineNumber + " " + lineText);
+                            } else {
+                                scriptLinesList.add(lineText);
+                            }
+
                         } else {
                             if (lineNumber == intPreviousLineNumber) {
                                 scriptLinesList.add(lineText);
@@ -932,8 +944,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         if(intLineNumber == intPreviousLineNumber){
 //                        scriptLinesList.add(strCharacter + "\n" + strScriptText );
                             scriptLinesList.add(strCharacter);
-                            scriptLinesList.add(strScriptText);
-                            //Log.d("flag", "not NA new character added");
+
+                            if(GlobalClass.intShowLineNumbers==1){
+                                scriptLinesList.add(toString().valueOf(intLineNumber) + ' ' + strScriptText);
+                                //Log.d("flag", "option 1: add script text without line number " +strCharacter + " line nr " + strScriptText);
+                            } else {
+                                scriptLinesList.add(strScriptText);
+
+                            }
 
                         } else{
 //                        scriptLinesList.add(strCharacter + "\n" + toString().valueOf(intLineNumber) + ' ' + strScriptText );
@@ -958,6 +976,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 //                    Log.d("flag", "line numbers: " + intLineNumber +", "+ intPreviousLineNumber+", difference: "+String.valueOf(intLineNumber-intPreviousLineNumber));
                         if((intLineNumber-intPreviousLineNumber)==0){
 //                        Log.d("flag", "option 2: add script text without line number " +strCharacter + " line nr " + strScriptText);
+
                             scriptLinesList.add(strScriptText);
 
                         } else{
@@ -981,6 +1000,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                     }
                 }
 
+//                Log.d("flag", strPreviousCharacter + ", " + strCharacter + "; " + "intLineNumber " + toString().valueOf(intLineNumber) + ", " + " intPreviousLineNumber " + toString().valueOf(intPreviousLineNumber) + "; " + strScriptText);
+
                 strPreviousCharacter = strCharacter;
                 intPreviousLineNumber = intLineNumber;
 
@@ -990,8 +1011,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        Log.d("list info", "2d list size: " + scriptLinesList_2d.size());
-        Log.d("list info", "list size: " + scriptLinesList.size());
+//        Log.d("list info", "2d list size: " + scriptLinesList_2d.size());
+//        Log.d("list info", "list size: " + scriptLinesList.size());
 
         // As at 13 April 2025:
         // The 2d (2-dimensional) version is still in development.

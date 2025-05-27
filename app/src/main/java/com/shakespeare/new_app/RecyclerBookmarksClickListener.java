@@ -56,7 +56,7 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
                 Integer position = recyclerView.getChildAdapterPosition(child);
                 MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
-                String strBookmark = myAdapter.getItem(position);
+                String strBookmark = myAdapter.getItem(position).toString();
                 Integer intContentLength = strBookmark.length();
 
                 if(strBookmark.substring(intContentLength-1, intContentLength).equals("+")){
@@ -72,7 +72,7 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
 
                 if (child != null && m2Listener != null) {
                     m2Listener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
-                    String strBookmarkText = myAdapter.getItem(position);
+                    CharSequence strBookmarkText = myAdapter.getItem(position);
                     Log.d("click check","onLongPress item clicked in RecyclerBookmarksClickListener.java class: position " + String.valueOf(position) + " " + strBookmarkText + ", getX " + String.valueOf(e.getX()) + " getY " + String.valueOf(e.getY()));
                     // show Yes/No message to confirm changing bookmark to inactive status
                     // if user presses Yes, then change bookmark to inactive status

@@ -27,8 +27,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Bookmarks extends AppCompatActivity {
 
+    private Context context;
     ArrayList<CharSequence> bookmarksList = new ArrayList<>();
     ArrayList<List<String>> bookmarkEntriesList = new ArrayList<List<String>>();
     // this is the 1-D array which is the list of items within each bookmark in the "outer" list
@@ -41,6 +43,8 @@ public class Bookmarks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_bookmarks);
+
+        this.context = this; // ✅ Save the context for later use
 
         RecyclerView rvBookmarks = findViewById(R.id.rvBookmarks);
         rvBookmarks.setLayoutManager(new LinearLayoutManager(rvBookmarks.getContext()));
@@ -148,9 +152,27 @@ public class Bookmarks extends AppCompatActivity {
                     }
                     strBmk += "<br>" + bookmarkEntry.get(5);
 
+                    String currentUser = UserManager.getUsername(context);
+
+                    if (!bookmarkUsername.equals(currentUser)) {
+                        strBmk = "<font color='#0000FF'>" + strBmk + "</font>"; // shared
+                    } else {
+                        strBmk = "<font color='#FFFFFF'>" + strBmk + "</font>"; // own
+                    }
                     bookmarksList.add(Html.fromHtml(strBmk, Html.FROM_HTML_MODE_LEGACY));
 //                    bookmarksList.add(String.valueOf(fromHtml(strBmk)));
                     strBmk = "";
+
+                    if (bookmarkUsername.equals(currentUser)) {
+                        // Create a checkbox dynamically or use a layout with a checkbox per item
+                        // Then set checked state from bookmarkEntry.get(12) (share_with_others)
+
+                        int shareFlag = Integer.parseInt(bookmarkEntry.get(12));
+                        boolean isShared = shareFlag == 1;
+
+                        // For each such item, show a checkbox and on change, call:
+                        db.updateBookmarkShareStatus(bookmarkID, isShared);
+                    }
                 }
 
                 adapter = new MyRecyclerViewAdapter(Bookmarks.this, bookmarksList, true);

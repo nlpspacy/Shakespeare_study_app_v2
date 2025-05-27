@@ -9,6 +9,7 @@ import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -92,7 +93,10 @@ public class NewBookmarkPop extends AppCompatActivity {
             }
         };
 
-        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr);
+        CheckBox shareCheckbox = findViewById(R.id.shareBookmarkCheckbox);
+        boolean share = shareCheckbox.isChecked();
+
+        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr, share);
         Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
 
         Intent result = new Intent();
@@ -124,7 +128,10 @@ public class NewBookmarkPop extends AppCompatActivity {
             }
         };
 
-        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr);
+        CheckBox shareCheckbox = findViewById(R.id.shareBookmarkCheckbox);
+        boolean share = shareCheckbox.isChecked();
+
+        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr, share);
         Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
 
 

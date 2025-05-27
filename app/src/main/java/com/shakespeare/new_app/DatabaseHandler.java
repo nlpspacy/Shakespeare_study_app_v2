@@ -592,14 +592,15 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
       // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
 
-    public int addBookmark(Integer intRvPosition, String strScriptText, String strUserNote, Integer intSceneLineNr, Integer intPlayLineNr) {
+    public int addBookmark(Integer intRvPosition, String strScriptText, String strUserNote, Integer intSceneLineNr, Integer intPlayLineNr, boolean share) {
+        int shareFlag = share ? 1 : 0;
         String sql = "INSERT INTO bookmark (" +
                 "username, date_time_added, play_code, play_full_name, act_nr, scene_nr, scene_line_nr, " +
                 "play_line_nr, position_in_view, script_text, annotation, active_0_or_1, share_with_others) " +
                 "VALUES ('dan', datetime('now'), '" + GlobalClass.selectedPlayCode + "', '" + GlobalClass.selectedPlay + "', " +
                 GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", " +
                 intSceneLineNr + ", " + intPlayLineNr + ", " + intRvPosition + ", '" +
-                strScriptText.replace("'", "''") + "', '" + strUserNote.replace("'", "''") + "', 1 ,1);";
+                strScriptText.replace("'", "''") + "', '" + strUserNote.replace("'", "''") + "', 1 , " + shareFlag + ");";
 
         RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
 //        remoteDb.runInsert(sql);  // ✅ simpler, lambda-free
@@ -669,7 +670,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 "WHERE active_0_or_1 = 1 AND (" +
                 "username = '" + currentUser + "' " +
                 "OR (share_with_others = 1 AND username IN (" + inClause + "))" +
-                ")";
+                ") " +
+                "ORDER BY play_full_name, act_nr, scene_nr, play_line_nr;";
 
 
         RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
@@ -1021,6 +1023,25 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         // character to allow the user to say their own character lines.
         return scriptLinesList_2d;
 
+    }
+
+    public void updateBookmarkShareStatus(int bookmarkId, boolean share) {
+        int shareFlag = share ? 1 : 0;
+        String sql = "UPDATE bookmark SET share_with_others = " + shareFlag +
+                " WHERE bookmark_row_id = " + bookmarkId;
+
+        RemoteDatabaseHelperHttp db = new RemoteDatabaseHelperHttp();
+        db.runInsert(sql, new RemoteDatabaseHelperHttp.InsertCallback() {
+            @Override
+            public void onInsertSuccess() {
+                Log.d("BookmarkShareUpdate", "Successfully updated share status");
+            }
+
+            @Override
+            public void onInsertFailure(Throwable e) {
+                Log.e("BookmarkShareUpdate", "Failed to update share status", e);
+            }
+        });
     }
 
 }

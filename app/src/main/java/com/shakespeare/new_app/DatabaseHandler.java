@@ -664,8 +664,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         String sql = "SELECT DISTINCT bookmark_row_id, username, play_code, play_full_name, " +
-                "act_nr, scene_nr, " +
-                "play_line_nr, scene_line_nr, position_in_view, script_text, annotation " +
+                "act_nr, scene_nr, play_line_nr, scene_line_nr, " +
+                "position_in_view, script_text, annotation, share_with_others " +
                 "FROM bookmark " +
                 "WHERE active_0_or_1 = 1 AND (" +
                 "username = '" + currentUser + "' " +
@@ -715,6 +715,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         entry.add(row.get("script_text"));
                         entry.add(row.get("annotation"));
                         entry.add(row.get("username"));
+                        entry.add(row.get("share_with_others"));
                         bookmarkEntriesList.add(entry);
                     }
 
@@ -744,7 +745,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
         // this uses the bookmark table
         String selectQuery = "SELECT DISTINCT bookmark_row_id, username, play_code, play_full_name, act_nr, scene_nr, ";
-        selectQuery += "play_line_nr, scene_line_nr, position_in_view, script_text, annotation, active_0_or_1 ";
+        selectQuery += "play_line_nr, scene_line_nr, position_in_view, script_text, annotation, active_0_or_1, share_with_others ";
         selectQuery += "FROM bookmark WHERE active_0_or_1 = 1 ";
         selectQuery += "ORDER BY play_code, date_time_added DESC;";
         Log.d("sql",selectQuery);
@@ -767,6 +768,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 bookmarkEntries.add(cursor.getString(5)); // scene_nr
                 bookmarkEntries.add(cursor.getString(9)); // script_text
                 bookmarkEntries.add(cursor.getString(10)); // annotation
+                bookmarkEntries.add(cursor.getString(12)); // share_with_others
+
+                // these are not needed but added to ensure we have the right number of columns in our arraylist
+                bookmarkEntries.add(cursor.getString(1)); // username
+                bookmarkEntries.add(cursor.getString(6)); // play_line_nr
+                bookmarkEntries.add(cursor.getString(7)); // scene_line_nr
+                bookmarkEntries.add(cursor.getString(8)); // position_in_view
+                bookmarkEntries.add(cursor.getString(11)); // active_0_or_1
 
                 bookmarkEntriesList.add(bookmarkEntries);
 

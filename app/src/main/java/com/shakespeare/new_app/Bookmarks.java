@@ -36,7 +36,8 @@ public class Bookmarks extends AppCompatActivity {
     // this is the 1-D array which is the list of items within each bookmark in the "outer" list
     ArrayList<String> bookmarkEntries = new ArrayList<>();
 
-    MyRecyclerViewAdapter adapter;
+//    MyRecyclerViewAdapter adapter;
+    BookmarkEntryAdapter adapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("settings", "open settings home activity");
@@ -118,7 +119,7 @@ public class Bookmarks extends AppCompatActivity {
 
                 bookmarksList.clear(); // ✅ clear any old data
                 String strBmk = "", strPlayFullName = "", strFirstPlayFullName = "";
-                int bookmarkID, actNr, scNr;
+                int bookmarkID, actNr, scNr, intShareWithOthers;
                 String bookmarkUsername;
                 String stringHeading;
 
@@ -127,6 +128,7 @@ public class Bookmarks extends AppCompatActivity {
                     bookmarkUsername = bookmarkEntry.get(7);
                     actNr = Integer.parseInt(bookmarkEntry.get(3));
                     scNr = Integer.parseInt(bookmarkEntry.get(4));
+                    intShareWithOthers = Integer.parseInt(bookmarkEntry.get(8));
 
                     // If the play name is new, i.e. has changed, then add another play name heading.
                     if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(2))) {
@@ -152,7 +154,8 @@ public class Bookmarks extends AppCompatActivity {
                     }
                     strBmk += "<br>" + bookmarkEntry.get(5);
 
-                    String currentUser = UserManager.getUsername(context);
+//                    String currentUser = UserManager.getUsername(context);
+                    String currentUser = UserManager.getUsername(Bookmarks.this);
 
                     if (!bookmarkUsername.equals(currentUser)) {
                         strBmk = "<font color='#0000FF'>" + strBmk + "</font>"; // shared
@@ -167,7 +170,8 @@ public class Bookmarks extends AppCompatActivity {
                         // Create a checkbox dynamically or use a layout with a checkbox per item
                         // Then set checked state from bookmarkEntry.get(12) (share_with_others)
 
-                        int shareFlag = Integer.parseInt(bookmarkEntry.get(12));
+//                        int shareFlag = Integer.parseInt(bookmarkEntry.get(12));
+                        int shareFlag = intShareWithOthers;
                         boolean isShared = shareFlag == 1;
 
                         // For each such item, show a checkbox and on change, call:
@@ -175,8 +179,17 @@ public class Bookmarks extends AppCompatActivity {
                     }
                 }
 
-                adapter = new MyRecyclerViewAdapter(Bookmarks.this, bookmarksList, true);
+                // 27 May 2025: This is the new adapter for bookmarks in which
+                // the user's own bookmarks are accompanied by a checkbox for the user
+                // to toggle sharing for their own bookmarks.
+                adapter = new BookmarkEntryAdapter(Bookmarks.this, bookmarksList, bookmarkEntriesList);
                 rvBookmarks.setAdapter(adapter);
+
+                // 27 May 2025: This is the old adapter for bookmarks in which bookmarks
+                // use the same adapter type as play scripts, and neither has a checkbox
+                // for the user to toggle sharing for their own bookmarks.
+//                adapter = new MyRecyclerViewAdapter(Bookmarks.this, bookmarksList, true);
+//                rvBookmarks.setAdapter(adapter);
                 rvBookmarks.smoothScrollToPosition(0);
             }
             @Override
@@ -303,10 +316,25 @@ public class Bookmarks extends AppCompatActivity {
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
 //                        Log.d("script line of text",recyclerView.position);
-                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
-                        String strBookmarks = myAdapter.getItem(position).toString();
+
+                        // old adapter for click listener
+//                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
+//                        String strBookmarks = myAdapter.getItem(position).toString();
+
+                        // 28 May 2025: new adapter for click listener
+                        BookmarkEntryAdapter bookmarkAdapter = (BookmarkEntryAdapter) rvBookmarks.getAdapter();
+                        String strBookmarks = bookmarkAdapter.getItem(position).toString(); // line from before the new bookmark adapter
+
                         // We would like to get the text of the string which is long-clicked to save in the bookmark.
                         Log.d("check","onItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
+
+                        // 28 May 2025: extra functionality with the new adapter
+                        CharSequence clickedText = bookmarkAdapter.getItem(position);
+//                        List<String> entryData = bookmarkAdapter.bookmarkEntriesList.get(position);
+                        List<String> entryData = bookmarkAdapter.getBookmarkEntry(position);
+                        String bookmarkId = entryData.get(0);
+                        Log.d("check", "onItemClick: position " + position + ", text: " + clickedText);
+
                     }
 
                     @Override public void onLongItemClick(View view, int position) {

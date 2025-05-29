@@ -40,7 +40,7 @@ public class Bookmarks extends AppCompatActivity {
     BookmarkEntryAdapter adapter;
 
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("settings", "open settings home activity");
+        Log.d("settings", "open Bookmarks activity");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_bookmarks);
@@ -65,6 +65,8 @@ public class Bookmarks extends AppCompatActivity {
         // read from database current act number and scene number with current play code
         // and assign to the global variables
         // because this is the starting point for the play navigation
+        Log.d("settings", "move to DatabaseHandler");
+
         DatabaseHandler db = new DatabaseHandler(this) {
             @Override
             public void onCreate(SQLiteDatabase db) {
@@ -111,6 +113,9 @@ public class Bookmarks extends AppCompatActivity {
         // but, instead, we want to add as an array or list
     //        bookmarkEntriesList = db.getBookmarks(); // This is based on local sqlite db.
         // Now we are replacing with a call to the cloud sqlite db:
+
+        Log.d("settings", "move to getBookmarksFromCloud");
+
         db.getBookmarksFromCloud(new BookmarkCallback() {
             @Override
             public void onBookmarksFetched(ArrayList<List<String>> bookmarks) {
@@ -123,75 +128,51 @@ public class Bookmarks extends AppCompatActivity {
                 String bookmarkUsername;
                 String stringHeading;
 
-                for (List<String> bookmarkEntry : bookmarkEntriesList) {
-                    bookmarkID = Integer.parseInt(bookmarkEntry.get(0));
-                    bookmarkUsername = bookmarkEntry.get(7);
-                    actNr = Integer.parseInt(bookmarkEntry.get(3));
-                    scNr = Integer.parseInt(bookmarkEntry.get(4));
-                    intShareWithOthers = Integer.parseInt(bookmarkEntry.get(8));
+                Log.d("log","bookmarkEntriesList.size(): " + bookmarkEntriesList.size() + ", bookmarkEntriesList.get(0): " + bookmarkEntriesList.get(0));
 
-                    // If the play name is new, i.e. has changed, then add another play name heading.
-                    if (!strPlayFullName.equalsIgnoreCase(bookmarkEntry.get(2))) {
-                        if (!strBmk.equals("")) {
-                            bookmarksList.add(String.valueOf(fromHtml(strBmk)));
-                        }
-                        strPlayFullName = bookmarkEntry.get(2);
-                        stringHeading = "<br><i><big>" + strPlayFullName + "</big></i>";
-                        bookmarksList.add(Html.fromHtml(stringHeading, Html.FROM_HTML_MODE_LEGACY));
+                String lastPlayTitle = "";
 
-                        if (strFirstPlayFullName.equals("")) {
-                            strFirstPlayFullName = strPlayFullName;
-                        }
+                for (int i = 0; i < bookmarks.size(); i++) {
+                    List<String> row = bookmarks.get(i);
 
-                        strBmk = ""; // start a fresh bookmark text string.
+                    String playTitle = row.get(2); // play_full_name
+
+                    StringBuilder sb = new StringBuilder();
+
+                    // ✅ Add heading inline with the first bookmark of a play
+                    if (!playTitle.equals(lastPlayTitle)) {
+                        sb.append("<br><i><big>").append(playTitle).append("</big></i><br>");
+                        lastPlayTitle = playTitle;
                     }
 
-                    strBmk += "<br> Note {" + bookmarkID + "} by " + bookmarkUsername + ": " + bookmarkEntry.get(6);
-                    if (actNr == 0 && scNr == 0) {
-                        strBmk += "<br>Characters in play";
-                    } else {
-                        strBmk += "<br>Act " + actNr + " Scene " + scNr;
-                    }
-                    strBmk += "<br>" + bookmarkEntry.get(5);
+                    String note = row.get(6);
+                    String username = row.get(7);
+                    String lineText = row.get(5);
+                    int act = Integer.parseInt(row.get(3));
+                    int scene = Integer.parseInt(row.get(4));
 
-//                    String currentUser = UserManager.getUsername(context);
+                    sb.append("Note by ").append(username).append(": ").append(note);
+                    sb.append("<br>Act ").append(act).append(", Scene ").append(scene);
+                    sb.append("<br>").append(lineText);
+
+                    // Coloring based on user
                     String currentUser = UserManager.getUsername(Bookmarks.this);
-
-                    if (!bookmarkUsername.equals(currentUser)) {
-                        strBmk = "<font color='#0000FF'>" + strBmk + "</font>"; // shared
+                    String styled;
+                    if (username.equals(currentUser)) {
+                        styled = "<font color='#FFFFFF'>" + sb.toString() + "</font>";
                     } else {
-                        strBmk = "<font color='#FFFFFF'>" + strBmk + "</font>"; // own
+                        styled = "<font color='#0000FF'>" + sb.toString() + "</font>";
                     }
-                    bookmarksList.add(Html.fromHtml(strBmk, Html.FROM_HTML_MODE_LEGACY));
-//                    bookmarksList.add(String.valueOf(fromHtml(strBmk)));
-                    strBmk = "";
 
-                    if (bookmarkUsername.equals(currentUser)) {
-                        // Create a checkbox dynamically or use a layout with a checkbox per item
-                        // Then set checked state from bookmarkEntry.get(12) (share_with_others)
-
-//                        int shareFlag = Integer.parseInt(bookmarkEntry.get(12));
-                        int shareFlag = intShareWithOthers;
-                        boolean isShared = shareFlag == 1;
-
-                        // For each such item, show a checkbox and on change, call:
-                        db.updateBookmarkShareStatus(bookmarkID, isShared);
-                    }
+                    bookmarksList.add(Html.fromHtml(styled, Html.FROM_HTML_MODE_LEGACY));
+                    bookmarkEntriesList.add(row); // no nulls anymore!
                 }
 
-                // 27 May 2025: This is the new adapter for bookmarks in which
-                // the user's own bookmarks are accompanied by a checkbox for the user
-                // to toggle sharing for their own bookmarks.
                 adapter = new BookmarkEntryAdapter(Bookmarks.this, bookmarksList, bookmarkEntriesList);
                 rvBookmarks.setAdapter(adapter);
-
-                // 27 May 2025: This is the old adapter for bookmarks in which bookmarks
-                // use the same adapter type as play scripts, and neither has a checkbox
-                // for the user to toggle sharing for their own bookmarks.
-//                adapter = new MyRecyclerViewAdapter(Bookmarks.this, bookmarksList, true);
-//                rvBookmarks.setAdapter(adapter);
                 rvBookmarks.smoothScrollToPosition(0);
             }
+
             @Override
             public void onError(Throwable e) {
                 Log.e("BookmarkFetch", "Error loading bookmarks", e);

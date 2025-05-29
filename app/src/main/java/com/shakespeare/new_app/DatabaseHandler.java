@@ -673,6 +673,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 ") " +
                 "ORDER BY play_full_name, act_nr, scene_nr, play_line_nr;";
 
+        Log.d("db tracker", "inside getBookmarksFromCloud sql: " + sql);
 
         RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
 

@@ -47,26 +47,22 @@ public class BookmarkEntryAdapter extends RecyclerView.Adapter<BookmarkEntryAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BookmarkEntryAdapter.ViewHolder holder, int position) {
-        CharSequence entryHtml = bookmarksList.get(position);
-        holder.bookmarkTextView.setText(entryHtml);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        CharSequence html = bookmarksList.get(position);
+        holder.bookmarkTextView.setText(html);
 
-        if (position >= bookmarkEntriesList.size()) {
-            holder.shareCheckbox.setVisibility(View.GONE);
-            return;
-        }
+        List<String> entry = bookmarkEntriesList.get(position);
 
-        List<String> entryData = bookmarkEntriesList.get(position);
-        String ownerUsername = entryData.get(IDX_USERNAME); // username
         String currentUser = UserManager.getUsername(context);
+        String entryUser = entry.get(IDX_USERNAME);
 
-        if (ownerUsername.equals(currentUser)) {
+        if (entryUser.equals(currentUser)) {
             holder.shareCheckbox.setVisibility(View.VISIBLE);
-            boolean isShared = "1".equals(entryData.get(IDX_SHARE_WITH_OTHERS)); // share_with_others column
-
+            boolean isShared = "1".equals(entry.get(IDX_SHARE_WITH_OTHERS));
+            holder.shareCheckbox.setOnCheckedChangeListener(null); // clear old
             holder.shareCheckbox.setChecked(isShared);
 
-            int bookmarkId = Integer.parseInt(entryData.get(IDX_BOOKMARK_ROW_ID));
+            int bookmarkId = Integer.parseInt(entry.get(IDX_BOOKMARK_ROW_ID));
             holder.shareCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 updateShareStatus(bookmarkId, isChecked);
             });

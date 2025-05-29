@@ -58,13 +58,19 @@ public class BookmarkEntryAdapter extends RecyclerView.Adapter<BookmarkEntryAdap
 
         if (entryUser.equals(currentUser)) {
             holder.shareCheckbox.setVisibility(View.VISIBLE);
+
+            // 🔁 Clear previous listener before setting new state
+            holder.shareCheckbox.setOnCheckedChangeListener(null);
+
             boolean isShared = "1".equals(entry.get(IDX_SHARE_WITH_OTHERS));
-            holder.shareCheckbox.setOnCheckedChangeListener(null); // clear old
             holder.shareCheckbox.setChecked(isShared);
 
             int bookmarkId = Integer.parseInt(entry.get(IDX_BOOKMARK_ROW_ID));
+
+            // ✅ Add new listener
             holder.shareCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 updateShareStatus(bookmarkId, isChecked);
+                entry.set(IDX_SHARE_WITH_OTHERS, isChecked ? "1" : "0"); // update local list
             });
 
         } else {

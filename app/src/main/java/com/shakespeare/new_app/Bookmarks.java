@@ -128,7 +128,7 @@ public class Bookmarks extends AppCompatActivity {
                 String bookmarkUsername;
                 String stringHeading;
 
-                Log.d("log","bookmarkEntriesList.size(): " + bookmarkEntriesList.size() + ", bookmarkEntriesList.get(0): " + bookmarkEntriesList.get(0));
+//                Log.d("log","bookmarkEntriesList.size(): " + bookmarkEntriesList.size() + ", bookmarkEntriesList.get(0): " + bookmarkEntriesList.get(0));
 
                 String lastPlayTitle = "";
 
@@ -318,7 +318,7 @@ public class Bookmarks extends AppCompatActivity {
 
                     }
 
-                    @Override public void onLongItemClick(View view, int position) {
+                    public void onLongItemClick(View view, int position) {
                         MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
                         String strBookmarks = myAdapter.getItem(position).toString();
                         // *** request confirmation to remove this bookmark

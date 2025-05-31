@@ -1,6 +1,7 @@
 package com.shakespeare.new_app;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
@@ -13,12 +14,16 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import org.w3c.dom.Text;
 
 public class NewBookmarkPop extends AppCompatActivity {
+
+    private Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +101,25 @@ public class NewBookmarkPop extends AppCompatActivity {
         CheckBox shareCheckbox = findViewById(R.id.shareBookmarkCheckbox);
         boolean share = shareCheckbox.isChecked();
 
-        db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr, share);
-        Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
+        this.context = this;
 
-        Intent result = new Intent();
-        result.putExtra("bookmarkSaved", true);
-        setResult(RESULT_OK, result);
-        finish(); // closes NewBookmarkPop and triggers onActivityResult
+        String username = UserManager.getUsername(context);
+        if (username.isEmpty()) {
+            Toast.makeText(context, "Please set your username before creating bookmarks.", Toast.LENGTH_LONG).show();
+            return;
+        } else {
 
-        getOnBackPressedDispatcher().onBackPressed();
+            db.addBookmark(com.shakespeare.new_app.GlobalClass.scriptPosition, com.shakespeare.new_app.GlobalClass.scriptText, strUserNote, GlobalClass.scriptSceneLineNr, GlobalClass.scriptPlayLineNr, share);
+            Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
+
+            Intent result = new Intent();
+            result.putExtra("bookmarkSaved", true);
+            setResult(RESULT_OK, result);
+            finish(); // closes NewBookmarkPop and triggers onActivityResult
+
+            getOnBackPressedDispatcher().onBackPressed();
+
+        }
 
     }
     public void saveBookmarkKeepTyping(View v) {

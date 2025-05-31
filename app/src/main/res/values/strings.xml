@@ -33,6 +33,7 @@
     <string name="btn_label_cancel">Cancel</string>
     <string name="btn_label_yes">Yes</string>
     <string name="btn_label_no">No</string>
+    <string name="btn_change_username">Change username</string>
     <string name="font_btn_label_small">T</string>
     <string name="font_btn_label_medium">T</string>
     <string name="font_btn_label_large">T</string>

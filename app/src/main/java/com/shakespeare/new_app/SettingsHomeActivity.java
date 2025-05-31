@@ -4,13 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -89,6 +93,30 @@ public class SettingsHomeActivity extends AppCompatActivity {
             btnSound.setImageResource(R.drawable.mute_icon_transparent_bg);
 //            tvSoundOnOffInd.setText("Sound off");
         }
+
+        Button btnChangeUsername = findViewById(R.id.btnChangeUsername);
+        btnChangeUsername.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+            builder.setTitle("Change your username");
+
+            final EditText input = new EditText(this);
+            input.setGravity(Gravity.CENTER);
+
+            input.setText(UserManager.getUsername(this));
+            builder.setView(input);
+
+            builder.setPositiveButton("Save", (dialog, which) -> {
+                String newUsername = input.getText().toString().trim();
+                if (!newUsername.isEmpty()) {
+                    UserManager.setUsername(this, newUsername);
+                    Toast.makeText(this, "Username changed to " + newUsername, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", null);
+            builder.show();
+        });
 
     }
 

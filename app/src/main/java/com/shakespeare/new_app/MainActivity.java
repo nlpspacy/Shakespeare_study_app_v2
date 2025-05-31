@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -397,6 +399,31 @@ public class MainActivity extends AppCompatActivity {
 //        playslist_spinner.setTextSize(TypedValue.COMPLEX_UNIT_SP, GlobalClass.fontsizesp);
 
 
+    }
+
+    private void checkAndPromptUsername() {
+        if (!UserManager.isUsernameSet(this)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Set your username");
+
+            final EditText input = new EditText(this);
+            input.setHint("Enter a unique username");
+            builder.setView(input);
+
+            builder.setCancelable(false); // Prevent dismissal
+            builder.setPositiveButton("Save", (dialog, which) -> {
+                String username = input.getText().toString().trim();
+                if (!username.isEmpty()) {
+                    UserManager.setUsername(this, username);
+                    Toast.makeText(this, "Username set to " + username, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Username cannot be empty.", Toast.LENGTH_SHORT).show();
+                    checkAndPromptUsername(); // Prompt again
+                }
+            });
+
+            builder.show();
+        }
     }
 }
 

@@ -105,6 +105,18 @@
             app:layout_constraintTop_toBottomOf="@+id/btnUserSelectCharacters"
             app:layout_constraintStart_toStartOf="@+id/btnViewSystemPrompt" />
 
+        <Button
+            android:id="@+id/btnChangeUsername"
+            android:layout_width="250sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="10sp"
+            android:onClick="openBookmarkSharingPreferences"
+            android:text="@string/btn_change_username"
+            android:textAllCaps="false"
+            app:layout_constraintTop_toBottomOf="@+id/btnBookmarkPreferences"
+            app:layout_constraintStart_toStartOf="@+id/btnViewSystemPrompt" />
+
         <TextView
             android:id="@+id/txtFontSize"
             android:layout_width="wrap_content"
@@ -137,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="100sp"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="5sp"
                 android:onClick="setFontMedium16sp"
                 android:text="@string/font_settings_btn_label_medium"
                 android:textSize="16sp"
@@ -149,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="100sp"
-                android:layout_marginTop="10sp"
+                android:layout_marginTop="5sp"
                 android:onClick="setFontLarge20sp"
                 android:text="@string/font_settings_btn_label_large"
                 android:textSize="20sp"
@@ -163,7 +175,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0sp"
-            android:layout_marginTop="20sp"
+            android:layout_marginTop="10sp"
             android:text="In play scripts, show or hide line numbers:"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnfontlarge" />
@@ -189,7 +201,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="100sp"
-            android:layout_marginTop="10sp"
+            android:layout_marginTop="5sp"
             android:onClick="hideLineNumbers"
             android:text="Hide"
             app:layout_constraintStart_toStartOf="parent"

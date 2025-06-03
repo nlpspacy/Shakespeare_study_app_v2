@@ -9,6 +9,7 @@ import android.speech.tts.TextToSpeech;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
@@ -75,6 +76,15 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // ensure a username is specified
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String username = prefs.getString("username", "");
+
+        if (username == null || username.trim().isEmpty()) {
+            // Prompt user to enter a unique username
+            showUsernamePromptDialog();
+        }
+
         array_plays_all = getResources().getStringArray(R.array.plays_all);
 
         playslist_spinner = (Spinner) findViewById(R.id.spinnerPlaysList);
@@ -130,6 +140,35 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    private void showUsernamePromptDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose a username");
+        builder.setCancelable(false); // Prevent dismissing the dialog
+
+        final EditText input = new EditText(this);
+        input.setGravity(Gravity.CENTER);
+        input.setHint("Enter your username");
+        builder.setView(input);
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String userInput = input.getText().toString().trim();
+
+            if (!userInput.isEmpty()) {
+                SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putString("username", userInput);
+                editor.apply();
+                Toast.makeText(this, "Username saved as: " + userInput, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Username cannot be blank", Toast.LENGTH_SHORT).show();
+                // Reopen the dialog until a valid username is entered
+                showUsernamePromptDialog();
+            }
+        });
+
+        builder.show();
     }
 
 

@@ -87,7 +87,7 @@ public class VoiceSynthesizer {
                         public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                             synchronized (playbackLock) {
                                 if (!sceneKey.equals(currentPlayKey)) {
-                                    Log.d("VoiceSynth", "Discarding old scene response");
+//                                    Log.d("VoiceSynth", "Discarding old scene response");
                                     releasePlayback();
                                     return;
                                 }
@@ -97,7 +97,7 @@ public class VoiceSynthesizer {
                                 byte[] audioData = response.body().bytes();
                                 playAudio(context, audioData, sceneKey);
                             } else {
-                                Log.e("VoiceSynth", "Response error: " + response.code());
+//                                Log.e("VoiceSynth", "Response error: " + response.code());
                                 releasePlayback();
                             }
                         }

@@ -58,7 +58,7 @@ public class BookmarkSharingPreferences extends AppCompatActivity {
                 .getStringSet("visible_bookmark_users", new HashSet<>());
         Log.d("prefs", "Restored on app launch: " + restored);
 
-        helperHttp = new RemoteDatabaseHelperHttp(context);
+        helperHttp = new RemoteDatabaseHelperHttp(this);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainlayout), (v, insets) -> insets);
 
@@ -169,7 +169,8 @@ public class BookmarkSharingPreferences extends AppCompatActivity {
 //                List<Map<String, String>> structured = BookmarkSharingUsernameAdapter.structureGroupedList(rows);
 //                BookmarkSharingUsernameAdapter usernameAdapter = new BookmarkSharingUsernameAdapter(this, structured);
                 BookmarkSharingUsernameAdapter usernameAdapter = new BookmarkSharingUsernameAdapter(this, rows);
-                recyclerView.setAdapter(usernameAdapter);                recyclerView.setAdapter(usernameAdapter);
+                recyclerView.setAdapter(usernameAdapter);
+                //recyclerView.setAdapter(usernameAdapter);
             } else {
                 Toast.makeText(this, "Failed to load usernames.", Toast.LENGTH_SHORT).show();
             }

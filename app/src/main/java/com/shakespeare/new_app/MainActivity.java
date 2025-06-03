@@ -156,10 +156,7 @@ public class MainActivity extends AppCompatActivity {
             String userInput = input.getText().toString().trim();
 
             if (!userInput.isEmpty()) {
-                SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putString("username", userInput);
-                editor.apply();
+                UserManager.setUsername(this, userInput);
                 Toast.makeText(this, "Username saved as: " + userInput, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Username cannot be blank", Toast.LENGTH_SHORT).show();

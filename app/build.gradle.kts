@@ -60,4 +60,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
 
     implementation(project(":sqlitecloud"))
+//    implementation("khttp:khttp:1.0.0")
+
 }

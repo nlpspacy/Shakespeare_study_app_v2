@@ -1,5 +1,7 @@
 package com.shakespeare.new_app;
 
+import androidx.annotation.NonNull;
+
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.content.Context;
@@ -9,9 +11,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.database.QueryResult;
+import com.example.database.QueryResultCallback;
 import com.example.database.RemoteDatabaseHelperHttp;
 //import com.shakespeare.new_app.RemoteDatabaseHelperHttp;
-//import com.shakespeare.new_app.InsertCallback;
+import com.example.database.InsertCallback;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class DatabaseHandler extends SQLiteOpenHelper {
+    private RemoteDatabaseHelperHttp remoteHelper;
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "play_navigation.db";
 //    private static final String TABLE_PLAY = "play_navigation";
@@ -34,6 +38,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         //3rd argument to be passed is CursorFactory instance
 
         this.context = context; // ✅ Save the context for later use
+        this.remoteHelper = new RemoteDatabaseHelperHttp(context);
 
         Log.d("progress update", "DatabaseHandler constructor");
 
@@ -359,17 +364,29 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
         baseQuery += "ORDER BY p.play_line_number;";
 
-        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp(context);
 
-        remoteDb.runQueryFromJava(baseQuery, new kotlin.jvm.functions.Function1<QueryResult<List<Map<String, String>>>, kotlin.Unit>() {
-            @Override
-            public kotlin.Unit invoke(QueryResult<List<Map<String, String>>> result) {
-                if (result.isSuccess()) {
-                    ArrayList<String> scriptLinesList = new ArrayList<>();
-                    String strPreviousCharacter = "";
-                    int intPreviousLineNumber = -9;
+//        remoteDb.runQueryFromJava(baseQuery, new QueryResultCallback<List<Map<String, String>>>() {
+////        remoteDb.runQueryFromJava(baseQuery, new kotlin.jvm.functions.Function1<QueryResult<List<Map<String, String>>>, kotlin.Unit>() {
+//            @Override
+//            public kotlin.Unit invoke(QueryResult<List<Map<String, String>>> result) {
+//                if (result.isSuccess()) {
+//                    ArrayList<String> scriptLinesList = new ArrayList<>();
+//                    String strPreviousCharacter = "";
+//                    int intPreviousLineNumber = -9;
+                    remoteDb.runQueryFromJava(baseQuery, new QueryResultCallback<List<Map<String, String>>>() {
+                        ArrayList<String> scriptLinesList = new ArrayList<>();
+                        String strPreviousCharacter = "";
+                        int intPreviousLineNumber = -9;
 
-                    for (Map<String, String> row : result.getData()) {
+                                @Override
+                                public void onResult(QueryResult<List<Map<String, String>>> result) {
+                                    List<Map<String, String>> rows = result.getData();
+                                    if (rows != null) {
+                                        for (Map<String, String> row : rows) {
+
+//                                        }
+//                    for (Map<String, String> row : result.getData()) {
                         String character = row.get("character_short_name") + "+";
                         int lineNumber = Integer.parseInt(row.get("scene_line_number"));
                         int playLineNumber = Integer.parseInt(row.get("play_line_number"));
@@ -444,8 +461,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                     callback.onError(result.getException());
                 }
 
-                return kotlin.Unit.INSTANCE;
+//                return kotlin.Unit.INSTANCE;
             }
+
+//                        @Override
+//                        public void onError(Throwable error) {
+//                            // ✅ This is the required method!
+//                            Log.e("DatabaseHandler", "Query failed", error);
+//                        }
         });
     }
 
@@ -594,18 +617,26 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
     public int addBookmark(Integer intRvPosition, String strScriptText, String strUserNote, Integer intSceneLineNr, Integer intPlayLineNr, boolean share) {
         int shareFlag = share ? 1 : 0;
+        String currentUsername = UserManager.getUsername(context);
         String sql = "INSERT INTO bookmark (" +
                 "username, date_time_added, play_code, play_full_name, act_nr, scene_nr, scene_line_nr, " +
                 "play_line_nr, position_in_view, script_text, annotation, active_0_or_1, share_with_others) " +
-                "VALUES ('dan', datetime('now'), '" + GlobalClass.selectedPlayCode + "', '" + GlobalClass.selectedPlay + "', " +
+                "VALUES ('" + currentUsername + "', datetime('now'), '" + GlobalClass.selectedPlayCode + "', '" + GlobalClass.selectedPlay + "', " +
                 GlobalClass.selectedActNumber + ", " + GlobalClass.selectedSceneNumber + ", " +
                 intSceneLineNr + ", " + intPlayLineNr + ", " + intRvPosition + ", '" +
                 strScriptText.replace("'", "''") + "', '" + strUserNote.replace("'", "''") + "', 1 , " + shareFlag + ");";
 
-        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp(context);
 //        remoteDb.runInsert(sql);  // ✅ simpler, lambda-free
 
-        remoteDb.runInsert(sql, new RemoteDatabaseHelperHttp.InsertCallback() {
+        remoteDb.runInsert(sql, new com.example.database.InsertCallback() {
+//        remoteDb.runQueryFromJava(sql, new RemoteDatabaseHelperHttp.InsertCallback() {
+
+            @Override
+            public void onInsertFailure(Throwable e) {
+                // Handle failure, e.g. log or show error message
+                Log.e("DatabaseHandler", "Insert failed", e);
+            }
             @Override
             public void onInsertSuccess() {
                 Log.d("bookmark", "✅ Bookmark saved to SQLiteCloud.");
@@ -617,11 +648,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
             }
 
-            @Override
-            public void onInsertFailure(Throwable e) {
-                Log.e("bookmark", "❌ Failed to save bookmark", e);
-//                callback.onBookmarkSaveFailed(e);
-                }
+            //@Override
+//            public void onInsertFailure(Throwable e) {
+//                Log.e("bookmark", "❌ Failed to save bookmark", e);
+////                callback.onBookmarkSaveFailed(e);
+//                }
         });
 
 //        // Asynchronous cloud insert
@@ -651,6 +682,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Set<String> visibleUsers = prefs.getStringSet("visible_bookmark_users", new HashSet<>());
 
+        Log.d("show user list","user list for sql query for shared bookmarks (1): " + visibleUsers.toString());
+
         StringBuilder inClause = new StringBuilder();
         for (String user : visibleUsers) {
             if (!user.equals(currentUser)) {
@@ -662,6 +695,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         } else {
             inClause.append("''"); // prevent SQL error if empty
         }
+
+        Log.d("show user list","user list for sql query for shared bookmarks (2): " + inClause.toString());
 
         String sql = "SELECT DISTINCT bookmark_row_id, username, play_code, play_full_name, " +
                 "act_nr, scene_nr, play_line_nr, scene_line_nr, " +
@@ -675,7 +710,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
         Log.d("db tracker", "inside getBookmarksFromCloud sql: " + sql);
 
-        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp(context);
 
 //        remoteDb.runQueryFromJava(sql, result -> {
 //            if (result.isSuccess()) {
@@ -700,9 +735,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 //            }
 //        });
 
-        remoteDb.runQueryFromJava(sql, new kotlin.jvm.functions.Function1<QueryResult<List<Map<String, String>>>, kotlin.Unit>() {
+        remoteDb.runQueryFromJava(sql, new QueryResultCallback<List<Map<String, String>>>() {
+//        remoteDb.runQueryFromJava(sql, new kotlin.jvm.functions.Function1<QueryResult<List<Map<String, String>>>, kotlin.Unit>() {
             @Override
-            public kotlin.Unit invoke(QueryResult<List<Map<String, String>>> result) {
+//            public kotlin.Unit invoke(QueryResult<List<Map<String, String>>> result) {
+            public void onResult(QueryResult<List<Map<String, String>>> result) {
+
+                List<Map<String, String>> rows = result.getData();
+
                 if (result.isSuccess()) {
                     ArrayList<List<String>> bookmarkEntriesList = new ArrayList<>();
 
@@ -726,8 +766,15 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                     callback.onError(result.getException());
                 }
 
-                return kotlin.Unit.INSTANCE; // ✅ Return Unit to satisfy Kotlin function type
+//                return kotlin.Unit.INSTANCE; // ✅ Return Unit to satisfy Kotlin function type
             }
+
+//            @Override
+//            public void onError(Throwable error) {
+//                // ✅ This is the required method!
+//                Log.e("DatabaseHandler", "Query failed", error);
+//            }
+
         });
 
     }
@@ -749,7 +796,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         selectQuery += "play_line_nr, scene_line_nr, position_in_view, script_text, annotation, active_0_or_1, share_with_others ";
         selectQuery += "FROM bookmark WHERE active_0_or_1 = 1 ";
         selectQuery += "ORDER BY play_code, date_time_added DESC;";
-        Log.d("sql",selectQuery);
+        //Log.d("sql",selectQuery);
 
         db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -810,9 +857,9 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
     public void removeBookmarkLongClicked(Integer intBookmarkReference) {
         String sql = "UPDATE bookmark SET active_0_or_1 = 0 WHERE bookmark_row_id = " + intBookmarkReference + ";";
 
-        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp();
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp(context);
 
-        remoteDb.runInsert(sql, new RemoteDatabaseHelperHttp.InsertCallback() {
+        remoteDb.runInsert(sql, new InsertCallback() {
             @Override
             public void onInsertSuccess() {
                 Log.d("bookmark", "✅ Bookmark deactivated in SQLiteCloud.");
@@ -1040,11 +1087,14 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         String sql = "UPDATE bookmark SET share_with_others = " + shareFlag +
                 " WHERE bookmark_row_id = " + bookmarkId;
 
-        RemoteDatabaseHelperHttp db = new RemoteDatabaseHelperHttp();
-        db.runInsert(sql, new RemoteDatabaseHelperHttp.InsertCallback() {
+        RemoteDatabaseHelperHttp db = new RemoteDatabaseHelperHttp(context);
+        db.runInsert(sql, new InsertCallback() {
+
             @Override
             public void onInsertSuccess() {
-                Log.d("BookmarkShareUpdate", "Successfully updated share status");
+                // Handle success, e.g. show a Toast or update UI
+                Log.e("BookmarkShareUpdate", "Insert succeeded");
+
             }
 
             @Override
@@ -1054,5 +1104,56 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         });
     }
 
+    public interface UsernameListCallback {
+        void onUsernamesFetched(List<String> usernames);
+    }
+
+//    public void getAllUsernames(UsernameListCallback callback) {
+//        String sql = "SELECT DISTINCT username FROM bookmark WHERE active_0_or_1 = 1";
+//        remoteHelper.runQueryFromJava(sql, result -> {
+//            List<String> usernames = new ArrayList<>();
+//            for (List<String> row : result) {
+//                usernames.add(row.get(0));
+//            }
+//            callback.onUsernamesFetched(usernames);
+//        });
+//    }
+
+    public void getAllUsernames(UsernameListCallback callback) {
+        String sql = "SELECT DISTINCT username FROM bookmark WHERE active_0_or_1 = 1";
+
+        remoteHelper.runQueryFromJava(sql, result -> {
+            List<String> usernames = new ArrayList<>();
+
+            if (result.isSuccess()) {
+
+//                List<Map<String, String>> rows = result.getData();
+                // 01 Jun 2025: This produces the error:
+                //"Incompatible types. Found: 'java.lang.Object', required:
+                // 'java.util.List<java.util.Map<java.lang.String,java.lang.String>>'"
+// 01 Jun 2025: This is a classic Java type safety issue.
+// The root cause of the error is that result.getData() returns Object, because QueryResult<T> is a generic class from Kotlin,
+// and Java cannot infer the actual generic type when calling getData() due to type erasure.
+// Java says: “I don’t know if getData() actually returns a List<Map<String, String>> — all I see is Object.”
+// You need to safely cast the result to the correct type, acknowledging that Java can't verify it at compile time:
+                // Updated version is here:
+                @SuppressWarnings("unchecked")
+                List<Map<String, String>> rows = (List<Map<String, String>>) result.getData();
+
+                if (rows != null) {
+                    for (Map<String, String> row : rows) {
+                        usernames.add(row.get("username"));
+                    }
+                }
+            } else {
+                Log.e("DatabaseHandler", "Failed to fetch usernames", result.exceptionOrNull());
+            }
+
+            // ✅ Always call the callback, even if it's empty
+            callback.onUsernamesFetched(usernames);
+
+        });
+
+    }
 }
 

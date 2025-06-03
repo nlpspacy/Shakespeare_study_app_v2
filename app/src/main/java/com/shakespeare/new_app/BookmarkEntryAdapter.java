@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.database.RemoteDatabaseHelperHttp;
 
 import java.util.List;
+import com.example.database.InsertCallback;
 
 public class BookmarkEntryAdapter extends RecyclerView.Adapter<BookmarkEntryAdapter.ViewHolder> {
 
@@ -91,8 +92,8 @@ public class BookmarkEntryAdapter extends RecyclerView.Adapter<BookmarkEntryAdap
         String sql = "UPDATE bookmark SET share_with_others = " + shareFlag +
                 " WHERE bookmark_row_id = " + bookmarkId;
 
-        RemoteDatabaseHelperHttp db = new RemoteDatabaseHelperHttp();
-        db.runInsert(sql, new RemoteDatabaseHelperHttp.InsertCallback() {
+        RemoteDatabaseHelperHttp db = new RemoteDatabaseHelperHttp(context);
+        db.runInsert(sql, new InsertCallback() {
             @Override
             public void onInsertSuccess() {
                 Log.d("BookmarkEntryAdapter", "Share status updated for ID: " + bookmarkId);

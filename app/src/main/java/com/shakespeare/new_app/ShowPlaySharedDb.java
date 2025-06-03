@@ -32,6 +32,8 @@ public class ShowPlaySharedDb extends AppCompatActivity {
     private TextView headingText;
     private RemoteDatabaseHelperHttp helperHttp;
 
+    private Context context;
+
     private Map<String, String> playCodeToNameMap = new HashMap<>();
     private Map<String, String> playNameToCodeMap = new HashMap<>();
     private List<String> playNames = new ArrayList<>();
@@ -41,13 +43,15 @@ public class ShowPlaySharedDb extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showplayshareddb);
 
+        this.context = context;
+
         spinner = findViewById(R.id.play_spinner);
         recyclerView = findViewById(R.id.recycler_view);
         headingText = findViewById(R.id.play_selected_heading);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        helperHttp = new RemoteDatabaseHelperHttp();
+        helperHttp = new RemoteDatabaseHelperHttp(context);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainlayout), (v, insets) -> insets);
 
@@ -73,7 +77,7 @@ public class ShowPlaySharedDb extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Failed to load play list.", Toast.LENGTH_SHORT).show();
             }
-            return null;
+//            return null;
         });
     }
     private void setupSpinner() {
@@ -156,7 +160,7 @@ public class ShowPlaySharedDb extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Failed to load characters.", Toast.LENGTH_SHORT).show();
             }
-            return null;
+//            return null;
         });
     }
 

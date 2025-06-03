@@ -58,7 +58,7 @@ public class BookmarkSharingPreferences extends AppCompatActivity {
                 .getStringSet("visible_bookmark_users", new HashSet<>());
         Log.d("prefs", "Restored on app launch: " + restored);
 
-        helperHttp = new RemoteDatabaseHelperHttp();
+        helperHttp = new RemoteDatabaseHelperHttp(context);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.mainlayout), (v, insets) -> insets);
 
@@ -85,7 +85,7 @@ public class BookmarkSharingPreferences extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Failed to load play list.", Toast.LENGTH_SHORT).show();
             }
-            return null;
+//            return null;
         });
     }
     private void setupSpinner() {
@@ -145,7 +145,7 @@ public class BookmarkSharingPreferences extends AppCompatActivity {
 
                 String playCode = playNameToCodeMap.get(playName);
                 if (playCode != null) {
-                    headingText.setText("Users with annotations on " + playName);
+                    headingText.setText("Users with shared annotations on " + playName + ":");
                     runQueryForPlay(playCode);
                 }
             }
@@ -173,7 +173,7 @@ public class BookmarkSharingPreferences extends AppCompatActivity {
             } else {
                 Toast.makeText(this, "Failed to load usernames.", Toast.LENGTH_SHORT).show();
             }
-            return null;
+//            return null;
         });
     }
 

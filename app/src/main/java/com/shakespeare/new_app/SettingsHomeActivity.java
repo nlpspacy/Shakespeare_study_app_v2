@@ -32,7 +32,7 @@ public class SettingsHomeActivity extends AppCompatActivity {
 
         font_size_when_open = GlobalClass.fontsizesp;
 
-        Log.d("settings", "open settings home activity");
+//        Log.d("settings", "open settings home activity");
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_settingshome);
@@ -41,6 +41,10 @@ public class SettingsHomeActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // 4 June 2025: Hide the select characters button for now because this functionality is not implemented yet.
+        Button btnUserSelectCharacters = findViewById(R.id.btnUserSelectCharacters); // initiate a radio button
+        btnUserSelectCharacters.setVisibility(View.GONE);
 
         if(GlobalClass.intShowLineNumbers==1){
             RadioButton rbShowLineNumbers = findViewById(R.id.rbtnShowLineNumbers); // initiate a radio button

@@ -77,8 +77,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // ensure a username is specified
-        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
-        String username = prefs.getString("username", "");
+//        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+//        String username = prefs.getString("username", "");
+        String username = UserManager.getUsername(this);
 
         if (username == null || username.trim().isEmpty()) {
             // Prompt user to enter a unique username

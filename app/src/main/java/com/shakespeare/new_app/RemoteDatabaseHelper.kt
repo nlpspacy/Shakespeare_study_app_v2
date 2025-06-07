@@ -11,7 +11,8 @@ import java.io.IOException
 class RemoteDatabaseHelperHttp(private val context: android.content.Context) {
 
         companion object {
-            const val BASE_URL = "https://your-railway-url-here.up.railway.app"
+            //            const val BASE_URL = "https://your-railway-url-here.up.railway.app"
+            private val BASE_URL = "https://android-sqlitecloud-api-production.up.railway.app"
         }
 
     fun runQueryFromJava(

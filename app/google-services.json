@@ -12,7 +12,20 @@
           "package_name": "com.shakespeare.new_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "698320345115-ofqkc88e1sd9i9b67ankrkpt0hj01hq3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shakespeare.new_app",
+            "certificate_hash": "9dead72211388b1a46e571b642165d2a1ad7d09d"
+          }
+        },
+        {
+          "client_id": "698320345115-3s1du12v50cqvctmss54h4fmpuk5md5s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCWOgSHO_KpqXpH59nU78ooP4PVSU6yclc"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "698320345115-3s1du12v50cqvctmss54h4fmpuk5md5s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

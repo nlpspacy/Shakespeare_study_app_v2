@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "698320345115",
+    "project_id": "shakespeare-study-app",
+    "storage_bucket": "shakespeare-study-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:698320345115:android:e75031adb1adf6c8fdc0be",
+        "android_client_info": {
+          "package_name": "com.shakespeare.new_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWOgSHO_KpqXpH59nU78ooP4PVSU6yclc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

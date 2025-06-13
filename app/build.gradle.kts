@@ -61,5 +61,8 @@ dependencies {
 
     implementation(project(":sqlitecloud"))
 //    implementation("khttp:khttp:1.0.0")
+    implementation("com.google.firebase:firebase-auth:22.3.0") // ✅ Firebase Authentication
+    implementation("com.google.android.gms:play-services-auth:21.0.0") // ✅ Google Sign-In
 
 }
+apply(plugin = "com.google.gms.google-services")

@@ -1,1 +1,18 @@
 /build
+
+# Ignore local dev tools and analysis dumps
+full-dependencies.txt
+*.BAK.txt
+*.debug.txt
+
+# Android Studio
+.idea/
+*.iml
+
+# Gradle
+.gradle/
+local.properties
+
+# Misc
+*.log
+.DS_Store

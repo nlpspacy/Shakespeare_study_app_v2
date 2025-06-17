@@ -6,6 +6,10 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.database.InsertCallback
+import com.example.database.QueryResult
+import com.example.database.QueryResultCallback
+import com.example.database.RemoteDatabaseHelperHttp
 import com.google.android.gms.auth.api.signin.*
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
@@ -54,20 +58,133 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+//    private fun firebaseAuthWithGoogle(idToken: String) {
+//        val credential = GoogleAuthProvider.getCredential(idToken, null)
+//        auth.signInWithCredential(credential)
+//            .addOnCompleteListener(this) { task ->
+//                if (task.isSuccessful) {
+//                    val user = auth.currentUser
+//                    Log.d("LoginActivity", "signInWithCredential:success ${user?.displayName}")
+//                    // Go to main screen
+//                    startActivity(Intent(this, MainActivity::class.java))
+//                    finish()
+//                } else {
+//                    Log.w("LoginActivity", "signInWithCredential:failure", task.exception)
+//                    Toast.makeText(this, "Authentication Failed", Toast.LENGTH_SHORT).show()
+//                }
+//
+//
+//            }
+//    }
+
+//        private fun firebaseAuthWithGoogle(idToken: String) {
+//            val credential = GoogleAuthProvider.getCredential(idToken, null)
+//            auth.signInWithCredential(credential)
+//                .addOnCompleteListener(this) { task ->
+//                    if (task.isSuccessful) {
+//                        val user = FirebaseAuth.getInstance().currentUser
+//                        if (user != null) {
+//                            // ✅ Build SQL and insert user
+//                            val uid = user.uid
+//                            val name = user.displayName ?: "Unknown"
+//                            val email = user.email ?: "Unknown"
+//
+//                            val sql = """
+//                    INSERT OR IGNORE INTO users (uid, display_name, email)
+//                    VALUES ('$uid', '${name.replace("'", "''")}', '${email.replace("'", "''")}')
+//                """.trimIndent()
+//
+//                            RemoteDatabaseHelperHttp(this).runInsert(sql, object : InsertCallback {
+//                                override fun onInsertSuccess() {
+//                                    Log.d("LoginActivity", "User inserted into SQLiteCloud")
+//                                }
+//
+//                                override fun onInsertFailure(e: Throwable) {
+//                                    Log.e("LoginActivity", "Insert failed", e)
+//                                }
+//                            })
+//                        }
+//
+//                        // ✅ Proceed to main screen
+//                        startActivity(Intent(this, MainActivity::class.java))
+//                        finish()
+//                    } else {
+//                        // ❌ Handle failed login
+//                        Log.w("LoginActivity", "signInWithCredential:failure", task.exception)
+//                        Toast.makeText(this, "Authentication Failed", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
+//        }
+
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
+        val auth = FirebaseAuth.getInstance()
+
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    Log.d("LoginActivity", "signInWithCredential:success ${user?.displayName}")
-                    // Go to main screen
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    if (user != null) {
+                        val uid = user.uid
+                        val name = user.displayName ?: "Unknown"
+                        val email = user.email ?: "Unknown"
+
+                        val dbHelper = RemoteDatabaseHelperHttp(this)
+                        val checkSql = "SELECT login_count FROM users WHERE uid = '$uid'"
+
+                        dbHelper.runQueryFromJava(checkSql, object :
+                            QueryResultCallback<List<Map<String, String>>> {
+                            override fun onResult(result: QueryResult<List<Map<String, String>>>) {
+                                if (result.success && !result.data.isNullOrEmpty()) {
+                                    // ✅ User exists: update login_count
+                                    val currentCount = result.data[0]["login_count"]?.toIntOrNull() ?: 1
+                                    val updateSql = "UPDATE users SET login_count = ${currentCount + 1} WHERE uid = '$uid'"
+
+                                    dbHelper.runInsert(updateSql, object : InsertCallback {
+                                        override fun onInsertSuccess() {
+                                            Log.d("LoginActivity", "Updated login count for user $uid")
+                                        }
+
+                                        override fun onInsertFailure(e: Throwable) {
+                                            Log.e("LoginActivity", "Failed to update login count", e)
+                                        }
+                                    })
+                                } else {
+                                    // ❌ New user: insert with created_at and login_count = 1
+                                    val insertSql = """
+                                    INSERT INTO users (uid, display_name, email, created_at, login_count)
+                                    VALUES (
+                                        '$uid',
+                                        '${name.replace("'", "''")}',
+                                        '${email.replace("'", "''")}',
+                                        datetime('now'),
+                                        1
+                                    )
+                                """.trimIndent()
+
+                                    dbHelper.runInsert(insertSql, object : InsertCallback {
+                                        override fun onInsertSuccess() {
+                                            Log.d("LoginActivity", "Inserted new user $uid")
+                                        }
+
+                                        override fun onInsertFailure(e: Throwable) {
+                                            Log.e("LoginActivity", "Insert failed", e)
+                                        }
+                                    })
+                                }
+                            }
+                        })
+
+                        // ✅ Navigate to main screen
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
                 } else {
                     Log.w("LoginActivity", "signInWithCredential:failure", task.exception)
                     Toast.makeText(this, "Authentication Failed", Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
+
 }

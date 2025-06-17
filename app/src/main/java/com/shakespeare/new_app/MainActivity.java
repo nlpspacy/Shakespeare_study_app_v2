@@ -30,6 +30,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
+
+import android.widget.TextView;
+import com.google.firebase.auth.FirebaseUser;
+
 //import com.example.new_app.R;
 import com.shakespeare.new_app.AMSND;
 import com.shakespeare.new_app.R;
@@ -76,6 +89,37 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Firebase user login instance
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        // to get current user from Google authentication through Firebase
+        FirebaseUser user = mAuth.getCurrentUser();
+        TextView welcomeText = findViewById(R.id.welcome_text);
+
+        // for the welcome message for the user logged in through Firebase
+        if (user != null && user.getDisplayName() != null) {
+            welcomeText.setText("Logged in as " + user.getDisplayName());
+        } else {
+            welcomeText.setText("Welcome");
+        }
+
+        // listener for the logout from Google function
+        Button logoutButton = findViewById(R.id.logout_button);
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                GoogleSignIn.getClient(
+                        MainActivity.this,
+                        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+                ).signOut();
+
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+        });
+        
         // ensure a username is specified
 //        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
 //        String username = prefs.getString("username", "");

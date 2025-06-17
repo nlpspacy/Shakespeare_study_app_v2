@@ -21,6 +21,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 //import com.example.new_app.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.shakespeare.new_app.R;
 
 public class SettingsHomeActivity extends AppCompatActivity {
@@ -121,6 +123,21 @@ public class SettingsHomeActivity extends AppCompatActivity {
             builder.setNegativeButton("Cancel", null);
             builder.show();
         });
+
+        // Firebase user login instance
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        // to get current user from Google authentication through Firebase
+        FirebaseUser user = mAuth.getCurrentUser();
+        TextView welcomeText = findViewById(R.id.welcome_text);
+
+        // for the welcome message for the user logged in through Firebase
+        if (user != null && user.getDisplayName() != null) {
+            welcomeText.setText("Logged in as " + user.getDisplayName());
+        } else {
+            welcomeText.setText("Welcome");
+        }
+
 
     }
 

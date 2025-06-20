@@ -219,7 +219,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 }
 
                 if(intSharedBookmarkCount>0){
-                    strScriptText += " <font color='#0000FF'><i>&lt;" + String.valueOf(intSharedBookmarkCount) + "&gt;</i></font>";
+                    strScriptText += " <font color='#30D5C8'><i>&lt;" + String.valueOf(intSharedBookmarkCount) + "&gt;</i></font>";
 //                    Log.d("indicate bookmark exists", "shared bookmark(s): " + String.valueOf(intSharedBookmarkCount));
                 }
 
@@ -416,7 +416,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         }
 
                         if (sharedBookmarkCount > 0) {
-                            lineText += " <font color='#0000FF'><i>&lt;" + String.valueOf(sharedBookmarkCount) + "&gt;</i></font>";
+                            lineText += " <font color='#30D5C8'><i>&lt;" + String.valueOf(sharedBookmarkCount) + "&gt;</i></font>";
                         }
 
                         scriptLinesList.add("play_code: " + GlobalClass.selectedPlayCode +

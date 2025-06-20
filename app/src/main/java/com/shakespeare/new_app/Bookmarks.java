@@ -14,6 +14,9 @@ import android.speech.tts.TextToSpeech;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.database.InsertCallback;
+import com.example.database.RemoteDatabaseHelperHttp;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -161,7 +167,7 @@ public class Bookmarks extends AppCompatActivity {
                     if (username.equals(currentUser)) {
                         styled = "<font color='#FFFFFF'>" + sb.toString() + "</font>";
                     } else {
-                        styled = "<font color='#0000FF'>" + sb.toString() + "</font>";
+                        styled = "<font color='#30D5C8'>" + sb.toString() + "</font>";
                     }
 
                     bookmarksList.add(Html.fromHtml(styled, Html.FROM_HTML_MODE_LEGACY));
@@ -294,6 +300,7 @@ public class Bookmarks extends AppCompatActivity {
 
                 // in progress to hook this up to the new click listener class RecyclerBookmarksClickListener
                 new RecyclerBookmarksClickListener(this, rvBookmarks ,new RecyclerBookmarksClickListener.OnItemClickListener() {
+
                     @Override public void onItemClick(View view, int position) {
                         // do whatever
 //                        Log.d("script line of text",recyclerView.position);
@@ -314,24 +321,137 @@ public class Bookmarks extends AppCompatActivity {
 //                        List<String> entryData = bookmarkAdapter.bookmarkEntriesList.get(position);
                         List<String> entryData = bookmarkAdapter.getBookmarkEntry(position);
                         String bookmarkId = entryData.get(0);
-                        Log.d("check", "onItemClick: position " + position + ", text: " + clickedText);
+                        String finalBookmarkId = bookmarkId;
+                        Log.d("check", "onItemClick: ID " + finalBookmarkId + ", position " + position + ", text: " + clickedText);
 
                     }
 
+//                    // This block uses MyRecyclerViewAdapter but it should use BookmarkEntryAdapter.
+//                    @Override public void onLongItemClick(View view, int position) {
+//                        Log.d("check","onLongItemClick item clicked in Bookmarks.java class");
+//                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
+//                        String strBookmarks = myAdapter.getItem(position).toString();
+//                        // *** request confirmation to remove this bookmark
+//                        // which will be actioned by setting the active_0_or_1 to 0.
+//                        Log.d("check","onLongItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
+//
+//                    }
+
+//                    // This version uses BookmarkEntryAdapter.
+//                    @Override public void onLongItemClick(View view, int position) {
+//                        BookmarkEntryAdapter bookmarkAdapter = (BookmarkEntryAdapter) rvBookmarks.getAdapter();
+//                        CharSequence clickedText = bookmarkAdapter.getItem(position);
+//                        List<String> entryData = bookmarkAdapter.getBookmarkEntry(position);
+//                        String bookmarkId = entryData.get(0);
+//
+//                        Log.d("check", "onLongItemClick: position " + position + ", bookmark ID: " + bookmarkId);
+//
+//                        // TODO: launch popup with options to edit or delete this bookmark
+//                        // For now, just show a test confirmation dialog
+//                        new AlertDialog.Builder(Bookmarks.this)
+//                                .setTitle("Edit or Delete Bookmark")
+//                                .setMessage("Bookmark ID: " + bookmarkId + "\n\nWould you like to edit or delete this bookmark?")
+//                                .setPositiveButton("Delete", (dialog, which) -> {
+//                                    // TODO: send delete to SQLiteCloud
+//                                    Toast.makeText(Bookmarks.this, "Delete logic here", Toast.LENGTH_SHORT).show();
+//                                })
+//                                .setNegativeButton("Cancel", null)
+//                                .show();
+//                    }
+
+                    @Override
                     public void onLongItemClick(View view, int position) {
-                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) rvBookmarks.getAdapter();
-                        String strBookmarks = myAdapter.getItem(position).toString();
-                        // *** request confirmation to remove this bookmark
-                        // which will be actioned by setting the active_0_or_1 to 0.
-                        Log.d("check","onLongItemClick item clicked in Bookmarks.java class: position " + String.valueOf(position) + ", text ");
+                        BookmarkEntryAdapter bookmarkAdapter = (BookmarkEntryAdapter) rvBookmarks.getAdapter();
+                        List<String> entryData = bookmarkAdapter.getBookmarkEntry(position);
+                        String bookmarkId = entryData.get(0);
+                        String ownerUsername = entryData.get(7);
+                        String currentUsername = UserManager.getUsername(Bookmarks.this);
 
+                        if (!ownerUsername.equals(currentUsername)) {
+                            // ❌ Bookmark belongs to someone else
+                            new AlertDialog.Builder(Bookmarks.this)
+                                    .setTitle("Shared Bookmark")
+                                    .setMessage("This bookmark belongs to someone else. You can hide it by updating your shared bookmark viewing preferences.")
+                                    .setPositiveButton("OK", null)
+                                    .show();
+                            return;
+                        }
+
+                        // ✅ Bookmark belongs to the current user — show Edit/Delete options
+                        new AlertDialog.Builder(Bookmarks.this)
+                                .setTitle("Edit or Delete Bookmark")
+                                .setMessage("What would you like to do with this bookmark?")
+                                .setPositiveButton("Edit", (dialog, which) -> {
+                                    launchEditBookmarkPopup(bookmarkId, entryData.get(6)); // note text
+                                })
+                                .setNegativeButton("Delete", (dialog, which) -> {
+                                    deleteBookmarkFromCloud(bookmarkId);
+                                })
+                                .setNeutralButton("Cancel", null)
+                                .show();
                     }
+
 
                 })
 
         );
 
     }
+
+    private void deleteBookmarkFromCloud(String bookmarkId) {
+        String sql = "UPDATE bookmark SET active_0_or_1 = 0 WHERE bookmark_row_id = " + bookmarkId + ";";
+
+        RemoteDatabaseHelperHttp dbHelper = new RemoteDatabaseHelperHttp(this);
+        dbHelper.runInsert(sql, new InsertCallback() {
+            @Override
+            public void onInsertSuccess() {
+                Toast.makeText(Bookmarks.this, "Bookmark deleted", Toast.LENGTH_SHORT).show();
+                recreate(); // refresh the screen
+            }
+
+            @Override
+            public void onInsertFailure(Throwable e) {
+                Log.e("DeleteBookmark", "Failed to delete", e);
+                Toast.makeText(Bookmarks.this, "Failed to delete", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void launchEditBookmarkPopup(String bookmarkId, String currentNote) {
+        final EditText input = new EditText(this);
+        input.setText(currentNote);
+
+        new AlertDialog.Builder(this)
+                .setTitle("Edit Bookmark Note")
+                .setView(input)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    String newNote = input.getText().toString().replace("'", "''");
+                    updateBookmarkNote(bookmarkId, newNote);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void updateBookmarkNote(String bookmarkId, String newNote) {
+        String sql = "UPDATE bookmark SET annotation = '" + newNote + "' WHERE bookmark_row_id = " + bookmarkId + ";";
+        Log.d("sql",sql);
+
+        RemoteDatabaseHelperHttp dbHelper = new RemoteDatabaseHelperHttp(this);
+        dbHelper.runInsert(sql, new InsertCallback() {
+            @Override
+            public void onInsertSuccess() {
+                Toast.makeText(Bookmarks.this, "Bookmark updated", Toast.LENGTH_SHORT).show();
+                recreate(); // refresh the list
+            }
+
+            @Override
+            public void onInsertFailure(Throwable e) {
+                Log.e("EditBookmark", "Failed to update", e);
+                Toast.makeText(Bookmarks.this, "Failed to update", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     public void goBack(View v) {
 

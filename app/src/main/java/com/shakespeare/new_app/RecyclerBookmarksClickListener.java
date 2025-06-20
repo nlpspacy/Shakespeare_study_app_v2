@@ -2,6 +2,7 @@ package com.shakespeare.new_app;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -13,6 +14,7 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
 
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
+        void onLongItemClick(View view, int position);
     }
 
     private final OnItemClickListener listener;
@@ -26,6 +28,16 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
             public boolean onSingleTapUp(MotionEvent e) {
                 return true;
             }
+
+            @Override
+            public void onLongPress(MotionEvent e) {
+                View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                if (child != null && listener != null) {
+                    Log.d("LongClick", "Long press detected at position " + recyclerView.getChildAdapterPosition(child));
+                    listener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child));
+                }
+            }
+
         });
     }
 
@@ -48,6 +60,7 @@ public class RecyclerBookmarksClickListener implements RecyclerView.OnItemTouchL
 
             listener.onItemClick(child, rv.getChildAdapterPosition(child));
             return true;
+
         }
         return false;
     }

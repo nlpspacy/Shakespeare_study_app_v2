@@ -103,6 +103,21 @@ public class MainActivity extends AppCompatActivity {
             welcomeText.setText("Welcome");
         }
 
+        TextView textGoogleEmail = findViewById(R.id.textGoogleEmail);
+        TextView textDisplayName = findViewById(R.id.textDisplayName);
+
+        if (user != null) {
+            String email = user.getEmail();
+            textGoogleEmail.setText("Logged in as: " + email);
+        }
+
+        String displayName = getSharedPreferences("prefs", MODE_PRIVATE).getString("username", null);
+        if (displayName != null) {
+            textDisplayName.setText("Display name: " + displayName);
+        } else {
+            textDisplayName.setText("Display name not set");
+        }
+
         // listener for the logout from Google function
         Button logoutButton = findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {

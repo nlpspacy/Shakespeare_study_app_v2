@@ -116,6 +116,80 @@ class LoginActivity : AppCompatActivity() {
 //                }
 //        }
 
+    // This version does not check whether the selected display name is unique, and it does not add it to the database.
+    // Replaced with updated version below.
+//    private fun firebaseAuthWithGoogle(idToken: String) {
+//        val credential = GoogleAuthProvider.getCredential(idToken, null)
+//        val auth = FirebaseAuth.getInstance()
+//
+//        auth.signInWithCredential(credential)
+//            .addOnCompleteListener(this) { task ->
+//                if (task.isSuccessful) {
+//                    val user = auth.currentUser
+//                    if (user != null) {
+//                        val uid = user.uid
+//                        val name = user.displayName ?: "Unknown"
+//                        val email = user.email ?: "Unknown"
+//
+//                        val dbHelper = RemoteDatabaseHelperHttp(this)
+//                        val checkSql = "SELECT login_count FROM users WHERE uid = '$uid'"
+//
+//                        dbHelper.runQueryFromJava(checkSql, object :
+//                            QueryResultCallback<List<Map<String, String>>> {
+//                            override fun onResult(result: QueryResult<List<Map<String, String>>>) {
+//                                if (result.success && !result.data.isNullOrEmpty()) {
+//                                    // ✅ User exists: update login_count
+//                                    val currentCount = result.data[0]["login_count"]?.toIntOrNull() ?: 1
+//                                    val updateSql = "UPDATE users SET login_count = ${currentCount + 1} WHERE uid = '$uid'"
+//
+//                                    dbHelper.runInsert(updateSql, object : InsertCallback {
+//                                        override fun onInsertSuccess() {
+//                                            Log.d("LoginActivity", "Updated login count for user $uid")
+//                                        }
+//
+//                                        override fun onInsertFailure(e: Throwable) {
+//                                            Log.e("LoginActivity", "Failed to update login count", e)
+//                                        }
+//                                    })
+//                                } else {
+//                                    // ❌ New user: insert with created_at and login_count = 1
+//                                    val insertSql = """
+//                                    INSERT INTO users (uid, display_name, email, created_at, login_count)
+//                                    VALUES (
+//                                        '$uid',
+//                                        '${name.replace("'", "''")}',
+//                                        '${email.replace("'", "''")}',
+//                                        datetime('now'),
+//                                        1
+//                                    )
+//                                """.trimIndent()
+//
+//                                    dbHelper.runInsert(insertSql, object : InsertCallback {
+//                                        override fun onInsertSuccess() {
+//                                            Log.d("LoginActivity", "Inserted new user $uid")
+//                                        }
+//
+//                                        override fun onInsertFailure(e: Throwable) {
+//                                            Log.e("LoginActivity", "Insert failed", e)
+//                                        }
+//                                    })
+//                                }
+//                            }
+//                        })
+//
+//                        // ✅ Navigate to main screen
+//                        startActivity(Intent(this, MainActivity::class.java))
+//                        finish()
+//                    }
+//                } else {
+//                    Log.w("LoginActivity", "signInWithCredential:failure", task.exception)
+//                    Toast.makeText(this, "Authentication Failed", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+//    }
+
+    // This version checks whether the selected display name is unique, and adds it to the database.
+    // 21 June 2025
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         val auth = FirebaseAuth.getInstance()
@@ -130,16 +204,15 @@ class LoginActivity : AppCompatActivity() {
                         val email = user.email ?: "Unknown"
 
                         val dbHelper = RemoteDatabaseHelperHttp(this)
-                        val checkSql = "SELECT login_count FROM users WHERE uid = '$uid'"
 
+                        // Step 1: Check login count / create new user
+                        val checkSql = "SELECT login_count FROM users WHERE uid = '$uid'"
                         dbHelper.runQueryFromJava(checkSql, object :
                             QueryResultCallback<List<Map<String, String>>> {
                             override fun onResult(result: QueryResult<List<Map<String, String>>>) {
                                 if (result.success && !result.data.isNullOrEmpty()) {
-                                    // ✅ User exists: update login_count
                                     val currentCount = result.data[0]["login_count"]?.toIntOrNull() ?: 1
                                     val updateSql = "UPDATE users SET login_count = ${currentCount + 1} WHERE uid = '$uid'"
-
                                     dbHelper.runInsert(updateSql, object : InsertCallback {
                                         override fun onInsertSuccess() {
                                             Log.d("LoginActivity", "Updated login count for user $uid")
@@ -150,7 +223,6 @@ class LoginActivity : AppCompatActivity() {
                                         }
                                     })
                                 } else {
-                                    // ❌ New user: insert with created_at and login_count = 1
                                     val insertSql = """
                                     INSERT INTO users (uid, display_name, email, created_at, login_count)
                                     VALUES (
@@ -161,7 +233,6 @@ class LoginActivity : AppCompatActivity() {
                                         1
                                     )
                                 """.trimIndent()
-
                                     dbHelper.runInsert(insertSql, object : InsertCallback {
                                         override fun onInsertSuccess() {
                                             Log.d("LoginActivity", "Inserted new user $uid")
@@ -175,9 +246,27 @@ class LoginActivity : AppCompatActivity() {
                             }
                         })
 
-                        // ✅ Navigate to main screen
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
+                        // Step 2: Check for existing display name
+                        val displayNameSql = "SELECT username FROM user_displaynames WHERE uid = '$uid'"
+                        dbHelper.runQueryFromJava(displayNameSql, object :
+                            QueryResultCallback<List<Map<String, String>>> {
+                            override fun onResult(result: QueryResult<List<Map<String, String>>>) {
+                                if (result.success && !result.data.isNullOrEmpty()) {
+                                    val displayName = result.data[0]["username"] ?: "Unknown"
+                                    getSharedPreferences("prefs", MODE_PRIVATE)
+                                        .edit()
+                                        .putString("username", displayName)
+                                        .apply()
+                                    Toast.makeText(this@LoginActivity, "Your display name is: $displayName", Toast.LENGTH_LONG).show()
+                                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                    finish()
+                                } else {
+                                    // No display name yet → launch display name picker
+                                    startActivity(Intent(this@LoginActivity, ChooseDisplayNameActivity::class.java))
+                                    finish()
+                                }
+                            }
+                        })
                     }
                 } else {
                     Log.w("LoginActivity", "signInWithCredential:failure", task.exception)

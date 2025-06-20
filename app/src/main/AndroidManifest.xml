@@ -28,6 +28,11 @@
             android:theme="@style/Theme.Design" >
         </activity>
         <activity
+            android:name=".ChooseDisplayNameActivity"
+            android:exported="false"
+            android:label="@string/title_activity_aac"
+            android:theme="@style/Theme.Design" />
+        <activity
             android:name=".AACActivity"
             android:exported="false"
             android:label="@string/title_activity_aac"

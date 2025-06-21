@@ -190,6 +190,8 @@ class LoginActivity : AppCompatActivity() {
 
     // This version checks whether the selected display name is unique, and adds it to the database.
     // 21 June 2025
+    // Further updates made to ensure that the username in Shared Prferences is always the one associated
+    // with the current Firebase/Google UID: 22 June 2025
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         val auth = FirebaseAuth.getInstance()
@@ -243,28 +245,28 @@ class LoginActivity : AppCompatActivity() {
                                         }
                                     })
                                 }
-                            }
-                        })
 
-                        // Step 2: Check for existing display name
-                        val displayNameSql = "SELECT username FROM user_displaynames WHERE uid = '$uid'"
-                        dbHelper.runQueryFromJava(displayNameSql, object :
-                            QueryResultCallback<List<Map<String, String>>> {
-                            override fun onResult(result: QueryResult<List<Map<String, String>>>) {
-                                if (result.success && !result.data.isNullOrEmpty()) {
-                                    val displayName = result.data[0]["username"] ?: "Unknown"
-                                    getSharedPreferences("prefs", MODE_PRIVATE)
-                                        .edit()
-                                        .putString("username", displayName)
-                                        .apply()
-                                    Toast.makeText(this@LoginActivity, "Your display name is: $displayName", Toast.LENGTH_LONG).show()
-                                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
-                                    finish()
-                                } else {
-                                    // No display name yet → launch display name picker
-                                    startActivity(Intent(this@LoginActivity, ChooseDisplayNameActivity::class.java))
-                                    finish()
-                                }
+                                // ✅ Step 2: After user table handled → Check for display name
+                                val displayNameSql = "SELECT username FROM user_displaynames WHERE uid = '$uid'"
+                                dbHelper.runQueryFromJava(displayNameSql, object :
+                                    QueryResultCallback<List<Map<String, String>>> {
+                                    override fun onResult(result: QueryResult<List<Map<String, String>>>) {
+                                        if (result.success && !result.data.isNullOrEmpty()) {
+                                            val displayName = result.data[0]["username"] ?: "Unknown"
+                                            getSharedPreferences("prefs", MODE_PRIVATE)
+                                                .edit()
+                                                .putString("username", displayName)
+                                                .apply()
+                                            Toast.makeText(this@LoginActivity, "Your display name is: $displayName", Toast.LENGTH_LONG).show()
+                                            startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                                            finish()
+                                        } else {
+                                            // No display name yet → launch display name picker
+                                            startActivity(Intent(this@LoginActivity, ChooseDisplayNameActivity::class.java))
+                                            finish()
+                                        }
+                                    }
+                                })
                             }
                         })
                     }

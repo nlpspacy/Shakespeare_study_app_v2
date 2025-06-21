@@ -45,7 +45,7 @@ public class SettingsHomeActivity extends AppCompatActivity {
         });
 
         // 4 June 2025: Hide the select characters button for now because this functionality is not implemented yet.
-        Button btnUserSelectCharacters = findViewById(R.id.btnUserSelectCharacters); // initiate a radio button
+        Button btnUserSelectCharacters = findViewById(R.id.btnUserSelectCharacters); // initiate a button
         btnUserSelectCharacters.setVisibility(View.GONE);
 
         if(GlobalClass.intShowLineNumbers==1){
@@ -100,7 +100,12 @@ public class SettingsHomeActivity extends AppCompatActivity {
 //            tvSoundOnOffInd.setText("Sound off");
         }
 
-        Button btnChangeUsername = findViewById(R.id.btnChangeUsername);
+        // 22 June 2025: Hide the change username button for now because we no longer want the user to be
+        // able to change their username, otherwise the bookmark sharing will not work correctly.
+        Button btnChangeUsername = findViewById(R.id.btnChangeUsername); // initiate a button
+        btnChangeUsername.setVisibility(View.GONE);
+
+        // 22 June 2025: This logic is redundant now because have hidden the btnChangeUsername button.
         btnChangeUsername.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
 

@@ -140,10 +140,12 @@ public class MainActivity extends AppCompatActivity {
 //        String username = prefs.getString("username", "");
         String username = UserManager.getUsername(this);
 
-        if (username == null || username.trim().isEmpty()) {
-            // Prompt user to enter a unique username
-            showUsernamePromptDialog();
-        }
+        // This block is deprecated: username is now set once based on Firebase UID-linked display name.
+        // 22 June 2025
+//        if (username == null || username.trim().isEmpty()) {
+//            // Prompt user to enter a unique username
+//            showUsernamePromptDialog();
+//        }
 
         array_plays_all = getResources().getStringArray(R.array.plays_all);
 
@@ -202,31 +204,33 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void showUsernamePromptDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose a username");
-        builder.setCancelable(false); // Prevent dismissing the dialog
-
-        final EditText input = new EditText(this);
-        input.setGravity(Gravity.CENTER);
-        input.setHint("Enter your username");
-        builder.setView(input);
-
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String userInput = input.getText().toString().trim();
-
-            if (!userInput.isEmpty()) {
-                UserManager.setUsername(this, userInput);
-                Toast.makeText(this, "Username saved as: " + userInput, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Username cannot be blank", Toast.LENGTH_SHORT).show();
-                // Reopen the dialog until a valid username is entered
-                showUsernamePromptDialog();
-            }
-        });
-
-        builder.show();
-    }
+    // This block is deprecated: username is now set once based on Firebase UID-linked display name.
+    // 22 June 2025
+//    private void showUsernamePromptDialog() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Choose a username");
+//        builder.setCancelable(false); // Prevent dismissing the dialog
+//
+//        final EditText input = new EditText(this);
+//        input.setGravity(Gravity.CENTER);
+//        input.setHint("Enter your username");
+//        builder.setView(input);
+//
+//        builder.setPositiveButton("Save", (dialog, which) -> {
+//            String userInput = input.getText().toString().trim();
+//
+//            if (!userInput.isEmpty()) {
+//                UserManager.setUsername(this, userInput);
+//                Toast.makeText(this, "Username saved as: " + userInput, Toast.LENGTH_SHORT).show();
+//            } else {
+//                Toast.makeText(this, "Username cannot be blank", Toast.LENGTH_SHORT).show();
+//                // Reopen the dialog until a valid username is entered
+//                showUsernamePromptDialog();
+//            }
+//        });
+//
+//        builder.show();
+//    }
 
 
     public void filterPlaysList (View v) {
@@ -497,29 +501,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void checkAndPromptUsername() {
-        if (!UserManager.isUsernameSet(this)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Set your username");
+    // This block is deprecated: username is now set once based on Firebase UID-linked display name.
+    // 22 June 2025
+//    private void checkAndPromptUsername() {
+//        if (!UserManager.isUsernameSet(this)) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle("Set your username");
+//
+//            final EditText input = new EditText(this);
+//            input.setHint("Enter a unique username");
+//            builder.setView(input);
+//
+//            builder.setCancelable(false); // Prevent dismissal
+//            builder.setPositiveButton("Save", (dialog, which) -> {
+//                String username = input.getText().toString().trim();
+//                if (!username.isEmpty()) {
+//                    UserManager.setUsername(this, username);
+//                    Toast.makeText(this, "Username set to " + username, Toast.LENGTH_SHORT).show();
+//                } else {
+//                    Toast.makeText(this, "Username cannot be empty.", Toast.LENGTH_SHORT).show();
+//                    checkAndPromptUsername(); // Prompt again
+//                }
+//            });
+//
+//            builder.show();
+//        }
+//    }
 
-            final EditText input = new EditText(this);
-            input.setHint("Enter a unique username");
-            builder.setView(input);
-
-            builder.setCancelable(false); // Prevent dismissal
-            builder.setPositiveButton("Save", (dialog, which) -> {
-                String username = input.getText().toString().trim();
-                if (!username.isEmpty()) {
-                    UserManager.setUsername(this, username);
-                    Toast.makeText(this, "Username set to " + username, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, "Username cannot be empty.", Toast.LENGTH_SHORT).show();
-                    checkAndPromptUsername(); // Prompt again
-                }
-            });
-
-            builder.show();
-        }
-    }
 }
 

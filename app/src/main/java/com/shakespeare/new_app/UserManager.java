@@ -4,7 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class UserManager {
-    private static final String PREFS_NAME = "user_prefs";
+//    private static final String PREFS_NAME = "user_prefs";
+    private static final String PREFS_NAME = "prefs";
     private static final String KEY_USERNAME = "username";
 
     // Save username

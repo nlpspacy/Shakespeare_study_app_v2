@@ -15,8 +15,8 @@ android {
         minSdk = 26 // Raised from 24 to 26 to be compatible with sqlitecloud module
         // in sqlitecloud/build.gradle.kts
         targetSdk = 34
-        versionCode = 20
-        versionName = "2.20"
+        versionCode = 21
+        versionName = "2.21"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

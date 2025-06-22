@@ -43,11 +43,11 @@
 
     <ImageView
         android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80sp"
-        android:scaleX="3"
-        android:scaleY="3"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonsTop"
@@ -57,7 +57,7 @@
         android:id="@+id/txtTitleSelectGenre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80sp"
+        android:layout_marginTop="10sp"
         android:text="@string/txt_genrefilter"
         android:textSize="@dimen/home_font_size"
         app:layout_constraintEnd_toEndOf="parent"
@@ -143,6 +143,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
+        android:layout_marginStart="10sp"
         android:layout_marginTop="20sp"
         app:layout_constraintTop_toBottomOf="@+id/playSelectorLL"
         app:layout_constraintEnd_toEndOf="parent"
@@ -152,8 +153,8 @@
             android:id="@+id/btnOpenBookmarks"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20sp"
-            android:layout_marginStart="0sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginEnd="10sp"
             android:background="@drawable/bookmark_icon_white_on_black"
             android:contentDescription="Bookmarks"
             android:onClick="openBookmarks" />
@@ -162,8 +163,7 @@
             android:id="@+id/btnOpenThePlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8sp"
-            android:layout_marginStart="0sp"
+            android:layout_marginStart="10sp"
             android:onClick="openSelectedPlay"
             android:text="Open Play"
             android:textAllCaps="false" />
@@ -173,7 +173,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10sp"
-            android:layout_marginEnd="10sp"
             android:src="@drawable/settings_cog_white_on_black"
             style="?android:attr/borderlessButtonStyle"
             android:contentDescription="Settings"
@@ -183,6 +182,7 @@
             android:id="@+id/logout_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="20sp"
             android:text="Logout" />
 
     </LinearLayout>

@@ -30,6 +30,8 @@ import java.util.regex.Pattern;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
 
+    private long lastClickTime = 0;
+
     private List<CharSequence> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
@@ -66,6 +68,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     }
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         Boolean boolSpeakThisLine = Boolean.TRUE;
 
         holder.itemView.setLayoutParams(new ViewGroup.LayoutParams(
@@ -113,13 +116,30 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
                 int start = matcher.start();
                 int end = matcher.end();
                 String ref = matcher.group(1); // the number inside <>
+//                ClickableSpan clickableSpan = new ClickableSpan() {
+//                    @Override
+//                    public void onClick(@NonNull View widget) {
+//                        Log.d("click response","bookmark reference click response");
+//                        showBookmarkDialog(widget.getContext(), ref);
+//                    }
+//                };
+
+                // Inside onBindViewHolder(), replace the ClickableSpan onClick with this:
                 ClickableSpan clickableSpan = new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View widget) {
-                        Log.d("click response","bookmark reference click response");
-                        showBookmarkDialog(widget.getContext(), ref);
+                        long currentTime = System.currentTimeMillis();
+                        long elapsedTime = currentTime - lastClickTime;
+                        lastClickTime = currentTime;
+
+                        Log.d("click response", "bookmark reference clicked, elapsed = " + elapsedTime);
+
+                        if (elapsedTime < 2000) {  // 400ms = double-click
+                            showBookmarkDialog(widget.getContext(), ref);
+                        }
                     }
                 };
+
                 spannable.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
 

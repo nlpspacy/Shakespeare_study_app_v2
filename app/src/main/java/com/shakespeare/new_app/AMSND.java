@@ -221,12 +221,12 @@ public class AMSND extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(this, recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
-                        // do whatever
-//                        Log.d("script line of text",recyclerView.position);
-                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
-                        CharSequence strScriptText = myAdapter.getItem(position);
-                        // We would like to get the text of the string which is long-clicked to save in the bookmark.
-                        Log.d("check","onItemClick item clicked in AMNSD.java class: position " + String.valueOf(position) + ", text " + strScriptText);
+//                        // do whatever
+////                        Log.d("script line of text",recyclerView.position);
+//                        MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
+//                        CharSequence strScriptText = myAdapter.getItem(position);
+//                        // We would like to get the text of the string which is long-clicked to save in the bookmark.
+//                        Log.d("check","onItemClick item clicked in AMNSD.java class: position " + String.valueOf(position) + ", text " + strScriptText);
                     }
 
                     @Override public void onLongItemClick(View view, int position) {

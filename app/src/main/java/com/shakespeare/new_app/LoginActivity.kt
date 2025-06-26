@@ -253,6 +253,7 @@ class LoginActivity : AppCompatActivity() {
                                     override fun onResult(result: QueryResult<List<Map<String, String>>>) {
                                         if (result.success && !result.data.isNullOrEmpty()) {
                                             val displayName = result.data[0]["username"] ?: "Unknown"
+                                            Log.d("check",displayName)
                                             getSharedPreferences("prefs", MODE_PRIVATE)
                                                 .edit()
                                                 .putString("username", displayName)
@@ -262,6 +263,7 @@ class LoginActivity : AppCompatActivity() {
                                             finish()
                                         } else {
                                             // No display name yet → launch display name picker
+                                            Log.d("check","no display name yet")
                                             startActivity(Intent(this@LoginActivity, ChooseDisplayNameActivity::class.java))
                                             finish()
                                         }

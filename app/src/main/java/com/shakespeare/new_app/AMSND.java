@@ -233,7 +233,7 @@ public class AMSND extends AppCompatActivity {
                         MyRecyclerViewAdapter myAdapter = (MyRecyclerViewAdapter) recyclerView.getAdapter();
                         CharSequence strScriptText = myAdapter.getItem(position);
                         // do whatever
-                        Log.d("check","onLongItemClick item clicked in AMNSD.java class: position " + String.valueOf(position) + ", text " + strScriptText);
+                        Log.d("check","onLongItemClick item clicked in AMSND.java class: position " + String.valueOf(position) + ", text " + strScriptText);
                     }
                 })
         );
@@ -472,7 +472,10 @@ public class AMSND extends AppCompatActivity {
 
         // script lines list needs alternating line with the playcode, act, scene, play_line_nr reference
         // to include in the recycler view as a hidden row for bookmark referencing
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList, false);
+        // Replaced with new version 29 June 2025 6.43am to fix problem with double tap logic.
+//        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList, false);
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList, false, rvScript);
+
         rvScript.setAdapter(adapter);
         int listLength = scriptLinesList.size();
 //        rvScript.smoothScrollToPosition(listLength);
@@ -760,7 +763,9 @@ public class AMSND extends AppCompatActivity {
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
         // attempt to clear the recycler view
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null, false);
+        // Replaced with new version 29 June 2025 6.43am to fix problem with double tap logic.
+//        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null, false);
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList, false, rvScript);
         rvScript.setAdapter(adapter);
         rvScript.smoothScrollToPosition(0);
 
@@ -806,7 +811,9 @@ public class AMSND extends AppCompatActivity {
 
         RecyclerView rvScript = findViewById(R.id.rvScript);
         // attempt to clear the recycler view
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null, false);
+        // Replaced with new version 29 June 2025 6.43am to fix problem with double tap logic.
+//        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), null, false);
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList, false, rvScript);
 //        rvScript.setAdapter(adapter);
         //rvScript.setAdapter(null);
         rvScript.smoothScrollToPosition(0);
@@ -1079,7 +1086,9 @@ public class AMSND extends AppCompatActivity {
                         RecyclerView recyclerView = findViewById(R.id.rvMessages);
                         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
 
-                        adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), messageList, false);
+                        // Replaced with new version 29 June 2025 6.43am to fix problem with double tap logic.
+                        // adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), messageList, false);
+                        adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), scriptLinesList, false, rvScript);
                         recyclerView.setAdapter(adapter);
                         int listLength = messageList.size();
                         recyclerView.smoothScrollToPosition(listLength);
@@ -1230,7 +1239,9 @@ public class AMSND extends AppCompatActivity {
 
         // script lines list needs alternating line with the playcode, act, scene, play_line_nr reference
         // to include in the recycler view as a hidden row for bookmark referencing
-        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList ,false);
+        // Replaced with new version 29 June 2025 6.43am to fix problem with double tap logic.
+        //adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList ,false);
+        adapter = new MyRecyclerViewAdapter(rvScript.getContext(), scriptLinesList, false, rvScript);
         rvScript.setAdapter(adapter);
         int listLength = scriptLinesList.size();
 //        rvScript.smoothScrollToPosition(listLength);

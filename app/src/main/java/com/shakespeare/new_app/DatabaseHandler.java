@@ -15,6 +15,7 @@ import com.example.database.QueryResultCallback;
 import com.example.database.RemoteDatabaseHelperHttp;
 //import com.shakespeare.new_app.RemoteDatabaseHelperHttp;
 import com.example.database.InsertCallback;
+import com.shakespeare.new_app.models.Bookmark;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -1155,5 +1156,37 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         });
 
     }
+
+    public List<Bookmark> getBookmarksForLine(String playCode, int act, int scene, int lineNumber) {
+        List<Bookmark> bookmarks = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM bookmark WHERE play_code = ? AND act_nr = ? AND scene_nr = ? AND play_line_nr = ?";
+        Cursor cursor = db.rawQuery(query, new String[] {
+                playCode,
+                String.valueOf(act),
+                String.valueOf(scene),
+                String.valueOf(lineNumber)
+        });
+
+        if (cursor.moveToFirst()) {
+            do {
+                Bookmark bm = new Bookmark();
+                bm.setId(cursor.getInt(cursor.getColumnIndexOrThrow("bookmark_row_id")));
+                bm.setUsername(cursor.getString(cursor.getColumnIndexOrThrow("username")));
+                bm.setAnnotation(cursor.getString(cursor.getColumnIndexOrThrow("annotation")));
+                bm.setPlayCode(cursor.getString(cursor.getColumnIndexOrThrow("play_code")));
+                bm.setAct(cursor.getInt(cursor.getColumnIndexOrThrow("act_nr")));
+                bm.setScene(cursor.getInt(cursor.getColumnIndexOrThrow("scene_nr")));
+                bm.setSceneLineNumber(cursor.getInt(cursor.getColumnIndexOrThrow("scene_line_nr")));
+                bm.setPlayLineNumber(cursor.getInt(cursor.getColumnIndexOrThrow("play_line_nr")));
+                bookmarks.add(bm);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        return bookmarks;
+    }
+
 }
 

@@ -2,17 +2,11 @@
 
 package com.shakespeare.new_app;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
-import android.app.Activity;
 import android.content.Context;
 //import android.support.v7.widget.RecyclerView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Typeface;
 import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.ClickableSpan;
@@ -21,9 +15,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListener {
@@ -53,6 +48,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                 View child = recyclerView.findChildViewUnder(e.getX(), e.getY());
 
                 boolean boolClickableSpanBookmarkRefClicked = false;
+                String numberOfBookmarks = "0"; // e.g., "3"
+
 
 //                if (child instanceof TextView) {
 //                    TextView textView = (TextView) child;
@@ -81,6 +78,25 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                                     Log.d("ClickableSpan", "ClickableSpan " + Arrays.toString(link));
 
                                     if (link.length > 0) {
+
+                                        // Find the content of the bookmark reference clicked
+                                        // start
+                                        int spanStart = spanned.getSpanStart(link[0]);
+                                        int spanEnd = spanned.getSpanEnd(link[0]);
+                                        CharSequence spanText = spanned.subSequence(spanStart, spanEnd);
+
+                                        // Now apply your regex to extract the ref number inside <>
+                                        Pattern pattern = Pattern.compile("<(\\d+)>");
+                                        Matcher matcher = pattern.matcher(spanText);
+                                        if (matcher.find()) {
+                                            numberOfBookmarks = matcher.group(1); // e.g., "3"
+                                            Log.d("click check", "Bookmark reference clicked: <" + numberOfBookmarks + ">");
+
+                                        }
+                                        // Find the content of the bookmark reference clicked
+                                        // finish
+
+
                                         // ✅ It's a ClickableSpan!
                                         Log.d("ClickableSpan", "ClickableSpan clicked at offset " + offset);
                                         boolClickableSpanBookmarkRefClicked = true;
@@ -167,6 +183,11 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 //                    db.addBookmark(recyclerView.getChildAdapterPosition(child), strScriptText);
 //                    Log.d("new bookmark pop", "RecyclerItemClickListener: bookmark added and bookmark pop closed");
 
+                            // Added 06 July 2025 5.00am
+                            // If the user has clicked a ClickableSpan bookmark ref
+                            // then show the bookmark dialog
+                            showBookmarkDialog(strScriptRef, strScriptText, numberOfBookmarks);
+
                         }
                     } catch (Exception exception) {
                         Log.e(TAG, "onSingleTapUp: ", exception);
@@ -174,10 +195,6 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                         Log.d("exception report", " " + exception.getMessage().toString());
                     }
 
-                    // Added 06 July 2025 5.00am
-                    // If the user has clicked a ClickableSpan bookmark ref
-                    // then show the bookmark dialog
-                    showBookmarkDialog();
                 }
 
                 com.shakespeare.new_app.GlobalClass.boolBookmarkRefClicked = false;
@@ -286,19 +303,31 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
     @Override
     public void onRequestDisallowInterceptTouchEvent (boolean disallowIntercept){}
 
-    public void showBookmarkDialog() {
+    public void showBookmarkDialog(String strScriptRef, String strScriptText, String numberOfBookmarks) {
 
         // set flag to false so that a future click is only treated as a bookmark reference
         // click if the ClickableSpan OnClick has again set this flag to true.
         com.shakespeare.new_app.GlobalClass.boolBookmarkRefClicked = false;
 
         this.context = context;
-        Log.d("bookmark reference", "In RecyclerItemClickListener. User tapped bookmark ref: <" + com.shakespeare.new_app.GlobalClass.scriptPosition + ">");
+        String strAlertDialogTitle = "";
+        String fullText = "";
 
-        String fullText = "In RecyclerItemClickListener. Bookmark ref clicked. Script position of click " + com.shakespeare.new_app.GlobalClass.scriptPosition + ".";
+        Log.d("bookmark reference", "In RecyclerItemClickListener. User tapped bookmark line " + com.shakespeare.new_app.GlobalClass.scriptPosition + ".");
+
+        if (numberOfBookmarks.equals("1")){
+            Log.d("bookmark reference", "There is " + numberOfBookmarks + " bookmark.");
+            strAlertDialogTitle = numberOfBookmarks + " bookmark:";
+        }
+        else {
+            Log.d("bookmark reference", "There are " + numberOfBookmarks + " bookmarks.");
+            strAlertDialogTitle = numberOfBookmarks + " bookmarks:";
+        }
+
+        fullText = "At " + com.shakespeare.new_app.GlobalClass.scriptPosition + " " + strScriptRef;
 
         new AlertDialog.Builder(context)
-                .setTitle("Bookmark <" +  com.shakespeare.new_app.GlobalClass.scriptPosition + ">")
+                .setTitle(strAlertDialogTitle)
                 .setMessage(fullText)
                 .setPositiveButton("Edit", (dialog, which) -> {
                     // TODO: Hook up edit functionality

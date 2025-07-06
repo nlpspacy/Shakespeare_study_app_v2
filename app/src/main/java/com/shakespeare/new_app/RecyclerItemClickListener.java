@@ -7,6 +7,8 @@ import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.Layout;
 import android.text.Spanned;
 import android.text.style.ClickableSpan;
@@ -15,8 +17,13 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.shakespeare.new_app.BookmarkCallback;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -136,7 +143,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                                     strScriptRef = myAdapter.getItem(position - 4).toString();
                                     Log.d("script ref", "search for closest previous strScriptRef, position - 2: " + strScriptRef);
                                     if (!strScriptRef.substring(0, 10).equals("play_code:")) {
-                                        strScriptRef = "play_code: " + com.shakespeare.new_app.GlobalClass.selectedPlay + " Act " + com.shakespeare.new_app.GlobalClass.selectedActNumber.toString() + " Scene " + com.shakespeare.new_app.GlobalClass.selectedSceneNumber.toString() + " scene_line_nr 0 play_line_nr 0";
+                                        strScriptRef = "play_code: " + GlobalClass.selectedPlay + " Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString() + " scene_line_nr 0 play_line_nr 0";
                                         Log.d("script ref", "search for closest previous strScriptRef, position - 2: " + strScriptRef);
                                     }
                                 }
@@ -163,8 +170,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                             // to add popup for annotation
 //                        Log.d("bookmark ref", "RecyclerItemClickListener: bookmark ref clicked");
 
-                            com.shakespeare.new_app.GlobalClass.scriptPosition = recyclerView.getChildAdapterPosition(child);
-                            com.shakespeare.new_app.GlobalClass.scriptText = strScriptText;
+                            GlobalClass.scriptPosition = recyclerView.getChildAdapterPosition(child);
+                            GlobalClass.scriptText = strScriptText;
 
 //                        Log.d("bookmark ref", "RecyclerItemClickListener: global variables assigned");
 
@@ -197,7 +204,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
                 }
 
-                com.shakespeare.new_app.GlobalClass.boolBookmarkRefClicked = false;
+                GlobalClass.boolBookmarkRefClicked = false;
 
                 return true;
             }
@@ -226,7 +233,7 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                                 strScriptRef = myAdapter.getItem(position - 4).toString();
                                 Log.d("script ref","search for closest previous strScriptRef, position - 2: " + strScriptRef);
                                 if (!strScriptRef.substring(0, 10).equals("play_code:")) {
-                                    strScriptRef = "play_code: " + com.shakespeare.new_app.GlobalClass.selectedPlay + " Act " + com.shakespeare.new_app.GlobalClass.selectedActNumber.toString() + " Scene " + com.shakespeare.new_app.GlobalClass.selectedSceneNumber.toString() + " scene_line_nr 0 play_line_nr 0";
+                                    strScriptRef = "play_code: " + GlobalClass.selectedPlay + " Act " + GlobalClass.selectedActNumber.toString() + " Scene " + GlobalClass.selectedSceneNumber.toString() + " scene_line_nr 0 play_line_nr 0";
                                     Log.d("script ref","search for closest previous strScriptRef, position - 2: " + strScriptRef);
                                 }}}}
 
@@ -250,8 +257,8 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
                     // to add popup for annotation
                     Log.d("new bookmark pop", "RecyclerItemClickListener: new bookmark pop");
 
-                    com.shakespeare.new_app.GlobalClass.scriptPosition = recyclerView.getChildAdapterPosition(child);
-                    com.shakespeare.new_app.GlobalClass.scriptText = strScriptText;
+                    GlobalClass.scriptPosition = recyclerView.getChildAdapterPosition(child);
+                    GlobalClass.scriptText = strScriptText;
 
                     Log.d("new bookmark pop", "RecyclerItemClickListener: global variables assigned");
 
@@ -307,36 +314,120 @@ public class RecyclerItemClickListener implements RecyclerView.OnItemTouchListen
 
         // set flag to false so that a future click is only treated as a bookmark reference
         // click if the ClickableSpan OnClick has again set this flag to true.
-        com.shakespeare.new_app.GlobalClass.boolBookmarkRefClicked = false;
+        GlobalClass.boolBookmarkRefClicked = false;
 
-        this.context = context;
-        String strAlertDialogTitle = "";
-        String fullText = "";
+        // find the line number of the script line which the click bookmark reference relates to
+        String strPlayLineNumber = "";
+        Integer intPlayLineNumber = 0;
+        strPlayLineNumber = strScriptRef.substring( strScriptRef.indexOf("play_line_nr")+13 , strScriptRef.length());
+        strPlayLineNumber = strPlayLineNumber.strip();
 
-        Log.d("bookmark reference", "In RecyclerItemClickListener. User tapped bookmark line " + com.shakespeare.new_app.GlobalClass.scriptPosition + ".");
-
-        if (numberOfBookmarks.equals("1")){
-            Log.d("bookmark reference", "There is " + numberOfBookmarks + " bookmark.");
-            strAlertDialogTitle = numberOfBookmarks + " bookmark:";
-        }
-        else {
-            Log.d("bookmark reference", "There are " + numberOfBookmarks + " bookmarks.");
-            strAlertDialogTitle = numberOfBookmarks + " bookmarks:";
+        try{
+            intPlayLineNumber = Integer.valueOf(strPlayLineNumber);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
-        fullText = "At " + com.shakespeare.new_app.GlobalClass.scriptPosition + " " + strScriptRef;
+        Log.d("play line number for bookmark ref click", "play line number for bookmark ref click: " +
+                strPlayLineNumber + "; as integer: " + String.valueOf(intPlayLineNumber));
 
-        new AlertDialog.Builder(context)
-                .setTitle(strAlertDialogTitle)
-                .setMessage(fullText)
-                .setPositiveButton("Edit", (dialog, which) -> {
-                    // TODO: Hook up edit functionality
-                })
-                .setNegativeButton("Delete", (dialog, which) -> {
-                    // TODO: Hook up delete functionality
-                })
-                .setNeutralButton("Close", null)
-                .show();
+        // Build the SQL select script
+        String strSQL = "";
+//        strSQL = "SELECT username, annotation FROM bookmark WHERE active_0_or_1 = 1 AND share_with_others = 1 " +
+        strSQL = "SELECT username, annotation FROM bookmark WHERE active_0_or_1 = 1 " +
+                " AND play_code = '" + GlobalClass.selectedPlayCode + "'" +
+                " AND act_nr = " + GlobalClass.selectedActNumber +
+                " AND scene_nr = " + GlobalClass.selectedSceneNumber +
+                " AND play_line_nr = " + strPlayLineNumber ;
+
+        Log.d("sql", strSQL);
+
+//        ArrayList bookmarks = GetBookmarksForReferenceClicked(strSQL);
+
+            DatabaseHandler db = new DatabaseHandler(context) {
+                @Override
+                public void onCreate(SQLiteDatabase db) {}
+                @Override
+                public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {}
+            };
+
+        db.getBookmarksFromReferenceClick(strSQL, new BookmarkCallback() {
+            @Override
+            public void onBookmarksFetched(ArrayList<List<String>> bookmarks) {
+                String strAlertDialogTitle;
+                if (bookmarks.size() == 1) {
+                    strAlertDialogTitle = "1 bookmark:";
+                } else {
+                    strAlertDialogTitle = bookmarks.size() + " bookmarks:";
+                }
+
+                // Construct message
+                StringBuilder messageBuilder = new StringBuilder();
+                for (List<String> bookmark : bookmarks) {
+                    String username = bookmark.get(0);
+                    String annotation = bookmark.get(1);
+                    messageBuilder.append(username).append(": ").append(annotation).append("\n\n");
+                }
+
+                // Show AlertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(strAlertDialogTitle);
+                builder.setMessage(messageBuilder.toString().trim());
+                builder.setNeutralButton("Close", null);
+                builder.show();
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Toast.makeText(context, "Error loading bookmarks: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Log.e("Bookmarks", "Error fetching bookmarks", e);
+            }
+        });
+
+//        Log.d("bookmarks returned", "number of bookmarks returned: " + String.valueOf(bookmarks.size()));
+//
+//        this.context = context;
+//        String strAlertDialogTitle = "";
+//        String fullText = "";
+//
+//        Log.d("bookmark reference", "In RecyclerItemClickListener. User tapped bookmark line " + GlobalClass.scriptPosition + ".");
+//
+//        if (numberOfBookmarks.equals("1")){
+//            Log.d("bookmark reference", "There is " + numberOfBookmarks + " bookmark.");
+//            strAlertDialogTitle = numberOfBookmarks + " bookmark:";
+//        }
+//        else {
+//            Log.d("bookmark reference", "There are " + numberOfBookmarks + " bookmarks.");
+//            strAlertDialogTitle = numberOfBookmarks + " bookmarks:";
+//        }
+//
+//        fullText = "At " + GlobalClass.scriptPosition + " " + strScriptRef;
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        builder.setTitle(strAlertDialogTitle);
+//        builder.setMessage(String.valueOf(bookmarks.size()));
+////        builder.setItems(bookmarks, new DialogInterface.OnClickListener() {
+////                    @Override
+////                    public void onClick(DialogInterface dialogInterface, int i) {
+////                    }
+////                });
+//        builder.setNeutralButton("Close", null);
+//        AlertDialog alert = builder.create();
+//        alert.show();
+
+
+//        new AlertDialog.Builder(context)
+//                .setTitle(strAlertDialogTitle)
+//                .setMessage(fullText)
+//                .setItems(GetBookmarksForReferenceClicked(strSQL), new DialogInterface.OnClickListener())
+//                .setPositiveButton("Edit", (dialog, which) -> {
+//                    // TODO: Hook up edit functionality
+//                })
+//                .setNegativeButton("Delete", (dialog, which) -> {
+//                    // TODO: Hook up delete functionality
+//                })
+//                .setNeutralButton("Close", null)
+//                .show();
 
 
     }

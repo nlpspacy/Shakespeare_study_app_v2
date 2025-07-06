@@ -158,7 +158,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         String strScriptText = "";
         Integer intLineNumber = cursor.getInt(0);
         Integer intPlayLineNumber = cursor.getInt(4);
-        Integer intBookmarkCount = cursor.getInt(5);
+        Integer intUserOwnBookmarkCount = cursor.getInt(5);
         Integer intSharedBookmarkCount = cursor.getInt(8);
         String strShowLineOnScreen;
         Integer intIndentFlag = 0;
@@ -187,7 +187,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 intLineNumber = cursor.getInt(0);
                 // add line reference which will be included as a hidden row for reference purposes
                 intPlayLineNumber = cursor.getInt(4);
-                intBookmarkCount = cursor.getInt(5);
+                intUserOwnBookmarkCount = cursor.getInt(5);
                 intSharedBookmarkCount = cursor.getInt(8);
                 intIndentFlag = cursor.getInt(7);
                 strScriptIndividualRow.clear();
@@ -212,11 +212,11 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 }
 
-//                Log.d("bookmark counter","own bookmarks <" + String.valueOf(intBookmarkCount) + ">, shared bookmarks <" + String.valueOf(intSharedBookmarkCount) + ">");
+//                Log.d("bookmark counter","own bookmarks <" + String.valueOf(intUserOwnBookmarkCount) + ">, shared bookmarks <" + String.valueOf(intSharedBookmarkCount) + ">");
 
-                if(intBookmarkCount>0){
-                    strScriptText += "  <font color='#FFFFFF'>&lt;" + String.valueOf(intBookmarkCount) + "&gt;</font>";
-//                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intBookmarkCount));
+                if(intUserOwnBookmarkCount>0){
+                    strScriptText += "  <font color='#FFFFFF'>&lt;" + String.valueOf(intUserOwnBookmarkCount) + "&gt;</font>";
+//                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intUserOwnBookmarkCount));
                 }
 
                 if(intSharedBookmarkCount>0){
@@ -391,7 +391,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         String character = row.get("character_short_name") + "+";
                         int lineNumber = Integer.parseInt(row.get("scene_line_number"));
                         int playLineNumber = Integer.parseInt(row.get("play_line_number"));
-                        int bookmarkCount = Integer.parseInt(row.get("bookmark_count"));
+                        int userOwnBookmarkCount = Integer.parseInt(row.get("bookmark_count"));
                         int sharedBookmarkCount = Integer.parseInt(row.get("shared_bookmark_count"));
                         String lineText = row.get("script_text");
                         String indentFlag = row.get("indent_text");
@@ -412,8 +412,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 //                        Log.d("bookmark counter","own bookmarks <" + String.valueOf(bookmarkCount) + ">, shared bookmarks <" + String.valueOf(sharedBookmarkCount) + ">");
 
-                        if (bookmarkCount > 0) {
-                            lineText += " <font color='#FFFFFF'>&lt;" + String.valueOf(bookmarkCount) + "&gt;</font>";
+                        if (userOwnBookmarkCount > 0) {
+                            lineText += " <font color='#FFFFFF'><b>&lt;" + String.valueOf(userOwnBookmarkCount) + "&gt;</b></font>";
                         }
 
                         if (sharedBookmarkCount > 0) {
@@ -839,6 +839,58 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+    // Obtain bookmarks from the cloud for the bookmark reference the user clicked.
+    public void getBookmarksFromReferenceClick(String strSQL, BookmarkCallback callback) {
+        String currentUser = UserManager.getUsername(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        Set<String> visibleUsers = prefs.getStringSet("visible_bookmark_users", new HashSet<>());
+
+        StringBuilder inClause = new StringBuilder();
+        for (String user : visibleUsers) {
+            if (!user.equals(currentUser)) {
+                inClause.append("'").append(user).append("',");
+            }
+        }
+        if (inClause.length() > 0) {
+            inClause.setLength(inClause.length() - 1);
+        } else {
+            inClause.append("''");
+        }
+
+        Log.d("show user list","user list for sql query for shared bookmarks (1): " + visibleUsers.toString());
+
+        // Monday 7 July 2025, at 5.19am
+        // Update SQL to ensure we only show shared bookmarks of the current users
+        // or of other users whose shared bookmarks the current user has opted to view.
+        strSQL = strSQL + " AND (" +
+                "username = '" + currentUser + "' " +
+                "OR (share_with_others = 1 AND username IN (" + inClause + "))" +
+                ");";
+
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp(context);
+
+        remoteDb.runQueryFromJava(strSQL, new QueryResultCallback<List<Map<String, String>>>() {
+            @Override
+            public void onResult(QueryResult<List<Map<String, String>>> result) {
+                if (result.isSuccess()) {
+                    ArrayList<List<String>> bookmarkEntriesList = new ArrayList<>();
+
+                    for (Map<String, String> row : result.getData()) {
+                        ArrayList<String> entry = new ArrayList<>();
+                        entry.add(row.get("username"));
+                        entry.add(row.get("annotation"));
+                        bookmarkEntriesList.add(entry);
+                    }
+
+                    callback.onBookmarksFetched(bookmarkEntriesList);
+
+                } else {
+                    callback.onError(result.getException());
+                }
+            }
+        });
+    }
+
 
     // Get current scene number in case the user is returning to the play, so navigation goes to where they left off last time.
     // This is the version for the local sqlite db.
@@ -875,6 +927,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 
     // Get script
+    // This block is decprecated at least for now because we are entirely reliant
+    // on sqlite cloud db to obtain the script, and are not using the local sqlite db at all.
     public ArrayList getScript_2d(Boolean boolAtPrologue, Boolean boolAtEpilogue) {
 
         ArrayList<ArrayList<String>> scriptLinesList_2d = new ArrayList<>();
@@ -922,7 +976,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         String strScriptText = "";
         Integer intLineNumber = cursor.getInt(0);
         Integer intPlayLineNumber = cursor.getInt(4);
-        Integer intBookmarkCount = cursor.getInt(5);
+        Integer intUserOwnBookmarkCount = cursor.getInt(5);
         String strShowLineOnScreen;
         Integer intIndentFlag = 0;
 
@@ -950,7 +1004,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 intLineNumber = cursor.getInt(0);
                 // add line reference which will be included as a hidden row for reference purposes
                 intPlayLineNumber = cursor.getInt(4);
-                intBookmarkCount = cursor.getInt(5);
+                intUserOwnBookmarkCount = cursor.getInt(5);
                 intIndentFlag = cursor.getInt(7);
                 strScriptIndividualRow.clear();
 
@@ -983,9 +1037,9 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
                 }
 
-                if(intBookmarkCount>0){
-                    strScriptText += " <" + String.valueOf(intBookmarkCount) + ">";
-                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intBookmarkCount));
+                if(intUserOwnBookmarkCount>0){
+                    strScriptText += " <" + String.valueOf(intUserOwnBookmarkCount) + ">";
+                    Log.d("indicate bookmark exists", "bookmark(s): " + String.valueOf(intUserOwnBookmarkCount));
                 }
 
                 scriptLinesList.add("play_code: " + GlobalClass.selectedPlayCode + " Act " + GlobalClass.selectedActNumber + " Scene " + GlobalClass.selectedSceneNumber + " scene_line_nr " + intLineNumber + " play_line_nr " + String.valueOf(intPlayLineNumber));

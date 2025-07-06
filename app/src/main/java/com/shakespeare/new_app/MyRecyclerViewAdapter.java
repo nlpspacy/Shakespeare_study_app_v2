@@ -194,8 +194,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         } else {
             SpannableStringBuilder spannable;
 
-            if (strContentAsString.endsWith("+")) {
-                strContentAsString = strContentAsString.substring(0, intContentLength - 1);
+            if (strContentAsString.endsWith("+")) {  // This is the marker for a character's name.
+                strContentAsString = "<i>"+strContentAsString.substring(0, intContentLength - 1)+"</i>";
                 spannable = new SpannableStringBuilder(Html.fromHtml(strContentAsString, Html.FROM_HTML_MODE_LEGACY));
                 holder.myTextView.setTypeface(null, Typeface.BOLD);
             } else {
@@ -284,8 +284,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
 
 
-        if (strContentAsString.endsWith("+")) {
-            strContent = strContentAsString.substring(0, intContentLength - 1);
+        if (strContentAsString.endsWith("+")) {  // This is the marker for a character's name.
+            strContent = "<i>"+strContentAsString.substring(0, intContentLength - 1)+"</i>";
             holder.myTextView.setText(Html.fromHtml(strContent.toString(), Html.FROM_HTML_MODE_LEGACY));
             holder.myTextView.setTypeface(null, Typeface.BOLD);
         } else if (strContent.equals("Characters in the Play")) {

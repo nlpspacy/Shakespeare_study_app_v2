@@ -84,7 +84,7 @@
             android:layout_width="250sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="8sp"
+            android:layout_marginTop="4sp"
             android:onClick="openUserSelectCharacters"
             android:text="@string/btnUserSelectCharacters"
             android:textAllCaps="false"
@@ -97,19 +97,32 @@
             android:layout_width="250sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="8sp"
-            android:onClick="openBookmarkSharingPreferences"
-            android:text="@string/btnBookmarkSharingPreferences"
+            android:layout_marginTop="4sp"
+            android:onClick="openSharedBookmarkViewingPreferences"
+            android:text="@string/btnLabelSharedBookmarkViewingPreferences"
             android:textAllCaps="false"
             app:layout_constraintTop_toBottomOf="@+id/btnViewSystemPrompt"
             app:layout_constraintStart_toStartOf="@+id/btnViewSystemPrompt" />
+
+        <Button
+            android:id="@+id/btnSeeBookmarkViewingPreferences"
+            android:layout_width="250sp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="4sp"
+            android:onClick="seeBookmarkViewingPreferences"
+            android:text="@string/btnLabelSeeBookmarkViewingPreferences"
+            android:textAllCaps="false"
+            app:layout_constraintTop_toBottomOf="@+id/btnViewSystemPrompt"
+            app:layout_constraintStart_toStartOf="@+id/btnViewSystemPrompt" />
+
 
         <Button
             android:id="@+id/btnChangeUsername"
             android:layout_width="250sp"
             android:layout_height="wrap_content"
             android:layout_marginStart="0dp"
-            android:layout_marginTop="8sp"
+            android:layout_marginTop="4sp"
             android:onClick="openBookmarkSharingPreferences"
             android:text="@string/btn_change_username"
             android:textAllCaps="false"
@@ -121,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0sp"
-            android:layout_marginTop="8sp"
+            android:layout_marginTop="4sp"
             android:text="@string/script_font_size_setting_label"
             app:layout_constraintTop_toBottomOf="@+id/btnBookmarkPreferences"
             app:layout_constraintStart_toStartOf="parent" />
@@ -136,7 +149,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="100sp"
-                android:layout_marginTop="8sp"
+                android:layout_marginTop="4sp"
                 android:onClick="setFontSmall12sp"
                 android:text="@string/font_settings_btn_label_small"
                 android:textSize="12sp"
@@ -148,7 +161,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="100sp"
-                android:layout_marginTop="5sp"
+                android:layout_marginTop="2sp"
                 android:onClick="setFontMedium16sp"
                 android:text="@string/font_settings_btn_label_medium"
                 android:textSize="16sp"
@@ -160,7 +173,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="100sp"
-                android:layout_marginTop="5sp"
+                android:layout_marginTop="2sp"
                 android:onClick="setFontLarge20sp"
                 android:text="@string/font_settings_btn_label_large"
                 android:textSize="20sp"
@@ -174,7 +187,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="0sp"
-            android:layout_marginTop="8sp"
+            android:layout_marginTop="4sp"
             android:text="In play scripts, show or hide line numbers:"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnfontlarge" />
@@ -189,7 +202,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="100sp"
-            android:layout_marginTop="8sp"
+            android:layout_marginTop="4sp"
             android:onClick="showLineNumbers"
             android:text="Show"
             app:layout_constraintStart_toStartOf="parent"
@@ -200,7 +213,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="100sp"
-            android:layout_marginTop="5sp"
+            android:layout_marginTop="2sp"
             android:onClick="hideLineNumbers"
             android:text="Hide"
             app:layout_constraintStart_toStartOf="parent"
@@ -216,7 +229,7 @@
             android:gravity="center_horizontal"
             android:inputType="text"
             android:text="Version code 21 version name 2.21"
-            android:layout_marginTop="20sp"
+            android:layout_marginTop="4sp"
             app:layout_constraintTop_toBottomOf="@+id/rbtnHideLineNumbers" />
 
     </LinearLayout>
@@ -227,7 +240,7 @@
         android:id="@+id/buttonsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10sp"
+        android:layout_marginBottom="4sp"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@+id/buttonsBank"
@@ -264,9 +277,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:layout_marginEnd="20sp"
-        android:layout_marginBottom="10sp"
+        android:padding="10dp"
+        android:layout_marginStart="10sp"
+        android:layout_marginBottom="8sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints" >
@@ -296,8 +309,5 @@
             android:textSize="16sp"
             android:layout_marginTop="4dp" />
     </LinearLayout>
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

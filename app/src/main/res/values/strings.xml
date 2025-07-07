@@ -3,7 +3,8 @@
 
     <string name="userselectcharacters_clouddb">Select your character(s)</string>
     <string name="btnUserSelectCharacters">Select your character(s)</string>
-    <string name="btnBookmarkSharingPreferences">Bookmark sharing</string>
+    <string name="btnLabelSharedBookmarkViewingPreferences">Shared bookmark viewing</string>
+    <string name="btnLabelSeeBookmarkViewingPreferences">See shared bookmark prefs</string>
     <string name="btnRefresh">Refresh</string>
 
     <string name="app_name">Shakes works</string>
@@ -268,5 +269,6 @@
     <string name="Othello">Othello, the Moor of Venice</string>
     <string name="RomeoAndJuliet">Romeo and Juliet</string>
     <string name="Tempest">The Tempest</string>
+    <string name="activity_view_preferences">Bookmark viewing preferences</string>
 
 </resources>

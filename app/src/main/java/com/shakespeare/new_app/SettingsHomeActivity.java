@@ -158,6 +158,11 @@ public class SettingsHomeActivity extends AppCompatActivity {
             textDisplayName.setText("Display name not set");
         }
 
+        // 7 July 2025: Hide the 'see user preferencse' button.
+        // This was added for debugging purposes and is not needed for typical use
+        // so hiding this button to simplify the interface and improve the user experience.
+        Button btnSeeBookmarkViewingPreferences = findViewById(R.id.btnSeeBookmarkViewingPreferences); // initiate a button
+        btnSeeBookmarkViewingPreferences.setVisibility(View.GONE);
 
 
     }
@@ -193,14 +198,20 @@ public class SettingsHomeActivity extends AppCompatActivity {
 //        startActivity(i);
     }
 
-    public void openBookmarkSharingPreferences(View v) {
+    public void openSharedBookmarkViewingPreferences(View v) {
         // go back to previous screen/activity
 
         Intent i = new Intent(this, BookmarkSharingPreferences.class);
         startActivity(i);
 
-//        Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);
-//        startActivity(i);
+    }
+
+    public void seeBookmarkViewingPreferences(View v) {
+        // go back to previous screen/activity
+
+        Intent i = new Intent(this, ViewPreferencesActivity.class);
+        startActivity(i);
+
     }
 
 //    prefs.edit().putString("sharedUsersToShow", "sophie,dan,julia").apply();

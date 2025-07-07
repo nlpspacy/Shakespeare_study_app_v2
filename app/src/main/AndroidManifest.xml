@@ -63,6 +63,11 @@
             android:label="@string/title_activity_bookmarksharingpreferences"
             android:theme="@style/Theme.Design" />
         <activity
+            android:name=".ViewPreferencesActivity"
+            android:exported="false"
+            android:label="@string/activity_view_preferences"
+            android:theme="@style/Theme.Design" />
+        <activity
             android:name=".Bookmarks"
             android:exported="false"
             android:label="@string/bookmarks"

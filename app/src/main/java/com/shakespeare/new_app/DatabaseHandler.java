@@ -136,13 +136,13 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
 //        selectQuery = "SELECT scene_line_number, script_text, character_short_name FROM " + TABLE_PLAY + " WHERE play_code='" + com.shakespeare.new_app.GlobalClass.selectedPlayCode + "' AND act_nr=" + com.shakespeare.new_app.GlobalClass.selectedActNumber + " AND scene_nr=" + com.shakespeare.new_app.GlobalClass.selectedSceneNumber + " ORDER BY play_line_number;";
         if (boolAtPrologue) {
-            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Prologue' ORDER BY p.play_line_number;";
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 AND share_with_others = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Prologue' ORDER BY p.play_line_number;";
 
         } else if (boolAtEpilogue) {
-            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Epilogue' ORDER BY p.play_line_number;";
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 AND share_with_others = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman='Epilogue' ORDER BY p.play_line_number;";
 
         } else {
-            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr=" + GlobalClass.selectedActNumber + " AND scene_nr=" + GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
+            selectQuery = "SELECT p.scene_line_number, p.script_text, p.character_short_name, p.play_code, p.play_line_number, b.bookmark_count, p.line_text, p.indent_text, shared_b.shared_bookmark_count FROM " + TABLE_PLAY + " p LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as bookmark_count from bookmark where username = '" + currentUser + "' AND active_0_or_1 = 1 group by play_code, play_line_nr) b on p.play_code = b.play_code and p.play_line_number = b.play_line_nr LEFT OUTER JOIN (SELECT play_code, play_line_nr, count(distinct bookmark_row_id) as shared_bookmark_count from bookmark where username IN (" + inClause + ") AND active_0_or_1 = 1 AND share_with_others = 1 group by play_code, play_line_nr) shared_b on p.play_code = shared_b.play_code and p.play_line_number = shared_b.play_line_nr WHERE p.play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr=" + GlobalClass.selectedActNumber + " AND scene_nr=" + GlobalClass.selectedSceneNumber + " ORDER BY p.play_line_number;";
 
         }
 
@@ -347,7 +347,7 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                         "    SELECT play_code, play_line_nr, COUNT(DISTINCT bookmark_row_id) AS bookmark_count " +
                         "    FROM bookmark " +
                         "    WHERE username <> '" + currentUser + "' AND username IN (" + inClause + ") " +
-                        "     AND active_0_or_1 = 1 " +
+                        "     AND active_0_or_1 = 1 AND share_with_others = 1 " +
                         "    GROUP BY play_code, play_line_nr" +
                         ") shared_b ON p.play_code = shared_b.play_code AND p.play_line_number = shared_b.play_line_nr " +
                         "WHERE p.play_code = '" + GlobalClass.selectedPlayCode + "' ";
@@ -355,12 +355,12 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
         Log.d("sql check","sql:" + baseQuery);
 
         if (isPrologue) {
-            baseQuery += "AND act_nr_roman = 'Prologue' ";
+            baseQuery += "AND p.act_nr_roman = 'Prologue' ";
         } else if (isEpilogue) {
-            baseQuery += "AND act_nr_roman = 'Epilogue' ";
+            baseQuery += "AND p.act_nr_roman = 'Epilogue' ";
         } else {
-            baseQuery += "AND act_nr = " + GlobalClass.selectedActNumber +
-                    " AND scene_nr = " + GlobalClass.selectedSceneNumber + " ";
+            baseQuery += "AND p.act_nr = " + GlobalClass.selectedActNumber +
+                    " AND p.scene_nr = " + GlobalClass.selectedSceneNumber + " ";
         }
 
         baseQuery += "ORDER BY p.play_line_number;";

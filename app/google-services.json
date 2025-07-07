@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "698320345115-e5h4oll0tqsih8906aecl4mtpgtha7q6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shakespeare.new_app",
+            "certificate_hash": "526157811fc60ef29eca0f4852ad80b823daa5a6"
+          }
+        },
+        {
           "client_id": "698320345115-ofqkc88e1sd9i9b67ankrkpt0hj01hq3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

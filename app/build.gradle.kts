@@ -8,13 +8,14 @@ plugins {
 }
 android {
     namespace = "com.shakespeare.new_app"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.shakespeare.new_app"
         minSdk = 26 // Raised from 24 to 26 to be compatible with sqlitecloud module
         // in sqlitecloud/build.gradle.kts
-        targetSdk = 34
+        //noinspection EditedTargetSdkVersion
+        targetSdk = 36
         versionCode = 22
         versionName = "2.22"
 

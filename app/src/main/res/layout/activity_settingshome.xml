@@ -278,8 +278,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp"
-        android:layout_marginStart="10sp"
-        android:layout_marginBottom="8sp"
+        android:layout_marginStart="20sp"
+        android:layout_marginBottom="40sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="MissingConstraints" >

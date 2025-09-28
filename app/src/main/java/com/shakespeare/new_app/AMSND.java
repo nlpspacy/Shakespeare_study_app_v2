@@ -1080,9 +1080,11 @@ public class AMSND extends AppCompatActivity {
                         System.out.println(gptMsg_role + " says: " + gptMsg_content);
 
                         messageList.add("You: " + userPrompt);
+                        messageList.add("");
                         String gptMsg_role_cap = gptMsg_role.substring(0, 1).toUpperCase();
                         String gptMsg_role_rest = gptMsg_role.substring(1, gptMsg_role.length());
                         messageList.add(gptMsg_role_cap + gptMsg_role_rest + ": " + gptMsg_content);
+                        messageList.add("");
                         Log.d("message", "messageList: " + String.valueOf(messageList.size()));
 
                         // Fixing problem 28 Sep 2025 with ChatGPT window not showing messages with Chat GPT but showing the script again.

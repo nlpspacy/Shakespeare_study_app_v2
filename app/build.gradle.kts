@@ -2,6 +2,9 @@
 //    alias(libs.plugins.android.application)
 //    alias(libs.plugins.kotlin.android)
 //}
+
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -20,11 +23,13 @@ android {
         versionName = "2.25"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField(
-            "String",
-            "OPENAI_API_KEY",
-            "\"${project.findProperty("OPENAI_API_KEY") ?: ""}\""
-        )
+
+        val localProps = gradleLocalProperties(rootDir, providers)
+        val openAiKey = localProps.getProperty("OPENAI_API_KEY")
+            ?: System.getenv("OPENAI_API_KEY")
+            ?: ""
+
+        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
 
     }
 

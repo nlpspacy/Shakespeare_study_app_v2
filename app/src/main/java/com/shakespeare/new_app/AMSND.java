@@ -1054,9 +1054,11 @@ public class AMSND extends AppCompatActivity {
             userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " scene " + String.valueOf(GlobalClass.selectedSceneNumber) + " of the Shakespeare play <i>" + GlobalClass.selectedPlay + "</i>.";
         }
 
+        String openaiApiKey = BuildConfig.OPENAI_API_KEY;
         Log.d("message", "userPrompt: " + userPrompt);
         Toast.makeText(getApplicationContext(), "Thinking...", Toast.LENGTH_SHORT).show();
-        ChatGPTApiHelper.callChatGPTApi("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", userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
+//        ChatGPTApiHelper.callChatGPTApi("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", userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
+        ChatGPTApiHelper.callChatGPTApi(openaiApiKey, userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
 
             @Override
             public void onSuccess(String response, int responseCode) {

@@ -29,7 +29,8 @@ public class VoiceSynthesizer {
     private static String currentPlayKey = "";
 
     private static final OkHttpClient client = new OkHttpClient();
-    private static final String OPENAI_API_KEY = "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"; // 🔒 Replace with your key
+    private static final String openaiApiKey = BuildConfig.OPENAI_API_KEY;
+//    private static final String OPENAI_API_KEY = "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"; // 🔒 Replace with your key
 
     // ✅ Set the active scene key explicitly before playback begins
     public static void prepareScenePlayback(String key) {
@@ -69,7 +70,7 @@ public class VoiceSynthesizer {
 
                     Request request = new Request.Builder()
                             .url("https://api.openai.com/v1/audio/speech")
-                            .addHeader("Authorization", "Bearer " + OPENAI_API_KEY)
+                            .addHeader("Authorization", "Bearer " + openaiApiKey)
                             .post(body)
                             .build();
 

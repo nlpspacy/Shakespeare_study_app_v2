@@ -83,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         this.setTitle(getResources().getString(R.string.home_screen_title));
+
+        // ✅ Debug check for API key
+        Log.d("OpenAI", "Key present? " + (!BuildConfig.OPENAI_API_KEY.isEmpty()));
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

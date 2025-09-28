@@ -1085,15 +1085,20 @@ public class AMSND extends AppCompatActivity {
                         messageList.add(gptMsg_role_cap + gptMsg_role_rest + ": " + gptMsg_content);
                         Log.d("message", "messageList: " + String.valueOf(messageList.size()));
 
-                        RecyclerView recyclerView = findViewById(R.id.rvMessages);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                        // Fixing problem 28 Sep 2025 with ChatGPT window not showing messages with Chat GPT but showing the script again.
+                        // Renaming recyclerView to rvChat to make it clearer which recycler view for the ChatGPT messages versus which is for the script.
+                        //RecyclerView recyclerView = findViewById(R.id.rvMessages);
+                        RecyclerView rvChat = findViewById(R.id.rvMessages);
+                        rvChat.setLayoutManager(new LinearLayoutManager(rvChat.getContext()));
 
                         // Replaced with new version 29 June 2025 6.43am to fix problem with double tap logic.
                         // adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), messageList, false);
-                        adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), scriptLinesList, false, rvScript);
-                        recyclerView.setAdapter(adapter);
+                        // Fixing problem 28 Sep 2025 with ChatGPT window not showing messages with Chat GPT but showing the script again.
+                        // adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), scriptLinesList, false, rvScript);
+                        adapter = new MyRecyclerViewAdapter(rvChat.getContext(), messageList, false, rvChat);
+                        rvChat.setAdapter(adapter);
                         int listLength = messageList.size();
-                        recyclerView.smoothScrollToPosition(listLength);
+                        rvChat.smoothScrollToPosition(listLength);
 
                         // set edit text view to blank so user doesn't have to manually clear it
                         clearEditTextBox();

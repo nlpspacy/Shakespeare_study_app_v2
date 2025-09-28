@@ -8,6 +8,7 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 android {
     namespace = "com.shakespeare.new_app"
@@ -24,10 +25,18 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        val localProps = gradleLocalProperties(rootDir, providers)
-        val openAiKey = localProps.getProperty("OPENAI_API_KEY")
+        // Read from local.properties safely.
+        val props = gradleLocalProperties(rootDir, providers)
+        val openAiKey = props.getProperty("OPENAI_API_KEY")
             ?: System.getenv("OPENAI_API_KEY")
             ?: ""
+
+//        // Load API key from .env
+//        val dotenv = dotenv {
+//            directory = project.rootDir.toString()
+//            ignoreIfMissing = true
+//        }
+//        val openAiKey = dotenv["OPENAI_API_KEY"] ?: ""
 
         buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
 

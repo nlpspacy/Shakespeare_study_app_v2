@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         // ✅ Debug check for API key
         Log.d("OpenAI", "Key present? " + (!BuildConfig.OPENAI_API_KEY.isEmpty()));
+        Log.d("OpenAI", "Key loaded? " + maskedKey(BuildConfig.OPENAI_API_KEY));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -206,6 +207,13 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    // Utils (static helper)
+    private static String maskedKey(String key) {
+        if (key == null || key.length() < 12) return "****";
+        // keep first 8 and last 4
+        return key.substring(0, 8) + "..." + key.substring(key.length() - 4);
     }
 
     // This block is deprecated: username is now set once based on Firebase UID-linked display name.

@@ -16,10 +16,16 @@ android {
         // in sqlitecloud/build.gradle.kts
         //noinspection EditedTargetSdkVersion
         targetSdk = 36
-        versionCode = 24
-        versionName = "2.24"
+        versionCode = 25
+        versionName = "2.25"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField(
+            "String",
+            "OPENAI_API_KEY",
+            "\"${project.findProperty("OPENAI_API_KEY") ?: ""}\""
+        )
+
     }
 
     buildTypes {
@@ -40,6 +46,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
 }

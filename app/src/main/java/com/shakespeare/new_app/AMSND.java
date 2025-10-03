@@ -1,5 +1,6 @@
 package com.shakespeare.new_app;
 
+import com.shakespeare.new_app.BuildConfig;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -1057,7 +1058,7 @@ public class AMSND extends AppCompatActivity {
         String openaiApiKey = BuildConfig.OPENAI_API_KEY;
         Log.d("message", "userPrompt: " + userPrompt);
         Toast.makeText(getApplicationContext(), "Thinking...", Toast.LENGTH_SHORT).show();
-//        ChatGPTApiHelper.callChatGPTApi("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", userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
+//        ChatGPTApiHelper.callChatGPTApi("sk-proj-...", userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
         ChatGPTApiHelper.callChatGPTApi(openaiApiKey, userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
 
             @Override

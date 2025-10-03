@@ -14,6 +14,9 @@ android {
     namespace = "com.shakespeare.new_app"
     compileSdk = 36
 
+    buildFeatures{
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.shakespeare.new_app"
         minSdk = 26 // Raised from 24 to 26 to be compatible with sqlitecloud module

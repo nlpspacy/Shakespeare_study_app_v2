@@ -51,7 +51,7 @@ public class ChatGPTApiHelper {
 //            json.put("prompt", userPrompt);
 //            json.put("play_context", userPromptPlay); // optional: remove if your backend doesn’t use it
             json.put("system", GlobalClass.system_prompt);
-            json.put("prompt", userPrompt + userPromptPlay);
+            json.put("prompt", GlobalClass.system_prompt + userPrompt + userPromptPlay);
         } catch (Exception e) {
             callback.onError(e, 0);
             return;

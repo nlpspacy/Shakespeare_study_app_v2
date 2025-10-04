@@ -433,34 +433,28 @@ public class SettingsActivity extends AppCompatActivity {
         countryspinner = (Spinner) findViewById(R.id.country_spinner);
         String countrySelected = countryspinner.getSelectedItem().toString();
         int countryspinner_pos = countryspinner.getSelectedItemPosition();
-        Log.d("system prompt", countrySelected);
         String countryPrompt;
         if(!countrySelected.equals("Please select...")){
 
             countryPrompt = "I live in " + countrySelected + ". ";
-            Log.d("system prompt", countryPrompt);
 
         }
         else {
             countryPrompt = "";
-            Log.d("system prompt", "Country not selected");
         }
 
         languagespinner = (Spinner) findViewById(R.id.language_spinner);
         String languageSelected = languagespinner.getSelectedItem().toString();
-        Log.d("system prompt", languageSelected);
         int languagespinner_pos = languagespinner.getSelectedItemPosition();
 
         String languagePrompt;
         if(!languageSelected.equals("Please select...") && !languageSelected.equals("Mine is not listed...")){
 
             languagePrompt = "Please give your responses in the language of " + languageSelected + ". ";
-            Log.d("system prompt", languagePrompt);
 
         }
         else {
             languagePrompt = "";
-            Log.d("system prompt", "Language not selected");
         }
 
         genderrdogrp = (RadioGroup) findViewById(R.id.userGenderID);

@@ -1,6 +1,6 @@
 package com.shakespeare.new_app;
 
-import com.shakespeare.new_app.BuildConfig;
+//import com.shakespeare.new_app.BuildConfig;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
@@ -1055,11 +1055,16 @@ public class AMSND extends AppCompatActivity {
             userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " scene " + String.valueOf(GlobalClass.selectedSceneNumber) + " of the Shakespeare play <i>" + GlobalClass.selectedPlay + "</i>.";
         }
 
-        String openaiApiKey = BuildConfig.OPENAI_API_KEY;
+        // No longer need this because we are not going to be reading the API key from local.properties anymore.
+        // 4 Oct 2025
+//        String openaiApiKey = BuildConfig.OPENAI_API_KEY;
         Log.d("message", "userPrompt: " + userPrompt);
         Toast.makeText(getApplicationContext(), "Thinking...", Toast.LENGTH_SHORT).show();
 //        ChatGPTApiHelper.callChatGPTApi("sk-proj-...", userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
-        ChatGPTApiHelper.callChatGPTApi(openaiApiKey, userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
+        // No longer need this because we are not going to be reading the API key from local.properties anymore.
+        // 4 Oct 2025
+//        ChatGPTApiHelper.callChatGPTApi(openaiApiKey, userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
+        ChatGPTApiHelper.callChatGPTApi(userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {
 
             @Override
             public void onSuccess(String response, int responseCode) {
@@ -1088,16 +1093,20 @@ public class AMSND extends AppCompatActivity {
                         messageList.add("");
                         Log.d("message", "messageList: " + String.valueOf(messageList.size()));
 
+                        Log.d("check1", "check1");
                         // Fixing problem 28 Sep 2025 with ChatGPT window not showing messages with Chat GPT but showing the script again.
                         // Renaming recyclerView to rvChat to make it clearer which recycler view for the ChatGPT messages versus which is for the script.
                         //RecyclerView recyclerView = findViewById(R.id.rvMessages);
                         RecyclerView rvChat = findViewById(R.id.rvMessages);
+                        Log.d("check2", "check2");
                         rvChat.setLayoutManager(new LinearLayoutManager(rvChat.getContext()));
+                        Log.d("check3", "check3");
 
                         // Replaced with new version 29 June 2025 6.43am to fix problem with double tap logic.
                         // adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), messageList, false);
                         // Fixing problem 28 Sep 2025 with ChatGPT window not showing messages with Chat GPT but showing the script again.
                         // adapter = new MyRecyclerViewAdapter(recyclerView.getContext(), scriptLinesList, false, rvScript);
+                        Log.d("adapter", "adapter = new MyRecyclerViewAdapter(rvChat.getContext(), messageList, false, rvChat);");
                         adapter = new MyRecyclerViewAdapter(rvChat.getContext(), messageList, false, rvChat);
                         rvChat.setAdapter(adapter);
                         int listLength = messageList.size();

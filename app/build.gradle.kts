@@ -14,9 +14,9 @@ android {
     namespace = "com.shakespeare.new_app"
     compileSdk = 36
 
-    buildFeatures{
-        buildConfig = true
-    }
+//    buildFeatures{
+//        buildConfig = true
+//    }
     defaultConfig {
         applicationId = "com.shakespeare.new_app"
         minSdk = 26 // Raised from 24 to 26 to be compatible with sqlitecloud module
@@ -28,11 +28,11 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Read from local.properties safely.
-        val props = gradleLocalProperties(rootDir, providers)
-        val openAiKey = props.getProperty("OPENAI_API_KEY")
-            ?: System.getenv("OPENAI_API_KEY")
-            ?: ""
+//        // Read from local.properties safely.
+//        val props = gradleLocalProperties(rootDir, providers)
+//        val openAiKey = props.getProperty("OPENAI_API_KEY")
+//            ?: System.getenv("OPENAI_API_KEY")
+//            ?: ""
 
 //        // Load API key from .env
 //        val dotenv = dotenv {
@@ -41,7 +41,7 @@ android {
 //        }
 //        val openAiKey = dotenv["OPENAI_API_KEY"] ?: ""
 
-        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
+//        buildConfigField("String", "OPENAI_API_KEY", "\"$openAiKey\"")
 
     }
 

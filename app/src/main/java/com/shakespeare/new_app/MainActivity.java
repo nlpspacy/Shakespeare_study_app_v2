@@ -84,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.setTitle(getResources().getString(R.string.home_screen_title));
 
-        // ✅ Debug check for API key
-        Log.d("OpenAI", "Key present? " + (!BuildConfig.OPENAI_API_KEY.isEmpty()));
-        Log.d("OpenAI", "Key loaded? " + maskedKey(BuildConfig.OPENAI_API_KEY));
+//        // ✅ Debug check for API key
+//        Log.d("OpenAI", "Key present? " + (!BuildConfig.OPENAI_API_KEY.isEmpty()));
+//        Log.d("OpenAI", "Key loaded? " + maskedKey(BuildConfig.OPENAI_API_KEY));
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

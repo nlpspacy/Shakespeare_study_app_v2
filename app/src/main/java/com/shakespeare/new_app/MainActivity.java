@@ -182,14 +182,23 @@ public class MainActivity extends AppCompatActivity {
         // check for prior set value of system prompt and if it exists then assign this to the system prompt global variable
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
         String stringSystemPrompt = sharedPreferences.getString("system prompt", "xx");
-        if (!stringSystemPrompt.equals("xx")){
+//        Log.d("check system prompt", "system prompt from SharedPreferences: " + stringSystemPrompt);
+        if (!stringSystemPrompt.equals("xx") && !stringSystemPrompt.equals("")){
             // set the value of the spinner
             GlobalClass.system_prompt = stringSystemPrompt;
-        Log.d("retrieve from SharedPreferences", "system prompt from SharedPreferences: " + stringSystemPrompt);
+//        Log.d("retrieve from SharedPreferences", "system prompt from SharedPreferences: " + stringSystemPrompt);
         }
         else{
-            Log.d("retrieve from SharedPreferences","system prompt is not in SharedPreferences");
+//            Log.d("retrieve from SharedPreferences","system prompt is not in SharedPreferences");
 
+        }
+
+        // check for prior set value of personalisation prompt and if it exists then assign
+        // this to the personalise prompt global variable
+        String stringPersonalisePrompt = sharedPreferences.getString("personalise prompt", "xx");
+        if (!stringPersonalisePrompt.equals("xx") && !stringPersonalisePrompt.equals("")){
+            // set the value of the personalisation prompt
+            GlobalClass.personalise_prompt = stringPersonalisePrompt;
         }
 
 //        TextView tv_Title = (TextView) findViewById(R.id.txtSettingsInstruction);

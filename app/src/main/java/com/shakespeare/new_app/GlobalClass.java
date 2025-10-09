@@ -3,7 +3,8 @@ package com.shakespeare.new_app;
 public class GlobalClass {
     public static int fontsizesp = 16;
 
-    public static String system_prompt = "Assume this query relates to William Shakespeare's plays.";
+    public static String system_prompt = "You are a caring and insightful teacher and mentor on William Shakespeare's plays.";
+    public static String personalise_prompt = "";
 
     public static String selectedPlay = "";
     public static String selectedPlayCode = "";

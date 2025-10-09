@@ -1050,15 +1050,15 @@ public class AMSND extends AppCompatActivity {
         // then the prompt needs to incorporate reference to the current act or scene to send this
         // information to ChatGPT in the prompt.
         if (userPrompt.lastIndexOf("this Act")!=-1){
-            userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " of the Shakespeare play <i>" + GlobalClass.selectedPlay + "</i>.";
+            userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " of the Shakespeare play <" + GlobalClass.selectedPlay + ">.";
         } else if (userPrompt.lastIndexOf("this scene")!=-1){
-            userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " scene " + String.valueOf(GlobalClass.selectedSceneNumber) + " of the Shakespeare play <i>" + GlobalClass.selectedPlay + "</i>.";
+            userPromptPlay = " My query relates specifically to act " + String.valueOf(GlobalClass.selectedActNumber) + " scene " + String.valueOf(GlobalClass.selectedSceneNumber) + " of the Shakespeare play <" + GlobalClass.selectedPlay + ">.";
         }
 
         // No longer need this because we are not going to be reading the API key from local.properties anymore.
         // 4 Oct 2025
 //        String openaiApiKey = BuildConfig.OPENAI_API_KEY;
-        Log.d("message", "user prompt: " + userPrompt + userPromptPlay);
+        Log.d("message", "user prompt: " + GlobalClass.personalise_prompt + userPrompt + userPromptPlay);
         Log.d("message", "system prompt: " + GlobalClass.system_prompt);
         Toast.makeText(getApplicationContext(), "Thinking...", Toast.LENGTH_SHORT).show();
 //        ChatGPTApiHelper.callChatGPTApi("sk-proj-...", userPrompt, userPromptPlay, new ChatGPTApiHelper.ChatGPTResponseCallback() {

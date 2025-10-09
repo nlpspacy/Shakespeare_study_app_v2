@@ -1,7 +1,10 @@
 package com.shakespeare.new_app;
 
+import static com.shakespeare.new_app.GlobalClass.fontsizesp;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -17,9 +20,17 @@ public class SystemPromptActivity  extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_systemprompt);
 
-        TextView tvSystemPrompt = findViewById(R.id.tvSystemPrompt);
-        tvSystemPrompt.setText(com.shakespeare.new_app.GlobalClass.system_prompt);
-        tvSystemPrompt.setTextSize(18);
+        TextView tvSystemPrompt = findViewById(R.id.tvPersonalisePrompt);
+        Log.d("prompts", "system prompt: " + com.shakespeare.new_app.GlobalClass.system_prompt);
+        Log.d("prompts", "personalise prompt: " + com.shakespeare.new_app.GlobalClass.personalise_prompt);
+
+        if(!com.shakespeare.new_app.GlobalClass.personalise_prompt.equals("")){
+            tvSystemPrompt.setText(com.shakespeare.new_app.GlobalClass.personalise_prompt);
+        } else {
+            tvSystemPrompt.setText("No personalisation set.");
+        }
+
+        tvSystemPrompt.setTextSize(fontsizesp);
 
     }
 

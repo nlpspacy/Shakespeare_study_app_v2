@@ -496,24 +496,28 @@ public class SettingsActivity extends AppCompatActivity {
         String anythingElseString = anythingElse_et.getText().toString();
         Log.d("system prompt", anythingElseString);
 
-        String systemPrompt;
+//        String systemPrompt;
+        String personalisePrompt;
 
         if (anythingElseString.length() > 1){
-            systemPrompt = agePrompt + genderPrompt + purposePrompt + countryPrompt + languagePrompt + " Please also bear in mind " + anythingElseString + " Assume this query relates to the works of, or a work of, William Shakespeare.";
+            personalisePrompt = agePrompt + genderPrompt + purposePrompt + countryPrompt + languagePrompt + " Please also bear in mind " + anythingElseString + " Assume this query relates to the works of, or a work of, William Shakespeare.";
         }
         else{
-            systemPrompt = agePrompt + genderPrompt + purposePrompt + countryPrompt + languagePrompt + " Assume this query relates to the works of, or a work of, William Shakespeare.";
+            personalisePrompt = agePrompt + genderPrompt + purposePrompt + countryPrompt + languagePrompt + " Assume this query relates to the works of, or a work of, William Shakespeare.";
         }
-        Log.d("system prompt", systemPrompt);
-        Toast.makeText(this, "Instruction: \n" + systemPrompt, Toast.LENGTH_SHORT).show(); // in Activity
+        Log.d("personalise prompt", personalisePrompt);
+        Toast.makeText(this, "Instruction: \n" + personalisePrompt, Toast.LENGTH_SHORT).show(); // in Activity
 
-        com.shakespeare.new_app.GlobalClass.system_prompt = systemPrompt;
+//        com.shakespeare.new_app.GlobalClass.system_prompt = systemPrompt;
+        com.shakespeare.new_app.GlobalClass.personalise_prompt = personalisePrompt;
 
-        Log.d("system prompt", "*** Updated system prompt ***");
+        Log.d("personalise prompt", "*** Updated personalise prompt ***");
 
         // save settings locally so that these persist next time the settings screen is opened; from:
         // https://www.quora.com/What-is-the-most-efficient-way-of-storing-data-locally-on-an-android-Android-Programming
         // https://stackoverflow.com/questions/25869956/shared-preference-returns-always-the-default-value
+        // The shared preferences are also saved for next time the app is opened to keep the personalisation
+        // in the ChatGPT prompt that was set previously.
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -535,7 +539,8 @@ public class SettingsActivity extends AppCompatActivity {
         editor.putInt("genderId", genderSelectedId);
         editor.putString("genderCodeSelected", genderCodeSelected);
         editor.putString("anything else", anythingElseString);
-        editor.putString("system prompt", systemPrompt);
+        editor.putString("system prompt", com.shakespeare.new_app.GlobalClass.system_prompt);
+        editor.putString("personalise prompt", personalisePrompt);
         editor.apply(); // editor.apply() or editor.commit();
 
     }
@@ -544,7 +549,7 @@ public class SettingsActivity extends AppCompatActivity {
         // update system prompt to use the  user profile now updated
         // launch a new activity which in this case is returning to the main activity
 
-        com.shakespeare.new_app.GlobalClass.system_prompt = "";
+//        com.shakespeare.new_app.GlobalClass.system_prompt = "";
         updateSystemPrompt(v);
 
         Intent i = new Intent(this, com.shakespeare.new_app.MainActivity.class);

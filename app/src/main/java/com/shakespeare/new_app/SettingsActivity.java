@@ -220,18 +220,33 @@ public class SettingsActivity extends AppCompatActivity {
         //check purpose setting in preferences in case already selected and if so then pre-populate
         String radioPurpose = sharedPreferences.getString("purpose","X");
         Log.d("retrieve from SharedPreferences","Radio Purpose value from SharedPreferences: " + radioPurpose);
-        if(radioPurpose.equals("My primary school studies")){
+        if(radioPurpose.equals("primary school studies")){
             RadioButton rb_Purpose_PS = findViewById(R.id.rabtnPurposePrimarySchool);
             rb_Purpose_PS.setChecked(true);
+        } else if(radioPurpose.equals("My primary school studies")){
+            RadioButton rb_Purpose_PS = findViewById(R.id.rabtnPurposePrimarySchool);
+            rb_Purpose_PS.setChecked(true);
+        } else if(radioPurpose.equals("middle school studies")){
+            RadioButton rb_Purpose_MS = findViewById(R.id.rabtnPurposeMiddleSchool);
+            rb_Purpose_MS.setChecked(true);
         } else if(radioPurpose.equals("My middle school studies")){
             RadioButton rb_Purpose_MS = findViewById(R.id.rabtnPurposeMiddleSchool);
             rb_Purpose_MS.setChecked(true);
+        } else if(radioPurpose.equals("high school studies")){
+            RadioButton rb_Purpose_HS = findViewById(R.id.rabtnPurposeHighSchool);
+            rb_Purpose_HS.setChecked(true);
         } else if(radioPurpose.equals("My high school studies")){
             RadioButton rb_Purpose_HS = findViewById(R.id.rabtnPurposeHighSchool);
             rb_Purpose_HS.setChecked(true);
+        } else if(radioPurpose.equals("university studies")){
+            RadioButton rb_Purpose_Univ = findViewById(R.id.rabtnPurposeUniversity);
+            rb_Purpose_Univ.setChecked(true);
         } else if(radioPurpose.equals("University studies")){
             RadioButton rb_Purpose_Univ = findViewById(R.id.rabtnPurposeUniversity);
             rb_Purpose_Univ.setChecked(true);
+        } else if(radioPurpose.equals("personal interest")){
+            RadioButton rb_Purpose_PI = findViewById(R.id.rabtnPurposeInterest);
+            rb_Purpose_PI.setChecked(true);
         } else if(radioPurpose.equals("My personal interest")){
             RadioButton rb_Purpose_PI = findViewById(R.id.rabtnPurposeInterest);
             rb_Purpose_PI.setChecked(true);
@@ -239,6 +254,9 @@ public class SettingsActivity extends AppCompatActivity {
             RadioButton rb_Purpose_Theatre = findViewById(R.id.rabtnPurposeTheatre);
             rb_Purpose_Theatre.setChecked(true);
         } else if(radioPurpose.equals("Other or choose not to answer")){
+            RadioButton rb_Purpose_Other = findViewById(R.id.rabtnPurposeOther);
+            rb_Purpose_Other.setChecked(true);
+        } else if(radioPurpose.equals("other or choose not to answer")){
             RadioButton rb_Purpose_Other = findViewById(R.id.rabtnPurposeOther);
             rb_Purpose_Other.setChecked(true);
         }

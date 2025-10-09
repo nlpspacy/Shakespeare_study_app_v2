@@ -134,35 +134,35 @@
             android:id="@+id/rabtnPurposePrimarySchool"
             android:layout_width="wrap_content"
             android:layout_height="22sp"
-            android:text="My primary school studies"
+            android:text="primary school studies"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <RadioButton
             android:id="@+id/rabtnPurposeMiddleSchool"
             android:layout_width="wrap_content"
             android:layout_height="22sp"
-            android:text="My middle school studies"
+            android:text="middle school studies"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <RadioButton
             android:id="@+id/rabtnPurposeHighSchool"
             android:layout_width="wrap_content"
             android:layout_height="22sp"
-            android:text="My high school studies"
+            android:text="high school studies"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <RadioButton
             android:id="@+id/rabtnPurposeUniversity"
             android:layout_width="wrap_content"
             android:layout_height="22sp"
-            android:text="University studies"
+            android:text="university studies"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <RadioButton
             android:id="@+id/rabtnPurposeInterest"
             android:layout_width="wrap_content"
             android:layout_height="22sp"
-            android:text="My personal interest"
+            android:text="personal interest"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <RadioButton
@@ -176,7 +176,7 @@
             android:id="@+id/rabtnPurposeOther"
             android:layout_width="wrap_content"
             android:layout_height="22sp"
-            android:text="Other or choose to not answer"
+            android:text="other or choose to not answer"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RadioGroup>

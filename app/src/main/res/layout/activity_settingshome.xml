@@ -228,7 +228,7 @@
             android:ems="10"
             android:gravity="center_horizontal"
             android:inputType="text"
-            android:text="Version code 24 version name 2.24"
+            android:text="Version code 26 version name 2.26"
             android:layout_marginTop="4sp"
             app:layout_constraintTop_toBottomOf="@+id/rbtnHideLineNumbers" />
 

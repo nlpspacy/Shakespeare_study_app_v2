@@ -23,8 +23,8 @@ android {
         // in sqlitecloud/build.gradle.kts
         //noinspection EditedTargetSdkVersion
         targetSdk = 36
-        versionCode = 25
-        versionName = "2.25"
+        versionCode = 26
+        versionName = "2.26"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

@@ -283,12 +283,17 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
         }
 
+//        Log.d("check", String.valueOf(strContent));
 
         if (strContentAsString.endsWith("+")) {  // This is the marker for a character's name.
             strContent = "<i>"+strContentAsString.substring(0, intContentLength - 1)+"</i>";
             holder.myTextView.setText(Html.fromHtml(strContent.toString(), Html.FROM_HTML_MODE_LEGACY));
             holder.myTextView.setTypeface(null, Typeface.BOLD);
+        } else if (strContent.equals(" Characters in the Play")) {
+            Log.d("check","These are the characters in the play");
+            holder.myTextView.setTypeface(null, Typeface.BOLD);
         } else if (strContent.equals("Characters in the Play")) {
+            Log.d("check","These are the characters in the play");
             holder.myTextView.setTypeface(null, Typeface.BOLD);
         } else {
             holder.myTextView.setTypeface(null, Typeface.NORMAL);

@@ -1,5 +1,8 @@
 package com.shakespeare.new_app;
 
+import static android.content.ContentValues.TAG;
+import static com.shakespeare.new_app.GlobalClass.boolPlayHasPrologue;
+
 import androidx.annotation.NonNull;
 
 import android.content.SharedPreferences;
@@ -576,26 +579,111 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
 
     public boolean checkForPrologue() {
 
-        SQLiteDatabase db;
-        String selectQuery = "SELECT count(*) FROM " + TABLE_PLAY + " ";
-        selectQuery += "WHERE play_code='" + GlobalClass.selectedPlayCode + "' ";
-        selectQuery += "AND act_nr_roman = 'Prologue';";
+        String.valueOf(checkForPrologueOnCloud(new ScriptCallback() {
+            @Override
+            public void onScriptFetched(ArrayList<String> scriptLinesList) {
+                Log.d("Prologue check", "Does play have a prologue? " + String.valueOf(boolPlayHasPrologue));
+            }
+            @Override
+            public void onError(Throwable e) {
+                Log.e(TAG, "An error occurred: " + e.getMessage(), e);
+            }
+        }));
 
-        Log.d("check", selectQuery);
+        return boolPlayHasPrologue;
 
-        db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
+    }
 
-        cursor.moveToFirst();
-        Integer intPrologueCheck = Integer.valueOf(cursor.getInt(0));
-        Log.d("check", "check whether there is an prologue: " + String.valueOf(cursor.getInt(0)));
-        if (intPrologueCheck > 0) {
+
+    public boolean checkForPrologueOnCloud(ScriptCallback callback) {
+
+        String currentUser = UserManager.getUsername(context);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        StringBuilder inClause = new StringBuilder();
+        if (inClause.length() > 0) {
+            inClause.setLength(inClause.length() - 1); // remove trailing comma
+        } else {
+            inClause.append("''"); // prevent SQL error if empty
+        }
+
+        String baseQuery = "SELECT count(*) as prologue_count FROM " + TABLE_PLAY + " " +
+                        "WHERE play_code = '" + GlobalClass.selectedPlayCode + "' AND act_nr_roman = 'Prologue';";
+
+        Log.d("sql check","sql: " + baseQuery);
+
+        RemoteDatabaseHelperHttp remoteDb = new RemoteDatabaseHelperHttp(context);
+
+        remoteDb.runQueryFromJava(baseQuery, new QueryResultCallback<List<Map<String, String>>>() {
+            ArrayList<String> scriptLinesList = new ArrayList<>();
+
+            @Override
+            public void onResult(QueryResult<List<Map<String, String>>> result) {
+                List<Map<String, String>> rows = result.getData();
+                if (rows != null) {
+                    for (Map<String, String> row : rows) {
+                        Integer intPrologueCheck = Integer.parseInt(row.get("prologue_count"));
+                        if (intPrologueCheck > 0) {
+                            boolPlayHasPrologue = true;
+                            Log.d("check","boolPlayHasPrologue = true");
+                        } else {
+                            boolPlayHasPrologue = false;
+                            Log.d("check","boolPlayHasPrologue = false");
+                        }
+                        Log.d("check", "prologue_count: " + String.valueOf(intPrologueCheck));
+                    }
+
+                    callback.onScriptFetched(scriptLinesList);
+                } else {
+                    callback.onError(result.getException());
+                }
+
+            }});
+
+        if (boolPlayHasPrologue) {
+//            Log.d("check","Play has prologue");
             return true;
         } else {
+//            Log.d("check","Play does not have prologue");
             return false;
         }
 
     }
+
+//        public boolean checkForPrologue() {
+//
+//        Log.d("check", String.valueOf(checkForPrologueOnCloud(new ScriptCallback() {
+//            @Override
+//            public void onScriptFetched(ArrayList<String> scriptLinesList) {
+//                Log.d("check","yes onScriptFetched");
+//                Log.d("check", "does play have a prologue? " + String.valueOf(boolPlayHasPrologue));
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                Log.d("check","error: script not fetched");
+//            }
+//        })));
+//
+//        SQLiteDatabase db;
+//        String selectQuery = "SELECT count(*) FROM " + TABLE_PLAY + " ";
+//        selectQuery += "WHERE play_code='" + GlobalClass.selectedPlayCode + "' AND act_nr_roman = 'Prologue';";
+//
+////        Log.d("check", selectQuery);
+//
+//        db = this.getReadableDatabase();
+//        Cursor cursor = db.rawQuery(selectQuery, null);
+//
+//        cursor.moveToLast();
+//        Integer intPrologueCheck = Integer.valueOf(cursor.getInt(0));
+////        Log.d("check", "check whether there is a prologue: " + String.valueOf(intPrologueCheck));
+//        if (intPrologueCheck > 0) {
+//            return true;
+//        } else {
+//            return false;
+//        }
+//
+//    }
 
     // Get current act number in case the user is returning to the play, so navigation goes to where they left off last time.
     public int updateNavDbWithCurrentActSceneInPlay() {
@@ -1011,8 +1099,8 @@ public abstract class DatabaseHandler extends SQLiteOpenHelper {
                 // If we are in the Characters in the play section, then
                 // present the character name and, if any, extension to their name.
                 // For the hading of this section, leave out the character name field which holds the value "N.A."
-                if (cursor.getString(6).equals("Characters in the play")){
-                    if (cursor.getString(2).equals("N.A.") && cursor.getString(1).equals("Characters in the Play")){
+                if (cursor.getString(6).equalsIgnoreCase("Characters in the Play")){
+                    if (cursor.getString(2).equals("N.A.") && cursor.getString(1).equalsIgnoreCase("Characters in the Play")){
                         strScriptText = cursor.getString(1);
 
                     } else{

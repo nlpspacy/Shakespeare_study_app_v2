@@ -31,5 +31,6 @@ public class GlobalClass {
     public static Integer scriptPlayLineNr = -1; // Variable for adding play line reference in bookmark.
 
     public static Boolean boolSoundOn = false; // Variable flagging whether sound is on or not.
+    public static Boolean boolPlayHasPrologue = false; // Variable flagging whether the play has a prologue.
     public static Boolean boolBookmarkRefClicked = false; // Variable flagging whether sound is on or not.
 }

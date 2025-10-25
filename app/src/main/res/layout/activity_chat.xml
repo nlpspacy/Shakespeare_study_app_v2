@@ -1,0 +1,70 @@
+<!-- res/layout/activity_chat.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Messages list above -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/messagesList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/composerContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Composer bar -->
+    <LinearLayout
+        android:id="@+id/composerContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="?attr/colorSurface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="ExtraText">
+
+        <EditText
+            android:id="@+id/inputEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="10dp"
+            android:minHeight="48dp"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="10dp"
+            android:gravity="top|start"
+            android:hint="Type a message…"
+            android:inputType="textMultiLine|textCapSentences"
+            android:imeOptions="flagNoEnterAction"
+            android:scrollbars="vertical"
+            android:overScrollMode="ifContentScrolls"
+            android:minLines="1"
+            android:maxLines="6"
+            android:breakStrategy="high_quality"
+            android:hyphenationFrequency="normal"
+            android:importantForAutofill="no"
+            android:singleLine="false"
+            android:ellipsize="end"
+            android:fadeScrollbars="true"
+            android:hapticFeedbackEnabled="true"
+            android:scrollbarStyle="insideInset"
+            android:fadingEdgeLength="8dp"
+            android:ems="10"
+            android:capitalize="sentences"/>
+
+        <ImageButton
+            android:id="@+id/sendButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Send"
+            android:src="@drawable/ic_send_24" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

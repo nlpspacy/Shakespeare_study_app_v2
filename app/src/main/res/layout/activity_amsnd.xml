@@ -261,16 +261,13 @@
         <!-- Free text textbox for user to write free-form prompt-->
 
         <!-- Spinner Element to select standard prompts-->
-        <com.shakespeare.new_app.EditTextNoNewLine
-            android:id="@+id/message_edit_text"
+        <include
+            android:id="@+id/chatComposer"
+            layout="@layout/layout_chat_composer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1sp"
             android:layout_weight="4"
-            android:background="@android:color/background_dark"
             android:hint="@string/txt_Message_Send_Box_Hint"
-            android:padding="0sp"
-            android:textColor="#FFFFFF"
             android:textIsSelectable="true"
             app:layout_constraintBottom_toBottomOf="@+id/fetchDataButton"
             app:layout_constraintEnd_toStartOf="@+id/fetchDataButton" />

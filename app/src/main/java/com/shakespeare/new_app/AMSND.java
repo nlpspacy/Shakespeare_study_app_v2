@@ -143,7 +143,8 @@ public class AMSND extends AppCompatActivity {
         standardPromptsSpinner.setVisibility(View.GONE);
 
         // listen on text box and when enter key is pressed then send prompt to ChatGPT API
-        EditText etMessageToChatGPT = findViewById(R.id.message_edit_text);
+//        EditText etMessageToChatGPT = findViewById(R.id.message_edit_text);
+        EditText etMessageToChatGPT = findViewById(R.id.inputEditText);
         etMessageToChatGPT.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 
             @Override
@@ -944,16 +945,20 @@ public class AMSND extends AppCompatActivity {
 
         // Standard prompts show/hide and free text hide/show
         Spinner standardPromptsSpinner = (Spinner) findViewById(R.id.standardprompts_spinner);
-        EditText freeTextPrompt = (EditText) findViewById(R.id.message_edit_text);
+//        EditText freeTextPrompt = (EditText) findViewById(R.id.message_edit_text);
+        View chatComposer = findViewById(R.id.chatComposer);
+        EditText freeTextPrompt = (EditText) findViewById(R.id.inputEditText);
         if(standardPromptsSpinner.getVisibility() == View.GONE) {
             standardPromptsSpinner.setVisibility(View.VISIBLE);
-            freeTextPrompt.setVisibility(View.GONE);
+//            freeTextPrompt.setVisibility(View.GONE);
+            chatComposer.setVisibility(View.GONE);  // 🔹 hide the entire included layout
             Log.d("prompts show standard or allow free text","show standard prompts spinner");
             btnShowHide.setText("Free");
         }
         else {
             standardPromptsSpinner.setVisibility(View.GONE);
-            freeTextPrompt.setVisibility(View.VISIBLE);
+            chatComposer.setVisibility(View.VISIBLE);  // 🔹 show the included layout again
+//            freeTextPrompt.setVisibility(View.VISIBLE);
             Log.d("prompts show standard or allow free text","show free text entry box");
             btnShowHide.setText("Qns");
         }
@@ -977,7 +982,8 @@ public class AMSND extends AppCompatActivity {
     }
     public void clearEditTextBox() {
         // set edit text view to blank so user doesn't have to manually clear it
-        EditText editTV = findViewById(R.id.message_edit_text);
+//        EditText editTV = findViewById(R.id.message_edit_text);
+        EditText editTV = findViewById(R.id.inputEditText);
         editTV.getText().clear();
     }
 
@@ -1027,7 +1033,8 @@ public class AMSND extends AppCompatActivity {
         // spinner of standard prompts.
         // User free-text entry prompt
         EditText messageEditText;
-        messageEditText = findViewById(R.id.message_edit_text);
+//        messageEditText = findViewById(R.id.message_edit_text);
+        messageEditText = findViewById(R.id.inputEditText);
         // User selection from standard prompts spinner
         Spinner standardPromptsSpinner;
         standardPromptsSpinner = findViewById(R.id.standardprompts_spinner);

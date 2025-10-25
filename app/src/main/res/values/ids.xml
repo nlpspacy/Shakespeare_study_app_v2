@@ -30,4 +30,8 @@
     <item name="btn_CloseSettings" type="id"/>
     <item name="btn_SaveAndCloseSettings" type="id"/>
     <item name="txt_SettingsScreenHeading" type="id"/>
+    <item name="messagesList" type="id"/>
+    <item name="composerContainer" type="id"/>
+    <item name="inputEditText" type="id"/>
+    <item name="sendButton" type="id"/>
 </resources>

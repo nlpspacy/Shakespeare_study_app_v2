@@ -462,6 +462,89 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void openMoreResources(View v) {
+        // Pause TTS if needed
+        VoiceSynthesizer.stopPlayback();
+
+        // selected play to pass to the next activity
+        com.shakespeare.new_app.GlobalClass.selectedPlay = playslist_spinner.getSelectedItem().toString();
+        // specify the play filename based on the selection
+        com.shakespeare.new_app.GlobalClass.selectedPlayCode = "";
+
+        if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Antony and Cleopatra") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Antony and Cleopatra (1606)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Antony and Cleopatra";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "AAC";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Midsummer Night\'s Dream") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("A Midsummer Night\'s Dream (1595)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "A Midsummer Night\'s Dream";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "AMSND";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Romeo and Juliet") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Romeo and Juliet (1594)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Romeo and Juliet";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "RomeoAndJuliet";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("All\'s Well That Ends Well") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("All\'s Well That Ends Well (1602)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "All\'s Well That Ends Well";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "AllsWellThatEndsWell";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("As You Like It") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("As You Like It (1599)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "As You Like It";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "AsYouLikeIt";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Comedy of Errors") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("The Comedy of Errors (1589)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "The Comedy of Errors";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "ComedyOfErrors";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Hamlet") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Hamlet, Prince of Denmark (1600)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Hamlet, Prince of Denmark";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "Hamlet";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Henry IV, Part I") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Henry IV, Part I (1597)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Henry IV, Part I";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "HenryIVPart1";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Henry IV, Part II") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Henry IV, Part II (1597)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Henry IV, Part II";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "HenryIVPart2";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Henry V") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Henry V (1598)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Henry V";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "HenryV";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Julius Caesar") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Julius Caesar (1599)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Julius Caesar";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "JuliusCaesar";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("King Lear") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("The Tragedy of King Lear (1605)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "King Lear";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "KingLear";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Macbeth") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("The Tragedy of Macbeth (1605)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "The Tragedy of Macbeth";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "Macbeth";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Merchant of Venice") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("The Merchant of Venice (1596)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "The Merchant of Venice";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "MerchantOfVenice";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Much Ado about Nothing") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Much Ado about Nothing (1594)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Much Ado about Nothing";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "MuchAdo";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Othello") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Othello, the Moor of Venice (1604)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Othello, the Moor of Venice";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "Othello";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("The Tempest") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("The Tempest (1611)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "The Tempest";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "Tempest";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("King John") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("King John (1623)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "King John";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "KingJohn";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Richard II") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Richard II (1595)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Richard II";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "RichardII";
+        } else if(com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Richard III") || com.shakespeare.new_app.GlobalClass.selectedPlay.equals("Richard III (1597)")) {
+            com.shakespeare.new_app.GlobalClass.selectedPlay = "Richard III";
+            com.shakespeare.new_app.GlobalClass.selectedPlayCode = "RichardIII";
+        } else {
+            return;
+        }
+
+//        Log.d("selected text","more resources " + GlobalClass.selectedPlayCode);
+//        Log.d("selected text","more resources " + GlobalClass.selectedPlay);
+
+        Intent intent = new Intent(this, PlayResourcesActivity.class);
+        intent.putExtra(PlayResourcesActivity.EXTRA_PLAY_CODE, GlobalClass.selectedPlayCode);
+        intent.putExtra(PlayResourcesActivity.EXTRA_PLAY_NAME, GlobalClass.selectedPlay);
+        startActivity(intent);
+    }
+
+
     public void setFontSmall12sp(View v){
         // set font size to small 12sp
         com.shakespeare.new_app.GlobalClass.fontsizesp = 12;

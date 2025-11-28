@@ -46,6 +46,7 @@
     <string name="font_settings_btn_label_large">large</string>
     <string name="nav_btn_label_back">Back</string>
     <string name="nav_btn_label_return_to_home">Home</string>
+    <string name="nav_btn_label_open_more_resources">More</string>
     <string name="txt_Message_Send_Box_Hint">Write here</string>
     <string name="standard_queries">Select from standard questions</string>
     <string name="bookmarks">Bookmarks</string>

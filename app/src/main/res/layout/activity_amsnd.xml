@@ -298,12 +298,23 @@
 
         <Button
             android:id="@+id/btnReturnToMain"
-            android:layout_width="80sp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2sp"
             android:onClick="returnToMain"
             android:textAllCaps="false"
             android:text="@string/nav_btn_label_return_to_home" />
+
+        <Button
+            android:id="@+id/btnResources"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2sp"
+            android:textAllCaps="false"
+            app:layout_constraintStart_toStartOf="@+id/btnReturnToMain"
+            android:text="@string/nav_btn_label_open_more_resources"
+            android:onClick="openMoreResources"
+            />
 
         <ImageButton
             android:id="@+id/btnOpenBookmarks"

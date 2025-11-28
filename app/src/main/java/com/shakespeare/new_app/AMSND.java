@@ -937,6 +937,17 @@ public class AMSND extends AppCompatActivity {
         }
 
     }
+
+    public void openMoreResources(View v) {
+        // Pause TTS if needed
+        VoiceSynthesizer.stopPlayback();
+
+        Intent intent = new Intent(this, PlayResourcesActivity.class);
+        intent.putExtra(PlayResourcesActivity.EXTRA_PLAY_CODE, GlobalClass.selectedPlayCode);
+        intent.putExtra(PlayResourcesActivity.EXTRA_PLAY_NAME, GlobalClass.selectedPlay);
+        startActivity(intent);
+    }
+
     public void showStandardPromptsOrFreeTextEntry(View v) {
         // Standard pre-canned prompts show and free text hide, or vice-versa.
         Log.d("prompts show standard or allow free text","show standard prompts or allow free text");

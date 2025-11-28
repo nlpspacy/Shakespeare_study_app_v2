@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".MyApplication"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Design"
         tools:targetApi="31">
         <activity
+            android:name=".PlayResourcesActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Design" >
-        </activity>
+            android:theme="@style/Theme.Design"></activity>
         <activity
             android:name=".ChooseDisplayNameActivity"
             android:exported="false"
@@ -40,9 +44,9 @@
         <activity
             android:name=".AMSND"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize|stateHidden"
             android:label="@string/title_activity_amsnd"
-            android:theme="@style/Theme.Design" />
+            android:theme="@style/Theme.Design"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name=".SettingsActivity"
             android:exported="false"

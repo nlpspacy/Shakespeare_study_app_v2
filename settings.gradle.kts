@@ -15,6 +15,7 @@ pluginManagement {
     plugins {
         id("com.android.application") version("8.2.0")
         id("org.jetbrains.kotlin.android") version("1.9.0")
+        id("org.jetbrains.kotlin.android") version "1.9.0"
 //            id("com.android.application") version "8.2.2" apply false
 //            id("org.jetbrains.kotlin.android") version "1.9.22" apply false
 //            id("com.codingfeline.buildkonfig") version "0.15.1" apply false

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/resourceItemRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="?attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/resourceIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center_vertical"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ic_launcher_foreground" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="12dp">
+
+        <TextView
+            android:id="@+id/resourceTitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Resource title"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+        <TextView
+            android:id="@+id/resourceSubtitleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Short description"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?android:attr/textColorSecondary"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</LinearLayout>
